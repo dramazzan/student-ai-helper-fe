@@ -13,8 +13,8 @@ export const login = async (data : LoginDto) =>{
 
         return response.data;
     }catch(e){
-        throw new Error("Ошибка при входе");
         console.error("Login error:" , e)
+        throw new Error("Ошибка при входе");
     }
 }
 
@@ -23,8 +23,8 @@ export const register = async (data : RegisterDto) =>{
         const response = await api.post("/auth/register" , data)
         return response.data;
     }catch(e){
-        throw new Error("Ошибка при регистрации");
         console.error("Register error:" , e)
+        throw new Error("Ошибка при регистрации");
     }
 }
 

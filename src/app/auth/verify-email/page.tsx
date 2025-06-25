@@ -36,15 +36,32 @@ const VerifyPage = () => {
   }, []);
 
   return (
-    <div>
-      {status === "loading" && <p>Подтверждаем...</p>}
-      {status === "success" && <p>Email подтверждён ✅. Перенаправляем...</p>}
-      {status === "error" && (
-        <div>
-          <p>❌ Ошибка подтверждения: {errorMessage}</p>
-          <Link href="/auth/register">Повторить регистрацию</Link>
-        </div>
-      )}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
+        {status === "loading" && (
+          <p className="text-blue-600 text-lg font-medium">Подтверждаем...</p>
+        )}
+
+        {status === "success" && (
+          <p className="text-green-600 text-lg font-semibold">
+            Email подтверждён. Перенаправляем...
+          </p>
+        )}
+
+        {status === "error" && (
+          <div>
+            <p className="text-red-600 text-lg font-semibold mb-4">
+              Ошибка подтверждения: {errorMessage}
+            </p>
+            <Link
+              href="/auth/register"
+              className="text-blue-600 hover:underline text-sm"
+            >
+              Повторить регистрацию
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
