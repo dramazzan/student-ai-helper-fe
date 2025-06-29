@@ -1,48 +1,32 @@
 'use client'
 
 import React, { useState } from 'react'
-import { generateTest } from '@/services/testService'
+import { generateTest, generateMultiTest } from '@/services/testService'
 import { UploadCloud } from 'lucide-react'
 
 const GenerateTestForm = () => {
   const [file, setFile] = useState<File | null>(null)
-  const [dragActive, setDragActive] = useState(false)
-
   const [difficulty, setDifficulty] = useState('средний')
   const [questionCount, setQuestionCount] = useState(5)
   const [questionType, setQuestionType] = useState('тест с выбором')
-  const [testType , setTestType] = useState('normal')
   const [loading, setLoading] = useState(false)
-
-  const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setDragActive(false)
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0])
-    }
-  }
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setDragActive(true)
-  }
-
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setDragActive(false)
-  }
+  const [activeTab, setActiveTab] = useState<'normal' | 'multi'>('normal')
 
   const handleSubmit = async () => {
-    if (!file) return alert('Сначала выберите файл!')
+    if (!file) return alert('Выберите файл!')
     setLoading(true)
     try {
-      const result = await generateTest(file, { difficulty, questionCount, questionType })
-      alert('✅ Тест сгенерирован успешно!')
-      console.log('Результат:', result)
+      if (activeTab === 'normal') {
+        const result = await generateTest(file, { difficulty, questionCount, questionType })
+        console.log('✅ Обычный тест создан:', result)
+      } else {
+        const result = await generateMultiTest(file, { difficulty, questionCount })
+        console.log('✅ Мульти тесты созданы:', result)
+      }
+      alert('Тест(ы) успешно созданы!')
     } catch (err: any) {
       console.error(err)
-      alert(err?.response?.data?.message || 'Ошибка при генерации теста')
+      alert(err?.response?.data?.message || 'Ошибка при генерации')
     } finally {
       setLoading(false)
     }
@@ -55,29 +39,32 @@ const GenerateTestForm = () => {
         Генерация теста из файла
       </h2>
 
-      <div
-        onDrop={handleFileDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        className={`border-2 border-dashed rounded-xl p-6 text-center transition ${
-          dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
-        }`}
-      >
-        {file ? (
-          <p className="text-gray-700 font-medium">📄 {file.name}</p>
-        ) : (
-          <p className="text-gray-500">Перетащите файл сюда или выберите ниже</p>
-        )}
+      {/* Tabs */}
+      <div className="flex border-b mb-4">
+        <button
+          className={`px-4 py-2 text-sm font-medium ${activeTab === 'normal' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`}
+          onClick={() => setActiveTab('normal')}
+        >
+          Обычный тест
+        </button>
+        <button
+          className={`px-4 py-2 text-sm font-medium ml-4 ${activeTab === 'multi' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`}
+          onClick={() => setActiveTab('multi')}
+        >
+          Мульти тест
+        </button>
       </div>
 
+      {/* File input */}
       <input
         type="file"
-        accept=".txt,.pdf,.docx"
+        accept=".pdf,.docx"
         onChange={(e) => e.target.files?.[0] && setFile(e.target.files[0])}
         className="w-full p-2 border border-gray-300 rounded-md"
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {/* Common Fields */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Сложность</label>
           <select
@@ -92,6 +79,21 @@ const GenerateTestForm = () => {
         </div>
 
         <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Количество вопросов</label>
+          <input
+            type="number"
+            value={questionCount}
+            onChange={(e) => setQuestionCount(Number(e.target.value))}
+            min={1}
+            max={50}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+      </div>
+
+      {/* Только для обычного теста */}
+      {activeTab === 'normal' && (
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Тип вопроса</label>
           <select
             value={questionType}
@@ -104,19 +106,7 @@ const GenerateTestForm = () => {
             <option value="с несколькими">С несколькими</option>
           </select>
         </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Количество вопросов</label>
-          <input
-            type="number"
-            value={questionCount}
-            onChange={(e) => setQuestionCount(parseInt(e.target.value))}
-            className="w-full p-2 border rounded-md"
-            min={1}
-            max={50}
-          />
-        </div>
-      </div>
+      )}
 
       <button
         onClick={handleSubmit}

@@ -68,7 +68,7 @@ const ProgressOverview = ({
         </div>
       </div>
 
-      {data.weakTopics.length > 0 && (
+     {Array.isArray(data.weakTopics) && data.weakTopics.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold mt-6 mb-2 flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-red-500" />
@@ -84,7 +84,7 @@ const ProgressOverview = ({
         </div>
       )}
 
-      {data.lowScoreTests.length > 0 && (
+      {Array.isArray(data.lowScoreTests) && data.lowScoreTests.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold mt-6 mb-2 flex items-center gap-2">
             <FolderDown className="w-5 h-5 text-orange-500" />

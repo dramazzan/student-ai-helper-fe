@@ -21,3 +21,27 @@ export const generateTest = async (
   )
   return response.data
 }
+
+export const generateMultiTest = async (
+  file: File,
+  {
+    difficulty,
+    questionCount,
+  }: {
+    difficulty: string
+    questionCount: number
+  }
+) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('difficulty', difficulty)
+  formData.append('questionCount', String(questionCount))
+
+  const response = await api.post('/test/generate-multi', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+
+  return response.data
+}
