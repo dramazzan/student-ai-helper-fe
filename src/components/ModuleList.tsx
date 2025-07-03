@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   fetchTestsByModule,
   fetchModuleProgress,
   getTestProgressByTestId,
-} from "@/services/testService";
-import { useRouter } from "next/navigation";
+} from '@/services/testService';
+import { useRouter } from 'next/navigation';
 
 interface Module {
   _id: string;
@@ -36,12 +36,8 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
   const [tests, setTests] = useState<Test[]>([]);
   const [loading, setLoading] = useState(false);
   const [progressMap, setProgressMap] = useState<Record<string, number>>({});
-  const [progressLoading, setProgressLoading] = useState<
-    Record<string, boolean>
-  >({});
-  const [testProgressMap, setTestProgressMap] = useState<
-    Record<string, TestProgressInfo>
-  >({});
+  const [progressLoading, setProgressLoading] = useState<Record<string, boolean>>({});
+  const [testProgressMap, setTestProgressMap] = useState<Record<string, TestProgressInfo>>({});
   const router = useRouter();
 
   const handleModuleClick = async (moduleId: string) => {
@@ -65,7 +61,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
           try {
             const data = await getTestProgressByTestId(test._id);
             if (data.attempts && data.attempts.length > 0) {
-              const best = data.attempts.reduce((max: { percentage: number; }, attempt: { percentage: number; }) =>
+              const best = data.attempts.reduce((max: any, attempt: any) =>
                 attempt.percentage > max.percentage ? attempt : max
               );
               testProgresses[test._id] = {
@@ -80,7 +76,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
       );
       setTestProgressMap(testProgresses);
     } catch (err) {
-      console.error("Ошибка загрузки тестов:", err);
+      console.error('Ошибка загрузки тестов:', err);
       setTests([]);
     } finally {
       setLoading(false);
@@ -124,6 +120,12 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
 
     loadProgress();
   }, [modules]);
+
+  const getBadgeColor = (percentage: number) => {
+    if (percentage >= 80) return 'bg-green-100 text-green-800';
+    if (percentage >= 50) return 'bg-yellow-100 text-yellow-800';
+    return 'bg-red-100 text-red-800';
+  };
 
   if (!Array.isArray(modules) || modules.length === 0) {
     return (
@@ -200,7 +202,11 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
                           </div>
                           <div className="flex flex-col items-end gap-2 md:flex-row md:items-center">
                             {progress && (
-                              <p className="text-sm bg-green-100 text-green-700 px-3 py-1 rounded">
+                              <p
+                                className={`text-sm px-3 py-1 rounded ${getBadgeColor(
+                                  progress.percentage
+                                )}`}
+                              >
                                 Лучший результат: {progress.score} (
                                 {progress.percentage}%)
                               </p>
@@ -214,7 +220,6 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
                               >
                                 Пройти
                               </button>
-
                               {progress && (
                                 <button
                                   onClick={() =>

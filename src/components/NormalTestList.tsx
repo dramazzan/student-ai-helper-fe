@@ -44,6 +44,12 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
     loadProgress()
   }, [normalTests])
 
+  const getBadgeClass = (percentage: number) => {
+    if (percentage >= 80) return 'bg-green-100 text-green-800'
+    if (percentage >= 50) return 'bg-yellow-100 text-yellow-800'
+    return 'bg-red-100 text-red-800'
+  }
+
   if (isLoading) {
     return (
       <div className="p-6 bg-white rounded-xl shadow-md text-center text-blue-600 animate-pulse">
@@ -81,7 +87,9 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
               </div>
               <div className="flex items-center gap-3 flex-wrap">
                 {bestScore > 0 && (
-                  <span className="text-sm bg-green-100 text-green-700 px-3 py-1 rounded">
+                  <span
+                    className={`text-sm px-3 py-1 rounded ${getBadgeClass(bestScore)}`}
+                  >
                     Лучший результат: {bestScore}%
                   </span>
                 )}
