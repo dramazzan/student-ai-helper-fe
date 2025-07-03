@@ -145,3 +145,17 @@ export const getTestProgressByTestId = async (testId: string) => {
     throw error
   }
 }
+
+
+export const fetchModuleProgress = async (moduleId: string): Promise<number> => {
+  try {
+    const res = await api.get(`/progress/module/${moduleId}`);
+    if (res.status !== 200) {
+      throw new Error('Ошибка при получении прогресса модуля');
+    }
+    return res.data.percentage || 0;
+  } catch (error: any) {
+    console.error('Ошибка получения прогресса:', error.response?.data || error.message);
+    return 0;
+  }
+};

@@ -91,7 +91,7 @@ const TestProgressHistory = () => {
                 <p className="text-sm text-gray-600">
                   Дата: {new Date(attempt.completedAt).toLocaleString()}
                 </p>
-              </div>z
+              </div>
               <div>
                 <p>Результат: {attempt.score}/{attempt.totalQuestions}</p>
                 <p className="text-sm text-blue-600">{attempt.percentage}%</p>
