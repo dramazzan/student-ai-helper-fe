@@ -42,12 +42,20 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
                 {new Date(test.createdAt).toLocaleDateString()}
               </p>
             </div>
-            <button
-              onClick={() => router.push(`/test/passing/${test._id}`)}
-              className="text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-            >
-              Пройти тест
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => router.push(`/main/tests/passing/${test._id}`)}
+                className="text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+              >
+                Пройти тест
+              </button>
+              <button
+                onClick={() => router.push(`/main/tests/history/${test._id}`)}
+                className="text-sm px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
+              >
+                История
+              </button>
+            </div>
           </li>
         ))}
       </ul>

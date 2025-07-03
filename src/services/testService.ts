@@ -1,5 +1,16 @@
 import api from "./api";
 
+
+interface Answer {
+  questionId: string
+  selectedAnswer: number
+}
+
+interface SubmitTestPayload {
+  testId: string
+  answers: Answer[]
+}
+
 export const generateTest = async (
   file: File,
   options: {
@@ -101,5 +112,36 @@ export const fetchTestsByModule = async (id: string) => {
   } catch (e) {
     console.error("Error fetching test module by ID:", e);
     throw e;
+  }
+}
+
+
+export const getTestById = async (testId: string) => {
+  try {
+    const response = await api.get(`/test/${testId}`)
+    return response.data
+  } catch (error) {
+    console.error('Ошибка при получении теста:', error)
+    throw error
+  }
+}
+
+export const submitTestAnswers = async (payload: SubmitTestPayload) => {
+  try {
+    const response = await api.post('/test/passing/submit-test', payload)
+    return response.data 
+  } catch (error: any) {
+    console.error('Ошибка при отправке теста:', error.response?.data || error.message)
+    throw error
+  }
+}
+
+export const getTestProgressByTestId = async (testId: string) => {
+  try {
+    const response = await api.get(`/progress/test/result/${testId}`)
+    return response.data
+  } catch (error: any) {
+    console.error('Ошибка при получении истории тестов:', error.response?.data || error.message)
+    throw error
   }
 }

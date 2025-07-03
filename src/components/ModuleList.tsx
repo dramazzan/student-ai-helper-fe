@@ -89,7 +89,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
                     {tests.map((test) => (
                       <li
                         key={test._id}
-                        className="p-3 bg-white rounded-xl shadow border flex justify-between items-center"
+                        className="p-3 bg-white rounded-xl shadow border flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
                       >
                         <div>
                           <h4 className="text-md font-semibold text-gray-800">{test.title}</h4>
@@ -98,12 +98,20 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
                             {new Date(test.createdAt).toLocaleDateString()}
                           </p>
                         </div>
-                        <button
-                          className="text-sm px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                          onClick={() => router.push(`/test/passing/${test._id}`)}
-                        >
-                          Пройти
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            className="text-sm px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            onClick={() => router.push(`/main/tests/passing/${test._id}`)}
+                          >
+                            Пройти
+                          </button>
+                         <button
+                onClick={() => router.push(`/main/tests/history/${test._id}`)}
+                className="text-sm px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
+              >
+                История
+              </button>
+                        </div>
                       </li>
                     ))}
                   </ul>

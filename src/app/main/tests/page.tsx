@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { fetchNormalTests, fetchTestModule } from '@/services/testService'
-import TestTabs from '@/components/NormalTestList'
 import ModuleList from '@/components/ModuleList'
+import NormalTestList from '@/components/NormalTestList'
 
 interface Test {
   _id: string
   title: string
   questionCount: number
+  difficulty: string
   createdAt: string
 }
 
@@ -75,7 +76,7 @@ const TestPage = () => {
       {loading ? (
         <div className="text-gray-600">Загрузка данных...</div>
       ) : activeTab === 'normal' ? (
-        <TestTabs normalTests={normalTests} />
+        <NormalTestList normalTests={normalTests} />
       ) : (
         <ModuleList modules={modules} />
       )}
