@@ -16,29 +16,8 @@ import {
   Loader2,
 } from "lucide-react"
 import { fetchTestsByModule, fetchModuleProgress, getTestProgressByTestId } from "@/services/testService"
+import { Module, Test, ModuleListProps, TestProgressInfo } from "@/models/Test"
 
-interface Module {
-  _id: string
-  originalFileName: string
-  createdAt: string
-}
-
-interface Test {
-  _id: string
-  title: string
-  questionCount: number
-  difficulty: string
-  createdAt: string
-}
-
-interface ModuleListProps {
-  modules: Module[]
-}
-
-interface TestProgressInfo {
-  score: number
-  percentage: number
-}
 
 const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null)

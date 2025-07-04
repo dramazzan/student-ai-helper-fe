@@ -14,28 +14,7 @@ import {
   Brain,
 } from "lucide-react"
 
-interface WeakTopic {
-  topic: string
-  mistakes: number
-  recommendation: string
-}
-
-interface LowScoreTest {
-  title: string
-  score: number
-  total: number
-  date: string
-}
-
-interface ProgressData {
-  totalTestsTaken: number
-  averageScore: number
-  progressPercent: number
-  weakTopics: WeakTopic[]
-  lowScoreTests: LowScoreTest[]
-  recommendations: string[]
-  motivation: string
-}
+import { ProgressData, WeakTopic, LowScoreTest } from "@/models/Progress"
 
 const ProgressOverview = ({ data, isLoading = false }: { data?: ProgressData; isLoading?: boolean }) => {
   const [animatedValues, setAnimatedValues] = useState({

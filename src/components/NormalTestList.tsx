@@ -5,18 +5,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Clock, BookOpen, TrendingUp, Play, History, Award } from "lucide-react"
 import { getTestProgressByTestId } from "@/services/testService"
-
-interface Test {
-  _id: string
-  title: string
-  questionCount: number
-  difficulty: string
-  createdAt: string
-}
-
-interface TestTabsProps {
-  normalTests: Test[]
-}
+import { TestTabsProps } from "@/models/Test"
 
 const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
   const router = useRouter()

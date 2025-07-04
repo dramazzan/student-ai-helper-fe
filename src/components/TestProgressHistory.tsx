@@ -16,31 +16,8 @@ import {
   ChevronRight,
 } from "lucide-react"
 import { getTestProgressByTestId } from "@/services/testService"
+import { TestProgress, Attempt } from "@/models/ProgressHistory"
 
-interface AnswerDetail {
-  question: string
-  options: string[]
-  selectedAnswerIndex: number
-  selectedAnswerText: string
-  correctAnswerIndex: number
-  correctAnswerText: string
-  isCorrect: boolean
-}
-
-interface Attempt {
-  resultId: string
-  score: number
-  totalQuestions: number
-  percentage: number
-  completedAt: string
-  details: AnswerDetail[]
-}
-
-interface TestProgress {
-  testTitle: string
-  attempts: Attempt[]
-  testId: string
-}
 
 const TestProgressHistory = () => {
   const { testId } = useParams() as { testId: string }

@@ -17,23 +17,7 @@ import {
   Sparkles,
 } from "lucide-react"
 import { getTestResult } from "@/services/testService"
-
-interface QuestionDetail {
-  question: string
-  selected: number
-  correct: number
-  isCorrect: boolean
-}
-
-interface TestResultData {
-  testTitle: string
-  testId: string
-  score: number
-  total: number
-  percentage: number
-  completedAt: string
-  details: QuestionDetail[]
-}
+import { TestResultData } from "@/models/Test"
 
 const TestResult = () => {
   const { resultId } = useParams() as { resultId: string }
