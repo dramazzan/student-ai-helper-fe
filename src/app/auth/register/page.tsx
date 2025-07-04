@@ -21,6 +21,7 @@ import {
   ArrowRight,
   Check,
 } from "lucide-react"
+import Link from "next/link"
 
 const RegisterPage = () => {
   const [registerData, setRegisterData] = useState<RegisterDto>({
@@ -381,8 +382,9 @@ const RegisterPage = () => {
           {!success && (
             <div className="mt-6 text-center">
               <p className="text-sm text-slate-600">
-                Уже есть аккаунт? <button className="text-blue-600 hover:text-blue-700 font-medium">Войти</button>
+                Уже есть аккаунт? <Link href="/auth/login" className="text-blue-600 hover:text-blue-700 font-medium">Войти</Link>
               </p>
+
             </div>
           )}
         </div>
