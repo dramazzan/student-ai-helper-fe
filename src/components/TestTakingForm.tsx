@@ -36,7 +36,7 @@ const TestTakingForm = () => {
       setSubmitting(true)
       const response = await submitTestAnswers(payload)
       alert('Тест успешно сдан!')
-      router.push(`/tests/result/${response.resultId || ''}`)
+      router.push(`/main/tests/passed/${response.resultId || ''}`)
     } catch (error) {
       console.error('Ошибка при отправке теста:', error)
       alert('Произошла ошибка при отправке теста.')

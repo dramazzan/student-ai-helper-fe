@@ -64,7 +64,7 @@ export const fetchNormalTests = async () => {
     if (res.status !== 200) {
       throw new Error("Ошибка при получении нормальных тестов");
     }
-    return res.data.tests;
+    return res.data.tests || [];
   } catch (e) {
     console.error("Error fetching normal tests:", e);
     throw e;
@@ -78,7 +78,7 @@ export const fetchMultiTests = async () => {
     if (res.status !== 200) {
       throw new Error("Ошибка при получении мульти тестов");
     }
-    return res.data;
+    return res.data.tests || [];
   } catch (e) {
     console.error("Error fetching multi tests:", e);
     throw e;
@@ -159,3 +159,34 @@ export const fetchModuleProgress = async (moduleId: string): Promise<number> => 
     return 0;
   }
 };
+
+export const getTestResult = async (testId: string) => {
+  try {
+    const response = await api.get(`/progress/test/${testId}`)
+    return response.data
+  } catch (error: any) {
+    console.error('Ошибка при получении результата теста:', error.response?.data || error.message)
+    throw error
+  }
+}
+
+export const downloadTestDocx = async (testId: string) => {
+  try {
+    const response = await api.get(`/tests/${testId}/download`, {
+      responseType: 'blob', 
+    })
+
+    const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
+    const url = window.URL.createObjectURL(blob)
+
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `test-${testId}.docx`)
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  } catch (error) {
+    console.error('Ошибка при скачивании теста:', error)
+    throw error
+  }
+}

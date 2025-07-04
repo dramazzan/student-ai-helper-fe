@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { getTestProgressByTestId } from '@/services/testService'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 interface AnswerDetail {
   question: string
@@ -26,10 +26,12 @@ interface Attempt {
 interface TestProgress {
   testTitle: string
   attempts: Attempt[]
+  testId: string // добавим testId, если он есть в ответе сервера
 }
 
 const TestProgressHistory = () => {
   const { testId } = useParams() as { testId: string }
+  const router = useRouter()
   const [progress, setProgress] = useState<TestProgress | null>(null)
   const [selectedAttempt, setSelectedAttempt] = useState<Attempt | null>(null)
   const [loading, setLoading] = useState(true)
@@ -74,31 +76,40 @@ const TestProgressHistory = () => {
 
   if (!progress) return null
 
+  const reversedAttempts = [...progress.attempts].reverse()
+
   return (
     <div className="max-w-4xl mx-auto mt-6 bg-white p-6 rounded shadow">
       <h2 className="text-2xl font-bold mb-4">История теста: {progress.testTitle}</h2>
 
       <ul className="space-y-4">
-        {progress.attempts.map((attempt, index) => (
-          <li
-            key={attempt.resultId}
-            className="border p-4 rounded cursor-pointer hover:bg-gray-50"
-            onClick={() => setSelectedAttempt(attempt)}
-          >
-            <div className="flex justify-between">
-              <div>
-                <p className="font-medium">Попытка #{index + 1}</p>
-                <p className="text-sm text-gray-600">
-                  Дата: {new Date(attempt.completedAt).toLocaleString()}
-                </p>
+        {reversedAttempts.map((attempt, index) => {
+          const isActive = selectedAttempt?.resultId === attempt.resultId
+          const attemptNumber = reversedAttempts.length - index // правильная нумерация
+
+          return (
+            <li
+              key={attempt.resultId}
+              className={`border p-4 rounded cursor-pointer transition ${
+                isActive ? 'bg-blue-50 border-blue-400' : 'hover:bg-gray-50'
+              }`}
+              onClick={() => setSelectedAttempt(attempt)}
+            >
+              <div className="flex justify-between">
+                <div>
+                  <p className="font-medium">Попытка #{attemptNumber}</p>
+                  <p className="text-sm text-gray-600">
+                    Дата: {new Date(attempt.completedAt).toLocaleString()}
+                  </p>
+                </div>
+                <div>
+                  <p>Результат: {attempt.score}/{attempt.totalQuestions}</p>
+                  <p className="text-sm text-blue-600">{attempt.percentage}%</p>
+                </div>
               </div>
-              <div>
-                <p>Результат: {attempt.score}/{attempt.totalQuestions}</p>
-                <p className="text-sm text-blue-600">{attempt.percentage}%</p>
-              </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          )
+        })}
       </ul>
 
       {selectedAttempt && (
@@ -124,6 +135,16 @@ const TestProgressHistory = () => {
               </ul>
             </div>
           ))}
+
+          {/* Кнопка "Пройти снова" */}
+          <div className="mt-6">
+            <button
+              onClick={() => router.push(`/main/tests/passing/${progress.testId || testId}`)}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+            >
+              Пройти снова
+            </button>
+          </div>
         </div>
       )}
     </div>
