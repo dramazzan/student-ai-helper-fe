@@ -9,8 +9,8 @@ const Navbar = () => {
 
       <div className="flex space-x-6">
         <Link href="/main/generate" className="text-gray-700 hover:text-blue-600">Главная</Link>
-        <Link href="/dashboard" className='text-gray-700 hover:text-blue-600'>Профиль</Link>
-        <Link href="/dashboard/upload" className="text-gray-700 hover:text-blue-600">Загрузить</Link>
+        <Link href="/main/dashboard" className='text-gray-700 hover:text-blue-600'>Профиль</Link>
+        <Link href="/main/upload" className="text-gray-700 hover:text-blue-600">Загрузить</Link>
         <Link href="/main/tests" className="text-gray-700 hover:text-blue-600">Тесты</Link>
         <Link href="/auth/login" className="text-gray-700 hover:text-blue-600">Выйти</Link>
     

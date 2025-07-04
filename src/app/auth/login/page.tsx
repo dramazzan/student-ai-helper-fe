@@ -20,7 +20,7 @@ const LoginPage = () => {
     try {
       const response = await login(loginData);
       if (response.success) {
-        router.push("/dashboard");
+        router.push("/main/dashboard");
       } else {
         setError(response.message || "Ошибка входа");
       }
