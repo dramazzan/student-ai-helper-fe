@@ -59,7 +59,7 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/main" className="flex items-center gap-3 group">
+            <Link href="/main/generate" className="flex items-center gap-3 group">
               <div className="relative">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                   <Brain className="w-6 h-6 text-white" />
