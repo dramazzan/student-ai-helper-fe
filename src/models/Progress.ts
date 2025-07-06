@@ -11,12 +11,18 @@ export interface LowScoreTest {
   date: string
 }
 
+export interface Recommendation {
+  type: string
+  topic: string
+  content: string
+}
+
 export interface ProgressData {
   totalTestsTaken: number
   averageScore: number
   progressPercent: number
   weakTopics: WeakTopic[]
   lowScoreTests: LowScoreTest[]
-  recommendations: string[]
-  motivation: string
+  recommendations: Recommendation[] 
+  motivation: string 
 }

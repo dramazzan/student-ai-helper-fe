@@ -1,19 +1,37 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
-import { generateTest, generateMultiTest } from "@/services/testService"
-import { UploadCloud, FileText, Layers, Upload, Settings, Loader2, CheckCircle } from "lucide-react"
+import {
+  generateTest,
+  generateMultiTest
+} from "@/services/testService"
+import {
+  UploadCloud,
+  FileText,
+  Layers,
+  Upload,
+  Settings,
+  Loader2,
+  CheckCircle,
+  AlertTriangle
+} from "lucide-react"
+
+const difficultyLabels: Record<string, string> = {
+  easy: "Лёгкий",
+  medium: "Средний",
+  hard: "Сложный"
+}
 
 const GenerateTestForm = () => {
   const [file, setFile] = useState<File | null>(null)
-  const [difficulty, setDifficulty] = useState("средний")
+  const [difficulty, setDifficulty] = useState("medium")
   const [questionCount, setQuestionCount] = useState(5)
   const [questionType, setQuestionType] = useState("тест с выбором")
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState<"normal" | "multi">("normal")
   const [dragActive, setDragActive] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
@@ -35,7 +53,7 @@ const GenerateTestForm = () => {
       if (droppedFile.type === "application/pdf" || droppedFile.name.endsWith(".docx")) {
         setFile(droppedFile)
       } else {
-        alert("Пожалуйста, выберите файл PDF или DOCX")
+        setErrorMessage("Пожалуйста, выберите файл PDF или DOCX")
       }
     }
   }
@@ -48,11 +66,17 @@ const GenerateTestForm = () => {
 
   const handleSubmit = async () => {
     if (!file) {
-      alert("Выберите файл!")
+      setErrorMessage("Выберите файл!")
+      return
+    }
+
+    if (questionCount < 5 || questionCount > 50) {
+      setErrorMessage("Количество вопросов должно быть от 5 до 50")
       return
     }
 
     setLoading(true)
+    setErrorMessage("")
     try {
       if (activeTab === "normal") {
         const result = await generateTest(file, { difficulty, questionCount, questionType })
@@ -64,7 +88,7 @@ const GenerateTestForm = () => {
       alert("Тест(ы) успешно созданы!")
     } catch (err: any) {
       console.error(err)
-      alert(err?.response?.data?.message || "Ошибка при генерации")
+      setErrorMessage(err?.response?.data?.message || "Ошибка при генерации")
     } finally {
       setLoading(false)
     }
@@ -72,11 +96,11 @@ const GenerateTestForm = () => {
 
   const getDifficultyColor = (diff: string) => {
     switch (diff) {
-      case "лёгкий":
+      case "easy":
         return "text-emerald-700 bg-emerald-100 border-emerald-200"
-      case "средний":
+      case "medium":
         return "text-amber-700 bg-amber-100 border-amber-200"
-      case "сложный":
+      case "hard":
         return "text-red-700 bg-red-100 border-red-200"
       default:
         return "text-slate-700 bg-slate-100 border-slate-200"
@@ -86,7 +110,6 @@ const GenerateTestForm = () => {
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-        {/* Header */}
         <div className="p-6 border-b border-slate-100">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
@@ -97,7 +120,16 @@ const GenerateTestForm = () => {
         </div>
 
         <div className="p-6 space-y-6">
-          {/* Tabs */}
+          {errorMessage && (
+            <div className="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl">
+              <AlertTriangle className="w-5 h-5 mt-1 text-red-500" />
+              <div>
+                <p className="font-medium">Ошибка:</p>
+                <p className="text-sm">{errorMessage}</p>
+              </div>
+            </div>
+          )}
+
           <div className="flex bg-slate-50 rounded-xl p-1">
             <button
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
@@ -119,7 +151,6 @@ const GenerateTestForm = () => {
             </button>
           </div>
 
-          {/* File Upload */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-slate-700">Файл документа</label>
             <div
@@ -127,8 +158,8 @@ const GenerateTestForm = () => {
                 dragActive
                   ? "border-blue-400 bg-blue-50"
                   : file
-                    ? "border-emerald-300 bg-emerald-50"
-                    : "border-slate-300 hover:border-slate-400"
+                  ? "border-emerald-300 bg-emerald-50"
+                  : "border-slate-300 hover:border-slate-400"
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -161,7 +192,6 @@ const GenerateTestForm = () => {
             </div>
           </div>
 
-          {/* Settings */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-4">
               <Settings className="w-5 h-5 text-slate-600" />
@@ -176,14 +206,14 @@ const GenerateTestForm = () => {
                   onChange={(e) => setDifficulty(e.target.value)}
                   className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 >
-                  <option value="лёгкий">Лёгкий</option>
-                  <option value="средний">Средний</option>
-                  <option value="сложный">Сложный</option>
+                  <option value="easy">Лёгкий</option>
+                  <option value="medium">Средний</option>
+                  <option value="hard">Сложный</option>
                 </select>
                 <div
                   className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${getDifficultyColor(difficulty)}`}
                 >
-                  Выбрано: {difficulty}
+                  Выбрано: {difficultyLabels[difficulty]}
                 </div>
               </div>
 
@@ -192,16 +222,20 @@ const GenerateTestForm = () => {
                 <input
                   type="number"
                   value={questionCount}
-                  onChange={(e) => setQuestionCount(Number(e.target.value))}
-                  min={1}
+                  onChange={(e) => {
+                    const val = Number(e.target.value)
+                    if (val >= 5 && val <= 50) setQuestionCount(val)
+                    else if (val < 5) setQuestionCount(5)
+                    else if (val > 50) setQuestionCount(50)
+                  }}
+                  min={5}
                   max={50}
                   className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 />
-                <p className="text-xs text-slate-500">От 1 до 50 вопросов</p>
+                <p className="text-xs text-slate-500">От 5 до 50 вопросов</p>
               </div>
             </div>
 
-            {/* Question Type - только для обычного теста */}
             {activeTab === "normal" && (
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-slate-700">Тип вопроса</label>
@@ -219,7 +253,6 @@ const GenerateTestForm = () => {
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             onClick={handleSubmit}
             disabled={loading || !file}
@@ -242,7 +275,6 @@ const GenerateTestForm = () => {
             )}
           </button>
 
-          {/* Info */}
           <div className="bg-slate-50 rounded-xl p-4">
             <div className="flex gap-3">
               <div className="w-5 h-5 text-slate-400 flex-shrink-0 mt-0.5">

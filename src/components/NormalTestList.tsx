@@ -34,13 +34,10 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty?.toLowerCase()) {
-      case "легкий":
       case "easy":
         return "text-emerald-600 bg-emerald-50"
-      case "средний":
       case "medium":
         return "text-amber-600 bg-amber-50"
-      case "сложный":
       case "hard":
         return "text-red-600 bg-red-50"
       default:

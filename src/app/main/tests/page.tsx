@@ -65,7 +65,7 @@ const TestPage = () => {
   }
 
   const stats = getStats()
-  const difficulties = ["all", "лёгкий", "средний", "сложный"]
+  const difficulties = ["all", "easy", "medium", "hard"]
 
   if (loading) {
     return (

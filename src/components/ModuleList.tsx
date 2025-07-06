@@ -110,13 +110,13 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty?.toLowerCase()) {
-      case "легкий":
+      case "easy":
       case "easy":
         return "text-emerald-600 bg-emerald-50 border-emerald-200"
-      case "средний":
+      case "medium":
       case "medium":
         return "text-amber-600 bg-amber-50 border-amber-200"
-      case "сложный":
+      case "hard":
       case "hard":
         return "text-red-600 bg-red-50 border-red-200"
       default:

@@ -283,34 +283,26 @@ const ProgressOverview = ({ data, isLoading = false }: { data?: ProgressData; is
       )}
 
       {/* Recommendations */}
-      {Array.isArray(data.recommendations) && data.recommendations.length > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-          <div className="p-6 border-b border-slate-100">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                <Zap className="w-5 h-5 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-900">Рекомендации</h3>
-            </div>
-          </div>
-
-          <div className="p-6 space-y-3">
-            {data.recommendations.map((rec, i) => (
-              <div
-                key={i}
-                className="group bg-indigo-50 border border-indigo-200 rounded-xl p-4 hover:shadow-md transition-all duration-200"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-indigo-600">{i + 1}</span>
-                  </div>
-                  <p className="text-sm text-indigo-800 leading-relaxed">{rec}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+    {data.recommendations.map((rec, i) => (
+  <div
+    key={i}
+    className="group bg-indigo-50 border border-indigo-200 rounded-xl p-4 hover:shadow-md transition-all duration-200"
+  >
+    <div className="flex items-start gap-3">
+      <div className="w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+        <span className="text-xs font-bold text-indigo-600">{i + 1}</span>
+      </div>
+      <div>
+        <p className="text-sm text-indigo-800 font-semibold">
+          {rec.topic} ({rec.type})
+        </p>
+        <p className="text-sm text-indigo-800 leading-relaxed whitespace-pre-wrap">
+          {rec.content}
+        </p>
+      </div>
+    </div>
+  </div>
+))}
 
       {/* Motivation */}
       {data.motivation && (
