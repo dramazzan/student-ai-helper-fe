@@ -23,6 +23,5 @@ export interface ProgressData {
   progressPercent: number
   weakTopics: WeakTopic[]
   lowScoreTests: LowScoreTest[]
-  recommendations: Recommendation[] 
   motivation: string 
 }

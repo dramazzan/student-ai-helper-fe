@@ -23,7 +23,6 @@ const ProgressOverview = ({ data, isLoading = false }: { data?: ProgressData; is
     progress: 0,
   })
 
-  // Анимация счетчиков
   useEffect(() => {
     if (data && !isLoading) {
       const duration = 1500
@@ -136,7 +135,6 @@ const ProgressOverview = ({ data, isLoading = false }: { data?: ProgressData; is
 
   return (
     <div className="space-y-6">
-      {/* Main Stats */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
         <div className="p-6 border-b border-slate-100">
           <div className="flex items-center gap-3">
@@ -149,7 +147,6 @@ const ProgressOverview = ({ data, isLoading = false }: { data?: ProgressData; is
 
         <div className="p-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {/* Total Tests */}
             <div className="group bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 hover:shadow-md transition-all duration-200 border border-blue-200">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
@@ -179,7 +176,6 @@ const ProgressOverview = ({ data, isLoading = false }: { data?: ProgressData; is
               <p className="text-sm text-emerald-700 font-medium">Средний балл</p>
             </div>
 
-            {/* Progress */}
             <div className="group bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 hover:shadow-md transition-all duration-200 border border-purple-200">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
@@ -193,7 +189,6 @@ const ProgressOverview = ({ data, isLoading = false }: { data?: ProgressData; is
         </div>
       </div>
 
-      {/* Weak Topics */}
       {Array.isArray(data.weakTopics) && data.weakTopics.length > 0 && (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
           <div className="p-6 border-b border-slate-100">
@@ -235,7 +230,6 @@ const ProgressOverview = ({ data, isLoading = false }: { data?: ProgressData; is
         </div>
       )}
 
-      {/* Low Score Tests */}
       {Array.isArray(data.lowScoreTests) && data.lowScoreTests.length > 0 && (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
           <div className="p-6 border-b border-slate-100">
@@ -281,30 +275,6 @@ const ProgressOverview = ({ data, isLoading = false }: { data?: ProgressData; is
           </div>
         </div>
       )}
-
-      {/* Recommendations */}
-    {data.recommendations.map((rec, i) => (
-  <div
-    key={i}
-    className="group bg-indigo-50 border border-indigo-200 rounded-xl p-4 hover:shadow-md transition-all duration-200"
-  >
-    <div className="flex items-start gap-3">
-      <div className="w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-        <span className="text-xs font-bold text-indigo-600">{i + 1}</span>
-      </div>
-      <div>
-        <p className="text-sm text-indigo-800 font-semibold">
-          {rec.topic} ({rec.type})
-        </p>
-        <p className="text-sm text-indigo-800 leading-relaxed whitespace-pre-wrap">
-          {rec.content}
-        </p>
-      </div>
-    </div>
-  </div>
-))}
-
-      {/* Motivation */}
       {data.motivation && (
         <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-lg">
           <div className="flex items-start gap-4">
