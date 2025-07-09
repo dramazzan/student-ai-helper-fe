@@ -10,6 +10,7 @@ export interface Test {
   questionCount: number
   difficulty: string
   createdAt: string
+  summary?: string
 }
 
 export interface ModuleListProps {
