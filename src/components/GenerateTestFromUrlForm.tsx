@@ -1,152 +1,130 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { generateTestFromUrl } from "@/services/testService";
-import {
-  Link,
-  FileText,
-  Loader2,
-  AlertTriangle,
-  CheckCircle,
-  Settings
-} from "lucide-react";
+import { useState } from "react"
+import { generateTestFromUrl } from "@/services/testService"
+import { Link, FileText, Loader2, AlertTriangle, Globe, Hash, Target, Type } from "lucide-react"
 
 const difficultyLabels: Record<string, string> = {
   easy: "Лёгкий",
   medium: "Средний",
-  hard: "Сложный"
-};
+  hard: "Сложный",
+}
 
 const GenerateTestFromUrlForm = () => {
-  const [url, setUrl] = useState("");
-  const [difficulty, setDifficulty] = useState("medium");
-  const [questionCount, setQuestionCount] = useState(5);
-  const [questionType, setQuestionType] = useState("тест с выбором");
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [url, setUrl] = useState("")
+  const [difficulty, setDifficulty] = useState("medium")
+  const [questionCount, setQuestionCount] = useState(5)
+  const [questionType, setQuestionType] = useState("тест с выбором")
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
   const handleSubmit = async () => {
     if (!url) {
-      setErrorMessage("Введите ссылку на сайт!");
-      return;
+      setErrorMessage("Введите ссылку на сайт!")
+      return
     }
-
     if (questionCount < 5 || questionCount > 50) {
-      setErrorMessage("Количество вопросов должно быть от 5 до 50");
-      return;
+      setErrorMessage("Количество вопросов должно быть от 5 до 50")
+      return
     }
 
-    setLoading(true);
-    setErrorMessage("");
+    setLoading(true)
+    setErrorMessage("")
     try {
       const result = await generateTestFromUrl(url, {
         difficulty,
         questionCount,
-        questionType
-      });
-      console.log("✅ Тест создан из URL:", result);
-      alert("Тест успешно создан!");
+        questionType,
+      })
+      console.log("✅ Тест создан из URL:", result)
+      alert("Тест успешно создан!")
     } catch (err: any) {
-      console.error(err);
-      setErrorMessage(err?.response?.data?.message || "Ошибка при генерации");
+      console.error(err)
+      setErrorMessage(err?.response?.data?.message || "Ошибка при генерации")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-              <Link className="w-5 h-5 text-white" />
-            </div>
-            <h2 className="text-2xl font-semibold text-slate-900">
-              Генерация теста из URL
-            </h2>
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-lg">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl mb-4">
+            <Globe className="w-8 h-8 text-green-600" />
           </div>
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">Генерация теста из URL</h1>
+          <p className="text-slate-600">Создайте тест на основе содержимого веб-страницы</p>
         </div>
 
-        <div className="p-6 space-y-6">
-          {errorMessage && (
-            <div className="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl">
-              <AlertTriangle className="w-5 h-5 mt-1 text-red-500" />
-              <div>
-                <p className="font-medium">Ошибка:</p>
-                <p className="text-sm">{errorMessage}</p>
-              </div>
+        {/* Main Form */}
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+          {/* URL Input Section */}
+          <div className="p-6 border-b border-slate-100">
+            <div className="flex items-center gap-3 mb-4">
+              <Link className="w-5 h-5 text-green-600" />
+              <label className="text-sm font-medium text-slate-900">Ссылка на веб-страницу</label>
             </div>
-          )}
-
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-slate-700">
-              Ссылка на веб-страницу
-            </label>
             <input
               type="url"
               placeholder="https://example.com/article"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-3 bg-slate-50 border-0 rounded-xl text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:bg-white transition-all"
             />
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <Settings className="w-5 h-5 text-slate-600" />
-              <h3 className="text-lg font-semibold text-slate-900">Настройки теста</h3>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-700">Сложность</label>
+          {/* Settings Grid */}
+          <div className="p-6 space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              {/* Difficulty */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Target className="w-4 h-4 text-slate-600" />
+                  <label className="text-sm font-medium text-slate-900">Сложность</label>
+                </div>
                 <select
                   value={difficulty}
                   onChange={(e) => setDifficulty(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border-0 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:bg-white transition-all"
                 >
                   <option value="easy">Лёгкий</option>
                   <option value="medium">Средний</option>
                   <option value="hard">Сложный</option>
                 </select>
-                <div
-                  className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${
-                    difficulty === "easy"
-                      ? "text-emerald-700 bg-emerald-100 border-emerald-200"
-                      : difficulty === "medium"
-                      ? "text-amber-700 bg-amber-100 border-amber-200"
-                      : "text-red-700 bg-red-100 border-red-200"
-                  }`}
-                >
-                  Выбрано: {difficultyLabels[difficulty]}
-                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-700">
-                  Количество вопросов
-                </label>
+              {/* Question Count */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Hash className="w-4 h-4 text-slate-600" />
+                  <label className="text-sm font-medium text-slate-900">Вопросов</label>
+                </div>
                 <input
                   type="number"
                   value={questionCount}
                   onChange={(e) => {
-                    const val = Number(e.target.value);
-                    if (val >= 5 && val <= 50) setQuestionCount(val);
+                    const val = Number(e.target.value)
+                    if (val >= 5 && val <= 50) setQuestionCount(val)
                   }}
                   min={5}
                   max={50}
-                  className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border-0 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:bg-white transition-all"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-700">Тип вопроса</label>
+            {/* Question Type */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Type className="w-4 h-4 text-slate-600" />
+                <label className="text-sm font-medium text-slate-900">Тип вопросов</label>
+              </div>
               <select
                 value={questionType}
                 onChange={(e) => setQuestionType(e.target.value)}
-                className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2.5 bg-slate-50 border-0 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:bg-white transition-all"
               >
                 <option value="тест с выбором">Тест с выбором</option>
                 <option value="открытые">Открытые</option>
@@ -154,29 +132,65 @@ const GenerateTestFromUrlForm = () => {
                 <option value="с несколькими">С несколькими</option>
               </select>
             </div>
+
+            {/* Difficulty Badge */}
+            <div className="flex justify-center">
+              <div
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
+                  difficulty === "easy"
+                    ? "text-green-700 bg-green-100"
+                    : difficulty === "medium"
+                      ? "text-amber-700 bg-amber-100"
+                      : "text-red-700 bg-red-100"
+                }`}
+              >
+                {difficultyLabels[difficulty]} • {questionCount} вопросов
+              </div>
+            </div>
           </div>
 
-          <button
-            onClick={handleSubmit}
-            disabled={loading || !url}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 text-white font-semibold rounded-lg bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-green-400 disabled:cursor-not-allowed transition-all"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                <span>Генерация...</span>
-              </>
-            ) : (
-              <>
-                <FileText className="w-5 h-5" />
-                <span>Сгенерировать тест</span>
-              </>
-            )}
-          </button>
+          {/* Error Message */}
+          {errorMessage && (
+            <div className="mx-6 mb-6">
+              <div className="flex items-start gap-3 bg-red-50 text-red-700 p-4 rounded-xl">
+                <AlertTriangle className="w-5 h-5 mt-0.5 text-red-500 flex-shrink-0" />
+                <div className="text-sm">
+                  <p className="font-medium mb-1">Ошибка</p>
+                  <p>{errorMessage}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Submit Button */}
+          <div className="p-6 pt-0">
+            <button
+              onClick={handleSubmit}
+              disabled={loading || !url}
+              className="w-full flex items-center justify-center gap-3 px-6 py-4 text-white font-semibold rounded-2xl bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-200 disabled:bg-green-300 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>Генерация теста...</span>
+                </>
+              ) : (
+                <>
+                  <FileText className="w-5 h-5" />
+                  <span>Сгенерировать тест</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Footer Info */}
+        <div className="text-center mt-6">
+          <p className="text-xs text-slate-500">Поддерживаются статьи, блоги и образовательные материалы</p>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default GenerateTestFromUrlForm;
+export default GenerateTestFromUrlForm
