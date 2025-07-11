@@ -190,3 +190,19 @@ export const downloadTestDocx = async (testId: string) => {
     throw error
   }
 }
+
+
+export async function generateTestFromUrl(
+  url: string,
+  options: {
+    difficulty?: string;
+    questionCount?: number;
+    questionType?: string;
+  }
+) {
+  const res = await api.post("/generate-test/from-url", {
+    url,
+    ...options
+  });
+  return res.data;
+}

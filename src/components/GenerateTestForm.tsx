@@ -50,17 +50,34 @@ const GenerateTestForm = () => {
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFile = e.dataTransfer.files[0]
-      if (droppedFile.type === "application/pdf" || droppedFile.name.endsWith(".docx")) {
+      if (
+        droppedFile.type === "application/pdf" ||
+        droppedFile.name.endsWith(".docx") ||
+        droppedFile.name.endsWith(".pptx") ||
+        droppedFile.type === "text/plain" ||
+        droppedFile.name.endsWith(".txt")
+      ) {
         setFile(droppedFile)
       } else {
-        setErrorMessage("Пожалуйста, выберите файл PDF или DOCX")
+        setErrorMessage("Пожалуйста, выберите файл PDF, DOCX, PPTX или TXT")
       }
     }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
-      setFile(e.target.files[0])
+      const selected = e.target.files[0]
+      if (
+        selected.type === "application/pdf" ||
+        selected.name.endsWith(".docx") ||
+        selected.name.endsWith(".pptx") ||
+        selected.type === "text/plain" ||
+        selected.name.endsWith(".txt")
+      ) {
+        setFile(selected)
+      } else {
+        setErrorMessage("Пожалуйста, выберите файл PDF, DOCX, PPTX или TXT")
+      }
     }
   }
 
@@ -168,7 +185,7 @@ const GenerateTestForm = () => {
             >
               <input
                 type="file"
-                accept=".pdf,.docx"
+                accept=".pdf,.docx,.pptx,.txt"
                 onChange={handleFileChange}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
@@ -185,7 +202,7 @@ const GenerateTestForm = () => {
                   <div>
                     <Upload className="w-12 h-12 text-slate-400 mx-auto mb-3" />
                     <p className="text-slate-900 font-medium mb-1">Перетащите файл сюда или нажмите для выбора</p>
-                    <p className="text-sm text-slate-500">Поддерживаются форматы PDF и DOCX</p>
+                    <p className="text-sm text-slate-500">Поддерживаются форматы PDF, DOCX, PPTX и TXT</p>
                   </div>
                 )}
               </div>
@@ -291,7 +308,7 @@ const GenerateTestForm = () => {
                 <ul className="space-y-1 text-xs">
                   <li>• Обычный тест создает один тест с заданными параметрами</li>
                   <li>• Мульти тест создает несколько тестов разной сложности</li>
-                  <li>• Поддерживаются файлы PDF и DOCX размером до 10 МБ</li>
+                  <li>• Поддерживаются файлы PDF, DOCX, PPTX и TXT размером до 100 МБ</li>
                 </ul>
               </div>
             </div>
