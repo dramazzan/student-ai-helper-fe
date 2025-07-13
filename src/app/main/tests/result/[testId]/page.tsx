@@ -1,12 +1,14 @@
-import React from 'react'
-const TestProgressHistory = React.lazy(() => import('@/components/TestProgressHistory'))
+import React from "react";
+const TestProgressHistory = React.lazy(
+  () => import("@/components/passing/TestProgressHistory")
+);
 
 const TestResultHistory = () => {
   return (
     <div>
-        <TestProgressHistory />
+      <TestProgressHistory />
     </div>
-  )
-}
+  );
+};
 
-export default TestResultHistory
+export default TestResultHistory;

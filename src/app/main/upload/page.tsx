@@ -1,5 +1,5 @@
 import React from 'react'
-const TestDownloadList = React.lazy(() => import('@/components/TestDownloadList'))
+const TestDownloadList = React.lazy(() => import('@/components/fetching/TestDownloadList'))
 
 const UploadPage = () => {
   return (

@@ -1,12 +1,12 @@
-import React from 'react'
-import TestProgressHistory from '@/components/TestProgressHistory'
+import React from "react";
+import TestProgressHistory from "@/components/passing/TestProgressHistory";
 
 const TestHistoryPage = () => {
   return (
     <div>
-        <TestProgressHistory />
+      <TestProgressHistory />
     </div>
-  )
-}
+  );
+};
 
-export default TestHistoryPage
+export default TestHistoryPage;

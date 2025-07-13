@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import GenerateTestForm from "@/components/GenerateTestForm"
-import GenerateTestFromUrlForm from "@/components/GenerateTestFromUrlForm"
+import GenerateTestForm from "@/components/generation/GenerateTestForm"
+import GenerateTestFromUrlForm from "@/components/generation/GenerateTestFromUrlForm"
 import { FileText, Globe, Sparkles } from "lucide-react"
 import Link from "next/link"
 
