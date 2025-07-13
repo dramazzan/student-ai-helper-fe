@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { generateTestFromUrl } from "@/services/testService/generationService"
 import { Link, FileText, Loader2, AlertTriangle, Globe, Hash, Target, Type } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 const difficultyLabels: Record<string, string> = {
   easy: "Лёгкий",
@@ -17,6 +18,7 @@ const GenerateTestFromUrlForm = () => {
   const [questionType, setQuestionType] = useState("тест с выбором")
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
+  const router = useRouter()
 
   const handleSubmit = async () => {
     if (!url) {
@@ -38,6 +40,7 @@ const GenerateTestFromUrlForm = () => {
       })
       console.log("✅ Тест создан из URL:", result)
       alert("Тест успешно создан!")
+      router.push("/main/tests")
     } catch (err: any) {
       console.error(err)
       setErrorMessage(err?.response?.data?.message || "Ошибка при генерации")

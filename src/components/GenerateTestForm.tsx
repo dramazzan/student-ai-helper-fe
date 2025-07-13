@@ -21,7 +21,7 @@ const difficultyLabels: Record<string, string> = {
   medium: "Средний",
   hard: "Сложный",
 }
-
+import { useRouter } from "next/navigation"
 
 const GenerateTestForm = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -32,6 +32,7 @@ const GenerateTestForm = () => {
   const [activeTab, setActiveTab] = useState<"normal" | "multi">("normal")
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
+  const router = useRouter()
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
@@ -104,6 +105,7 @@ const GenerateTestForm = () => {
         console.log("✅ Мульти тесты созданы:", result)
       }
       alert("Тест(ы) успешно созданы!")
+      router.push("/main/tests")
     } catch (err: any) {
       console.error(err)
       setErrorMessage(err?.response?.data?.message || "Ошибка при генерации")
