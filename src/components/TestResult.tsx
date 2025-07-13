@@ -16,7 +16,7 @@ import {
   AlertCircle,
   Sparkles,
 } from "lucide-react"
-import { getTestResult } from "@/services/testService"
+import { getTestResult } from "@/services/testService/passingService"
 import { TestResultData } from "@/models/Test"
 
 const TestResult = () => {

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { CheckCircle, Clock, Send, Loader2, AlertCircle, ChevronLeft, ChevronRight, BookOpen } from "lucide-react"
 import { useTest } from "@/hooks/useTest"
-import { submitTestAnswers } from "@/services/testService"
+import { submitTestAnswers } from "@/services/testService/passingService"
 
 const TestTakingForm = () => {
   const { testId } = useParams() as { testId: string }

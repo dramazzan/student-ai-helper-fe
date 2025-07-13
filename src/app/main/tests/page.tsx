@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
-import { fetchNormalTests, fetchTestModule } from "@/services/testService"
+import { fetchNormalTests, fetchTestModule } from "@/services/testService/fetchService"
 import ModuleList from "@/components/ModuleList"
 import NormalTestList from "@/components/NormalTestList"
 import { BookOpen, Layers, Search, Filter, FileText, TrendingUp, Target, BarChart3 } from "lucide-react"

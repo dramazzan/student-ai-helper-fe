@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getTestById } from '@/services/testService'
+import { getTestById } from '@/services/testService/fetchService'
 
 export const useTest = (testId: string) => {
   const [test, setTest] = useState<any>(null)

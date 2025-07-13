@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { generateTestFromUrl } from "@/services/testService"
+import { generateTestFromUrl } from "@/services/testService/generationService"
 import { Link, FileText, Loader2, AlertTriangle, Globe, Hash, Target, Type } from "lucide-react"
 
 const difficultyLabels: Record<string, string> = {

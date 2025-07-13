@@ -3,7 +3,7 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Clock, BookOpen, TrendingUp, Play, History, Award, FileText, ChevronDown, ChevronUp } from "lucide-react"
-import { getTestProgressByTestId } from "@/services/testService"
+import { getTestProgressByTestId } from "@/services/testService/passingService"
 import type { TestTabsProps } from "@/models/Test"
 
 const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {

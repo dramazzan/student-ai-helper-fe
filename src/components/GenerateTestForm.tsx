@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { generateTest, generateMultiTest } from "@/services/testService"
+import { generateTest, generateMultiTest } from "@/services/testService/generationService"
 import {
   UploadCloud,
   FileText,
@@ -21,6 +21,7 @@ const difficultyLabels: Record<string, string> = {
   medium: "Средний",
   hard: "Сложный",
 }
+
 
 const GenerateTestForm = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -97,6 +98,7 @@ const GenerateTestForm = () => {
       if (activeTab === "normal") {
         const result = await generateTest(file, { difficulty, questionCount, questionType })
         console.log("✅ Обычный тест создан:", result)
+        
       } else {
         const result = await generateMultiTest(file, { difficulty, questionCount })
         console.log("✅ Мульти тесты созданы:", result)

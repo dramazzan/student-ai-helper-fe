@@ -15,7 +15,7 @@ import {
   ChevronDown,
   ChevronRight,
 } from "lucide-react"
-import { getTestProgressByTestId } from "@/services/testService"
+import { getTestProgressByTestId } from "@/services/testService/passingService"
 import { TestProgress, Attempt } from "@/models/ProgressHistory"
 
 

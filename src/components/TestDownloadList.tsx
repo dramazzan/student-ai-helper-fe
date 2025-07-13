@@ -16,8 +16,8 @@ import {
   fetchNormalTests,
   fetchMultiTests,
   getTestById,
-  downloadTestFile,
-} from "@/services/testService";
+} from "@/services/testService/fetchService";
+import { downloadTestFile } from "@/services/testService/downloadService";
 import type { TestDownloadListProps } from "@/models/Test";
 
 const TestDownloadList = () => {

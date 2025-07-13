@@ -15,7 +15,8 @@ import {
   Loader2,
   ChevronUp,
 } from "lucide-react"
-import { fetchTestsByModule, fetchModuleProgress, getTestProgressByTestId } from "@/services/testService"
+import { fetchTestsByModule } from "@/services/testService/fetchService"
+import { fetchModuleProgress, getTestProgressByTestId } from "@/services/testService/passingService"
 import type { ModuleListProps, TestProgressInfo } from "@/models/Test"
 
 const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
