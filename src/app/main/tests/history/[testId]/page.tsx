@@ -1,5 +1,5 @@
 import React from "react";
-import TestProgressHistory from "@/components/passing/TestProgressHistory";
+import TestProgressHistory from "@/components/TestProgressHistory";
 
 const TestHistoryPage = () => {
   return (

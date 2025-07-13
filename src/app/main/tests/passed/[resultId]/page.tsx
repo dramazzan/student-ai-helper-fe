@@ -1,5 +1,5 @@
 import React from 'react'
-const TestResult = React.lazy(() => import('@/components/passing/TestResult'))
+const TestResult = React.lazy(() => import('@/components/TestResult'))
 
 const ResultPage = () => {
   return (

@@ -1,5 +1,5 @@
 import React from 'react'
-import TestTakingForm from '@/components/passing/TestTakingForm'
+import TestTakingForm from '@/components/TestTakingForm'
 
 const TestPassingPage = () => {
   return (
