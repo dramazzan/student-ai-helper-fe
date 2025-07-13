@@ -170,26 +170,42 @@ export const getTestResult = async (testId: string) => {
   }
 }
 
-export const downloadTestDocx = async (testId: string) => {
-  try {
-    const response = await api.get(`/tests/${testId}/download`, {
-      responseType: 'blob', 
-    })
+// export const downloadTestDocx = async (testId: string) => {
+//   try {
+//     const response = await api.get(`/tests/${testId}/download/docx`, {
+//       responseType: 'blob', 
+//     })
 
-    const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
-    const url = window.URL.createObjectURL(blob)
+//     const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
+//     const url = window.URL.createObjectURL(blob)
 
-    const link = document.createElement('a')
-    link.href = url
-    link.setAttribute('download', `test-${testId}.docx`)
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-  } catch (error) {
-    console.error('Ошибка при скачивании теста:', error)
-    throw error
-  }
+//     const link = document.createElement('a')
+//     link.href = url
+//     link.setAttribute('download', `test-${testId}.docx`)
+//     document.body.appendChild(link)
+//     link.click()
+//     link.remove()
+//   } catch (error) {
+//     console.error('Ошибка при скачивании теста:', error)
+//     throw error
+//   }
+// }
+
+
+export const downloadTestFile = async (testId: string, format: 'pdf' | 'docx' | 'gift' | 'qti' | 'moodlexml' | 'csv') => {
+  const response = await api.get(`/tests/${testId}/download/${format}`, {
+    responseType: 'blob',
+  })
+
+  const url = window.URL.createObjectURL(new Blob([response.data]))
+  const link = document.createElement('a')
+  link.href = url
+  link.setAttribute('download', `test-${testId}.${format}`)
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
 }
+
 
 
 export async function generateTestFromUrl(
