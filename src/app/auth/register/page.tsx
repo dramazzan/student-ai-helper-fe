@@ -103,10 +103,8 @@ const RegisterPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
-      {/* Left Side - Features */}
       <div className="hidden lg:flex lg:w-1/2 bg-white border-r border-slate-200 p-12">
         <div className="flex flex-col justify-center max-w-lg mx-auto">
-          {/* Logo */}
           <div className="flex items-center gap-3 mb-12">
             <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
               <Brain className="w-6 h-6 text-white" />
@@ -161,10 +159,8 @@ const RegisterPage = () => {
         </div>
       </div>
 
-      {/* Right Side - Register Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
-          {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
               <Brain className="w-5 h-5 text-white" />
@@ -198,7 +194,6 @@ const RegisterPage = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Name Field */}
                 <div className="space-y-2">
                   <label htmlFor="name" className="block text-sm font-medium text-slate-900">
                     Полное имя
@@ -219,7 +214,6 @@ const RegisterPage = () => {
                   </div>
                 </div>
 
-                {/* Email Field */}
                 <div className="space-y-2">
                   <label htmlFor="email" className="block text-sm font-medium text-slate-900">
                     Email адрес
@@ -239,8 +233,6 @@ const RegisterPage = () => {
                     />
                   </div>
                 </div>
-
-                {/* Password Field */}
                 <div className="space-y-2">
                   <label htmlFor="password" className="block text-sm font-medium text-slate-900">
                     Пароль
@@ -273,7 +265,6 @@ const RegisterPage = () => {
                   </div>
                 </div>
 
-                {/* Confirm Password Field */}
                 <div className="space-y-2">
                   <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-900">
                     Подтвердите пароль
@@ -306,7 +297,6 @@ const RegisterPage = () => {
                   </div>
                 </div>
 
-                {/* Error Message */}
                 {error && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                     <div className="flex items-center gap-3">
@@ -316,7 +306,6 @@ const RegisterPage = () => {
                   </div>
                 )}
 
-                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={loading}
@@ -335,7 +324,6 @@ const RegisterPage = () => {
                   )}
                 </button>
 
-                {/* Terms */}
                 <div className="text-center">
                   <p className="text-xs text-slate-600">
                     Создавая аккаунт, вы соглашаетесь с{" "}
@@ -346,7 +334,6 @@ const RegisterPage = () => {
               </form>
             )}
 
-            {/* Security Indicator */}
             {!success && (
               <div className="mt-6 pt-6 border-t border-slate-200">
                 <div className="flex items-center justify-center gap-2 text-sm text-slate-600">
@@ -357,7 +344,6 @@ const RegisterPage = () => {
             )}
           </div>
 
-          {/* Mobile Features */}
           <div className="lg:hidden mt-8 bg-white rounded-xl border border-slate-200 p-6">
             <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
               <ArrowRight className="w-4 h-4 text-blue-600" />
@@ -378,7 +364,6 @@ const RegisterPage = () => {
             </div>
           </div>
 
-          {/* Login Link */}
           {!success && (
             <div className="mt-6 text-center">
               <p className="text-sm text-slate-600">

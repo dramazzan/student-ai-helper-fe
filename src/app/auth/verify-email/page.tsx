@@ -100,7 +100,6 @@ const VerifyPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-8">
           <div className="relative">
             <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
@@ -116,9 +115,7 @@ const VerifyPage = () => {
           </div>
         </div>
 
-        {/* Main Card */}
         <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
-          {/* Header with gradient */}
           <div className={`bg-gradient-to-r ${config.bgClass} border-b ${config.borderClass} p-8 text-center`}>
             <div className="flex justify-center mb-4">
               <div className={`p-4 bg-white rounded-full shadow-lg ${config.borderClass} border-2`}>
@@ -129,12 +126,10 @@ const VerifyPage = () => {
             <p className="text-slate-700 font-medium">{config.subtitle}</p>
           </div>
 
-          {/* Content */}
           <div className="p-8">
             <div className="text-center space-y-6">
               <p className="text-slate-600 leading-relaxed">{config.description}</p>
 
-              {/* Loading State */}
               {status === "loading" && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-center gap-2 text-blue-600">
@@ -147,7 +142,6 @@ const VerifyPage = () => {
                 </div>
               )}
 
-              {/* Success State */}
               {status === "success" && (
                 <div className="space-y-6">
                   <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
@@ -182,7 +176,6 @@ const VerifyPage = () => {
                 </div>
               )}
 
-              {/* Error State */}
               {status === "error" && (
                 <div className="space-y-6">
                   <div className="bg-red-50 border border-red-200 rounded-xl p-4">
@@ -220,7 +213,6 @@ const VerifyPage = () => {
             </div>
           </div>
 
-          {/* Footer */}
           <div className="bg-slate-50 px-8 py-4 border-t border-slate-200">
             <div className="flex items-center justify-center gap-2 text-sm text-slate-600">
               <Mail className="w-4 h-4" />
@@ -229,7 +221,6 @@ const VerifyPage = () => {
           </div>
         </div>
 
-        {/* Additional Info */}
         <div className="mt-6 text-center">
           <p className="text-sm text-slate-500">
             Не получили письмо?{" "}
