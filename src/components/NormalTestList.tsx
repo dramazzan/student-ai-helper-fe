@@ -89,13 +89,11 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div>
         <h2 className="text-2xl font-semibold text-slate-900 mb-2">Обычные тесты</h2>
         <p className="text-slate-600">Индивидуальные тесты по темам</p>
       </div>
 
-      {/* Tests */}
       <div className="space-y-6">
         {normalTests.map((test, index) => {
           const bestScore = progressMap[test._id]
@@ -104,7 +102,6 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
 
           return (
             <div key={test._id} className="group">
-              {/* Test Header */}
               <div className="flex items-start justify-between gap-6 py-4 hover:bg-slate-50 rounded-lg px-4 -mx-4 transition-colors">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-3">
@@ -137,7 +134,6 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
                     </div>
                   )}
 
-                  {/* Progress Bar */}
                   {hasProgress && (
                     <div className="w-full bg-slate-200 rounded-full h-1">
                       <div
@@ -148,7 +144,6 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
                   )}
                 </div>
 
-                {/* Actions */}
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <button
                     onClick={() => router.push(`/main/tests/passing/${test._id}`)}
@@ -170,7 +165,6 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
                 </div>
               </div>
 
-              {/* Summary */}
               {test.summary && (
                 <div className="ml-4 mt-2">
                   <button
@@ -190,7 +184,6 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
                 </div>
               )}
 
-              {/* Divider */}
               {index < normalTests.length - 1 && <div className="border-b border-slate-100 mt-6" />}
             </div>
           )

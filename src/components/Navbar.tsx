@@ -57,7 +57,6 @@ const Navbar = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
@@ -75,7 +74,6 @@ const Navbar = () => {
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-1">
               {navItems.map((item) => {
                 const Icon = item.icon
@@ -104,7 +102,6 @@ const Navbar = () => {
                 )
               })}
 
-              {/* Logout Button */}
               <div className="ml-4 pl-4 border-l border-slate-200">
                 <Link
                   href="/auth/login"
@@ -116,7 +113,6 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* Mobile menu button */}
             <button
               onClick={toggleMobileMenu}
               className="md:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all duration-200"
@@ -126,7 +122,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         <div
           className={`md:hidden transition-all duration-300 ease-in-out ${
             isMobileMenuOpen ? "max-h-96 opacity-100 border-t border-slate-200" : "max-h-0 opacity-0 overflow-hidden"
@@ -169,10 +164,8 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Spacer to prevent content from hiding behind fixed navbar */}
       <div className="h-16" />
 
-      {/* Mobile menu overlay */}
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-20 z-40 md:hidden"
