@@ -12,7 +12,6 @@ const GeneratePage = () => {
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-4xl mx-auto px-6 py-12">
-        {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium mb-4">
             <Sparkles className="w-4 h-4" />
@@ -22,9 +21,7 @@ const GeneratePage = () => {
           <p className="text-slate-600 max-w-2xl mx-auto">Выберите способ создания теста: из текста или веб-страницы</p>
         </div>
 
-        {/* Tabs */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          {/* Tab Headers */}
           <div className="flex border-b border-slate-200">
             <button
               onClick={() => setActiveTab("text")}
@@ -50,7 +47,6 @@ const GeneratePage = () => {
             </button>
           </div>
 
-          {/* Tab Content */}
           <div className="p-8">
             {activeTab === "text" && (
               <div className="space-y-6">
@@ -76,7 +72,6 @@ const GeneratePage = () => {
           </div>
         </div>
 
-        {/* Quick Tips */}
         <div className="mt-8 bg-white rounded-xl border border-slate-200 p-6">
           <h3 className="font-semibold text-slate-900 mb-4">Советы для лучших результатов</h3>
           <div className="grid md:grid-cols-2 gap-4 text-sm text-slate-600">
@@ -99,7 +94,6 @@ const GeneratePage = () => {
           </div>
         </div>
 
-        {/* CTA */}
         <div className="mt-8 text-center">
           <p className="text-slate-600 mb-4">Готовы посмотреть созданные тесты?</p>
           <Link
