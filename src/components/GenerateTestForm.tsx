@@ -117,7 +117,6 @@ const GenerateTestForm = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4">
             <UploadCloud className="w-8 h-8 text-blue-600" />
@@ -126,9 +125,7 @@ const GenerateTestForm = () => {
           <p className="text-slate-600">Загрузите документ и создайте тест на основе его содержимого</p>
         </div>
 
-        {/* Main Form */}
         <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-          {/* Test Type Tabs */}
           <div className="p-6 border-b border-slate-100">
             <div className="flex bg-slate-50 rounded-xl p-1">
               <button
@@ -152,7 +149,6 @@ const GenerateTestForm = () => {
             </div>
           </div>
 
-          {/* File Upload Section */}
           <div className="p-6 border-b border-slate-100">
             <div className="flex items-center gap-3 mb-4">
               <Upload className="w-5 h-5 text-slate-600" />
@@ -197,10 +193,8 @@ const GenerateTestForm = () => {
             </div>
           </div>
 
-          {/* Settings */}
           <div className="p-6 space-y-6">
             <div className="grid grid-cols-2 gap-4">
-              {/* Difficulty */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <Target className="w-4 h-4 text-slate-600" />
@@ -217,7 +211,6 @@ const GenerateTestForm = () => {
                 </select>
               </div>
 
-              {/* Question Count */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <Hash className="w-4 h-4 text-slate-600" />
@@ -237,7 +230,6 @@ const GenerateTestForm = () => {
               </div>
             </div>
 
-            {/* Question Type (only for normal test) */}
             {activeTab === "normal" && (
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
@@ -257,7 +249,6 @@ const GenerateTestForm = () => {
               </div>
             )}
 
-            {/* Settings Badge */}
             <div className="flex justify-center">
               <div
                 className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
@@ -273,7 +264,6 @@ const GenerateTestForm = () => {
             </div>
           </div>
 
-          {/* Error Message */}
           {errorMessage && (
             <div className="mx-6 mb-6">
               <div className="flex items-start gap-3 bg-red-50 text-red-700 p-4 rounded-xl">
@@ -286,7 +276,6 @@ const GenerateTestForm = () => {
             </div>
           )}
 
-          {/* Submit Button */}
           <div className="p-6 pt-0">
             <button
               onClick={handleSubmit}
@@ -312,7 +301,6 @@ const GenerateTestForm = () => {
           </div>
         </div>
 
-        {/* Footer Info */}
         <div className="text-center mt-6">
           <p className="text-xs text-slate-500">
             {activeTab === "normal"
