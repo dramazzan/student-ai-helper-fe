@@ -16,7 +16,6 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
   const [animatedAverage, setAnimatedAverage] = useState(0)
   const [animatedTests, setAnimatedTests] = useState(0)
 
-  // Простая анимация значений
   useEffect(() => {
     if (isLoading) return
 
@@ -42,12 +41,11 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
     return () => clearInterval(interval)
   }, [average, testsTaken, isLoading])
 
-  // Простая цветовая схема
   const getColor = (score: number) => {
-    if (score >= 80) return "#10b981" // emerald-500
-    if (score >= 60) return "#f59e0b" // amber-500
-    if (score >= 40) return "#f97316" // orange-500
-    return "#ef4444" // red-500
+    if (score >= 80) return "#10b981" 
+    if (score >= 60) return "#f59e0b" 
+    if (score >= 40) return "#f97316"
+    return "#ef4444" 
   }
 
   const getTextColor = (score: number) => {
@@ -110,11 +108,9 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
 
   return (
     <div className="flex flex-col items-center space-y-6">
-      {/* Chart Container */}
       <div className={`relative p-6 rounded-2xl border-2 ${getBgColor(animatedAverage)} shadow-lg`}>
         <div className="relative w-48 h-48">
           <Doughnut data={data} options={options} />
-          {/* Center Text */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
               <div className={`text-3xl font-bold ${getTextColor(animatedAverage)}`}>{animatedAverage}%</div>
@@ -124,7 +120,6 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
         </div>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 gap-4 w-full max-w-sm">
         <div className={`rounded-xl p-4 border-2 ${getBgColor(animatedAverage)}`}>
           <div className="flex items-center gap-2 mb-2">
@@ -151,7 +146,6 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
         </div>
       </div>
 
-      {/* Progress Bar */}
       <div className="w-full max-w-sm">
         <div className="flex justify-between text-xs text-slate-600 mb-2">
           <span>До отличного результата</span>
