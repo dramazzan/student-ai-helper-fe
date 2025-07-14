@@ -134,13 +134,11 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div>
         <h2 className="text-2xl font-semibold text-slate-900 mb-2">Модули</h2>
         <p className="text-slate-600">Коллекции тестов по темам</p>
       </div>
 
-      {/* Modules */}
       <div className="space-y-6">
         {modules.map((module) => {
           const isExpanded = selectedModuleId === module._id
@@ -149,7 +147,6 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
 
           return (
             <div key={module._id} className="group">
-              {/* Module Header */}
               <div
                 className="flex items-center justify-between py-4 cursor-pointer hover:bg-slate-50 rounded-lg px-4 -mx-4 transition-colors"
                 onClick={() => handleModuleClick(module._id)}
@@ -176,7 +173,6 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
                   </div>
                 </div>
 
-                {/* Progress */}
                 <div className="flex-shrink-0 w-24">
                   {isProgressLoading ? (
                     <div className="flex items-center gap-2 text-slate-400">
@@ -197,7 +193,6 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
                 </div>
               </div>
 
-              {/* Tests */}
               {isExpanded && (
                 <div className="ml-9 mt-4 space-y-4">
                   {loading ? (
@@ -217,7 +212,6 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
 
                       return (
                         <div key={test._id} className="group/test">
-                          {/* Test Header */}
                           <div className="flex items-start justify-between gap-4 py-3">
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-2">
@@ -248,7 +242,6 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
                               )}
                             </div>
 
-                            {/* Actions */}
                             <div className="flex items-center gap-2 flex-shrink-0">
                               <button
                                 onClick={() => router.push(`/main/tests/passing/${test._id}`)}
@@ -270,7 +263,6 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
                             </div>
                           </div>
 
-                          {/* Summary */}
                           {test.summary && (
                             <div className="mt-3">
                               <button
@@ -290,7 +282,6 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
                             </div>
                           )}
 
-                          {/* Divider */}
                           {tests.indexOf(test) < tests.length - 1 && <div className="border-b border-slate-100 mt-4" />}
                         </div>
                       )
