@@ -70,7 +70,6 @@ const TestPage = () => {
   if (loading) {
     return (
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        {/* Header Skeleton */}
         <div className="bg-white rounded-xl border border-slate-200 p-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-8 bg-slate-200 rounded-lg animate-pulse" />
@@ -89,7 +88,6 @@ const TestPage = () => {
           </div>
         </div>
 
-        {/* Content Skeleton */}
         <div className="bg-white rounded-xl border border-slate-200 p-6">
           <div className="flex gap-4 mb-6">
             <div className="h-10 bg-slate-200 rounded-lg w-32 animate-pulse" />
@@ -107,7 +105,6 @@ const TestPage = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      {/* Header */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-6">
@@ -120,7 +117,6 @@ const TestPage = () => {
             </div>
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
               <div className="flex items-center gap-2 mb-2">
@@ -157,9 +153,7 @@ const TestPage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm">
-        {/* Tabs */}
         <div className="border-b border-slate-200">
           <div className="flex">
             <button
@@ -193,11 +187,9 @@ const TestPage = () => {
           </div>
         </div>
 
-        {/* Filters */}
         {activeTab === "normal" && (
           <div className="p-6 border-b border-slate-200 bg-slate-50">
             <div className="flex flex-col sm:flex-row gap-4">
-              {/* Search */}
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
@@ -209,7 +201,6 @@ const TestPage = () => {
                 />
               </div>
 
-              {/* Difficulty Filter */}
               <div className="relative">
                 <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <select
@@ -228,7 +219,6 @@ const TestPage = () => {
           </div>
         )}
 
-        {/* Content */}
         <div className="p-6">
           {activeTab === "normal" ? (
             filteredNormalTests.length > 0 ? (
@@ -274,7 +264,6 @@ const TestPage = () => {
         </div>
       </div>
 
-      {/* Tips */}
       {(normalTests.length > 0 || modules.length > 0) && (
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
           <h3 className="font-semibold text-slate-900 mb-3">💡 Советы по использованию</h3>
