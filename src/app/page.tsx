@@ -25,10 +25,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
       <div className="max-w-4xl mx-auto px-6 py-20">
         <div className="text-center space-y-8">
-          {/* Logo */}
           <div className="flex justify-center">
             <div className="relative">
               <div className="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
@@ -40,7 +38,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Heading */}
           <div className="space-y-4">
             <h1 className="text-4xl md:text-6xl font-bold text-slate-900 leading-tight">
               Student AI
@@ -51,7 +48,6 @@ export default function Home() {
             </p>
           </div>
 
-          {/* CTA Button */}
           <div className="pt-4">
             <button
               onClick={() => router.push("/main/dashboard")}
@@ -63,7 +59,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Features */}
         <div className="mt-24">
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold text-slate-900 mb-3">Возможности платформы</h2>
@@ -89,7 +84,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="mt-20 bg-slate-50 rounded-2xl p-8 border border-slate-200">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
@@ -107,7 +101,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Bottom CTA */}
         <div className="mt-20 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium mb-6">
             <Zap className="w-4 h-4" />

@@ -42,14 +42,12 @@ const TestPage = () => {
     loadData()
   }, [])
 
-  // Фильтрация тестов
   const filteredNormalTests = normalTests.filter((test) => {
     const matchesSearch = test.title.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesDifficulty = selectedDifficulty === "all" || test.difficulty === selectedDifficulty
     return matchesSearch && matchesDifficulty
   })
 
-  // Статистика
   const getStats = () => {
     const totalNormal = normalTests.length
     const totalModules = modules.length
