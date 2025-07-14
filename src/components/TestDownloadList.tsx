@@ -192,7 +192,6 @@ const TestDownloadList = () => {
                       </div>
                     </div>
 
-                    {/* Правая часть - выпадающее меню для формата */}
                     <div className="relative dropdown-container">
                       <button
                         className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold rounded-xl shadow-lg transition-all duration-200"
@@ -262,7 +261,6 @@ const TestDownloadList = () => {
                               <span>Скачать как PDF</span>
                             </div>
                           </button>
-                          {/* GIFT */}
                           <button
                             className="block w-full text-left px-4 py-3 text-sm text-slate-700 hover:bg-slate-100 font-medium border-b border-slate-100"
                             onClick={(e) => {
@@ -277,7 +275,6 @@ const TestDownloadList = () => {
                             </div>
                           </button>
 
-                          {/* QTI */}
                           <button
                             className="block w-full text-left px-4 py-3 text-sm text-slate-700 hover:bg-slate-100 font-medium border-b border-slate-100"
                             onClick={(e) => {
@@ -292,7 +289,6 @@ const TestDownloadList = () => {
                             </div>
                           </button>
 
-                          {/* Moodle XML */}
                           <button
                             className="block w-full text-left px-4 py-3 text-sm text-slate-700 hover:bg-slate-100 font-medium border-b border-slate-100"
                             onClick={(e) => {
@@ -307,7 +303,6 @@ const TestDownloadList = () => {
                             </div>
                           </button>
 
-                          {/* CSV */}
                           <button
                             className="block w-full text-left px-4 py-3 text-sm text-slate-700 hover:bg-slate-100 font-medium"
                             onClick={(e) => {
@@ -326,7 +321,6 @@ const TestDownloadList = () => {
                     </div>
                   </div>
 
-                  {/* Отображение содержимого теста */}
                   {isSelected && (
                     <div className="border-t border-slate-100 bg-gradient-to-br from-slate-50 to-white">
                       <div className="p-8">

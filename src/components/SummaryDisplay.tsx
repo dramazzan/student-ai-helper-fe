@@ -107,7 +107,6 @@ const SummaryDisplay = ({ summary }: SummaryDisplayProps) => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      {/* Header */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
           <div className="flex items-center justify-between">
@@ -175,7 +174,6 @@ const SummaryDisplay = ({ summary }: SummaryDisplayProps) => {
         </div>
       </div>
 
-      {/* Sections */}
       <div className="space-y-4">
         {sections.map((section, index) => {
           const Icon = section.icon
@@ -239,7 +237,6 @@ const SummaryDisplay = ({ summary }: SummaryDisplayProps) => {
         })}
       </div>
 
-      {/* Footer */}
       <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl p-6 border border-slate-200">
         <div className="text-center">
           <h3 className="text-lg font-semibold text-slate-900 mb-2">💡 Конспект готов к изучению!</h3>

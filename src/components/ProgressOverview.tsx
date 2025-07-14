@@ -189,7 +189,6 @@ const ProgressOverview = ({
               </p>
             </div>
 
-            {/* Average Score */}
             <div className="group bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-6 hover:shadow-md transition-all duration-200 border border-emerald-200">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">

@@ -133,7 +133,6 @@ const TestProgressHistory = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      {/* Header */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
         <div className="p-6 border-b border-slate-100">
           <div className="flex items-center gap-3 mb-4">
@@ -146,7 +145,6 @@ const TestProgressHistory = () => {
             </div>
           </div>
 
-          {/* Statistics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-slate-50 rounded-xl p-4">
               <div className="flex items-center gap-3">
@@ -187,7 +185,6 @@ const TestProgressHistory = () => {
         </div>
       </div>
 
-      {/* Attempts List */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
         <div className="p-6 border-b border-slate-100">
           <h2 className="text-lg font-semibold text-slate-900">Все попытки</h2>
@@ -250,7 +247,6 @@ const TestProgressHistory = () => {
                   </div>
                 </div>
 
-                {/* Progress Bar */}
                 <div className="mt-4">
                   <div className="w-full bg-slate-100 rounded-full h-2">
                     <div
@@ -265,7 +261,6 @@ const TestProgressHistory = () => {
         </div>
       </div>
 
-      {/* Detailed Results */}
       {selectedAttempt && (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
           <div className="p-6 border-b border-slate-100">
