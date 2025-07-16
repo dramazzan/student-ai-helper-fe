@@ -39,6 +39,10 @@ interface SummaryState {
   [testId: string]: boolean
 }
 
+interface ModuleTestCount {
+  [moduleId: string]: number
+}
+
 interface ModuleTest {
   _id: string
   title: string
@@ -299,6 +303,8 @@ const ModuleCard: React.FC<{
   testsLoading: boolean
   testProgressMap: TestProgressMap
   openSummaries: SummaryState
+  testCount: number
+  testCountLoading: boolean
   onModuleClick: (moduleId: string) => void
   onToggleSummary: (testId: string) => void
   onStartTest: (testId: string) => void
@@ -313,6 +319,8 @@ const ModuleCard: React.FC<{
     testsLoading,
     testProgressMap,
     openSummaries,
+    testCount,
+    testCountLoading,
     onModuleClick,
     onToggleSummary,
     onStartTest,
@@ -358,7 +366,14 @@ const ModuleCard: React.FC<{
                 </span>
                 <span className="flex items-center gap-1.5">
                   <FolderOpen className="w-3.5 h-3.5" />
-                  {tests.length} тестов
+                  {testCountLoading ? (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <span>загрузка...</span>
+                    </>
+                  ) : (
+                    `${testCount} тестов`
+                  )}
                 </span>
               </div>
             </div>
@@ -474,6 +489,8 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
   const [progressLoading, setProgressLoading] = useState<LoadingState>({})
   const [testProgressMap, setTestProgressMap] = useState<TestProgressMap>({})
   const [openSummaries, setOpenSummaries] = useState<SummaryState>({})
+  const [testCounts, setTestCounts] = useState<ModuleTestCount>({})
+  const [testCountsLoading, setTestCountsLoading] = useState<LoadingState>({})
 
   // Мемоизированные обработчики
   const handleStartTest = useCallback(
@@ -493,6 +510,41 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
   const handleToggleSummary = useCallback((testId: string) => {
     setOpenSummaries((prev) => ({ ...prev, [testId]: !prev[testId] }))
   }, [])
+
+  // Загрузка количества тестов для всех модулей
+  const loadTestCounts = useCallback(async () => {
+    if (!modules.length) return
+
+    const loadingMap: LoadingState = {}
+    modules.forEach((mod) => (loadingMap[mod._id] = true))
+    setTestCountsLoading(loadingMap)
+
+    try {
+      const countResults = await Promise.all(
+        modules.map(async (mod) => {
+          try {
+            const response = await fetchTestsByModule(mod._id)
+            const testsArray = Array.isArray(response) ? response : []
+            return { id: mod._id, count: testsArray.length }
+          } catch (e) {
+            return { id: mod._id, count: 0 }
+          }
+        })
+      )
+
+      const countMap: ModuleTestCount = {}
+      countResults.forEach(({ id, count }) => {
+        countMap[id] = count
+      })
+      setTestCounts(countMap)
+    } catch (err) {
+      console.error("Ошибка загрузки количества тестов:", err)
+    } finally {
+      const doneMap: LoadingState = {}
+      modules.forEach((mod) => (doneMap[mod._id] = false))
+      setTestCountsLoading(doneMap)
+    }
+  }, [modules])
 
   // Обработчик клика по модулю
   const handleModuleClick = useCallback(
@@ -580,7 +632,8 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
 
   useEffect(() => {
     loadModuleProgress()
-  }, [loadModuleProgress])
+    loadTestCounts()
+  }, [loadModuleProgress, loadTestCounts])
 
   // Мемоизированная сортировка модулей
   const sortedModules = useMemo(() => {
@@ -595,7 +648,10 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
   }, [modules, progressMap])
 
   if (error && !modules.length) {
-    return <ErrorState onRetry={loadModuleProgress} />
+    return <ErrorState onRetry={() => {
+      loadModuleProgress()
+      loadTestCounts()
+    }} />
   }
 
   if (!Array.isArray(modules) || modules.length === 0) {
@@ -623,6 +679,8 @@ const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
             testsLoading={testsLoading}
             testProgressMap={testProgressMap}
             openSummaries={openSummaries}
+            testCount={testCounts[module._id] || 0}
+            testCountLoading={testCountsLoading[module._id] || false}
             onModuleClick={handleModuleClick}
             onToggleSummary={handleToggleSummary}
             onStartTest={handleStartTest}
