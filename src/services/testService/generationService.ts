@@ -69,3 +69,16 @@ export const generateTestFromUrl = async (
 
   return res.data;
 };
+
+
+
+export const generateTestsFromWeakTopics = async (options: {
+  difficulty?: string;
+  questionCount?: number;
+  questionType?: string;
+  testType?: string;
+}) => {
+  const response = await api.post("/tests/weak-topics/generate", { options });
+  return response.data;
+};
+

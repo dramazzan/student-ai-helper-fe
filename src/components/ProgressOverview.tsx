@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { ProgressData, WeakTopic, LowScoreTest } from "@/models/Progress";
+import { generateTestsFromWeakTopics } from "@/services/testService/generationService";
 
 const ProgressOverview = ({
   data,
@@ -59,6 +60,24 @@ const ProgressOverview = ({
       return () => clearInterval(interval);
     }
   }, [data, isLoading]);
+
+  const [options, setOptions] = useState({
+    difficulty: "medium",
+    questionCount: 5,
+    questionType: "тест с выбором",
+    testType: "normal",
+  });
+
+  const handleGenerate = async () => {
+    try {
+      const res = await generateTestsFromWeakTopics(options);
+      console.log("Сгенерировано тестов:", res);
+      alert(res.message);
+    } catch (err) {
+      console.error("Ошибка генерации:", err);
+      alert("Ошибка генерации тестов");
+    }
+  };
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "from-emerald-500 to-emerald-600";
@@ -276,6 +295,58 @@ const ProgressOverview = ({
                 </div>
               </div>
             ))}
+          </div>
+          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow mt-4">
+            <h3 className="text-lg font-semibold mb-2">
+              Создать тест по слабым темам
+            </h3>
+
+            <div className="grid sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Сложность
+                </label>
+                <select
+                  value={options.difficulty}
+                  onChange={(e) =>
+                    setOptions({ ...options, difficulty: e.target.value })
+                  }
+                  className="w-full border rounded p-2"
+                >
+                  <option value="easy">Лёгкий</option>
+                  <option value="medium">Средний</option>
+                  <option value="hard">Сложный</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Кол-во вопросов
+                </label>
+                <input
+                  type="number"
+                  value={options.questionCount}
+                  onChange={(e) =>
+                    setOptions({
+                      ...options,
+                      questionCount: parseInt(e.target.value),
+                    })
+                  }
+                  className="w-full border rounded p-2"
+                  min={1}
+                  max={20}
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                onClick={handleGenerate}
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+              >
+                Сгенерировать тесты
+              </button>
+            </div>
           </div>
         </div>
       )}
