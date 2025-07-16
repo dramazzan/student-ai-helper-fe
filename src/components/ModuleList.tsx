@@ -1,6 +1,7 @@
 "use client"
-import type React from "react"
-import { useEffect, useState } from "react"
+
+import React from "react"
+import { useEffect, useState, useMemo, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import {
   ChevronDown,
@@ -14,284 +15,620 @@ import {
   TrendingUp,
   Loader2,
   ChevronUp,
+  AlertCircle,
+  FolderOpen,
 } from "lucide-react"
 import { fetchTestsByModule } from "@/services/testService/fetchService"
 import { fetchModuleProgress, getTestProgressByTestId } from "@/services/testService/passingService"
 import type { ModuleListProps, TestProgressInfo } from "@/models/Test"
 
-const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
-  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null)
-  const [tests, setTests] = useState<any[]>([])
-  const [loading, setLoading] = useState(false)
-  const [progressMap, setProgressMap] = useState<Record<string, number>>({})
-  const [progressLoading, setProgressLoading] = useState<Record<string, boolean>>({})
-  const [testProgressMap, setTestProgressMap] = useState<Record<string, TestProgressInfo>>({})
-  const [openSummaries, setOpenSummaries] = useState<Record<string, boolean>>({})
-  const router = useRouter()
+// Улучшенные типы
+interface ModuleProgress {
+  [moduleId: string]: number
+}
 
-  const toggleSummary = (testId: string) => {
-    setOpenSummaries((prev) => ({ ...prev, [testId]: !prev[testId] }))
-  }
+interface TestProgressMap {
+  [testId: string]: TestProgressInfo
+}
 
-  const handleModuleClick = async (moduleId: string) => {
-    if (selectedModuleId === moduleId) {
-      setSelectedModuleId(null)
-      setTests([])
-      return
-    }
+interface LoadingState {
+  [moduleId: string]: boolean
+}
 
-    setSelectedModuleId(moduleId)
-    setLoading(true)
+interface SummaryState {
+  [testId: string]: boolean
+}
 
-    try {
-      const response = await fetchTestsByModule(moduleId)
-      const fetchedTests = Array.isArray(response) ? response : []
-      setTests(fetchedTests)
+interface ModuleTest {
+  _id: string
+  title: string
+  questionCount: number
+  difficulty: string
+  createdAt: string
+  sourceType?: string
+  summary?: string
+}
 
-      const testProgresses: Record<string, TestProgressInfo> = {}
-      await Promise.all(
-        fetchedTests.map(async (test) => {
-          try {
-            const data = await getTestProgressByTestId(test._id)
-            if (data.attempts && data.attempts.length > 0) {
-              const best = data.attempts.reduce((max: any, attempt: any) =>
-                attempt.percentage > max.percentage ? attempt : max,
-              )
-              testProgresses[test._id] = {
-                score: best.score,
-                percentage: best.percentage,
-              }
-            }
-          } catch (e) {}
-        }),
-      )
-      setTestProgressMap(testProgresses)
-    } catch (err) {
-      console.error("Ошибка загрузки тестов:", err)
-      setTests([])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    const loadProgress = async () => {
-      const loadingMap: Record<string, boolean> = {}
-      modules.forEach((mod) => (loadingMap[mod._id] = true))
-      setProgressLoading(loadingMap)
-
-      try {
-        const progressResults = await Promise.all(
-          modules.map(async (mod) => {
-            try {
-              const progress = await fetchModuleProgress(mod._id)
-              return { id: mod._id, progress }
-            } catch (e) {
-              return { id: mod._id, progress: 0 }
-            }
-          }),
-        )
-
-        const map: Record<string, number> = {}
-        progressResults.forEach(({ id, progress }) => {
-          map[id] = progress
-        })
-        setProgressMap(map)
-      } finally {
-        const doneMap: Record<string, boolean> = {}
-        modules.forEach((mod) => (doneMap[mod._id] = false))
-        setProgressLoading(doneMap)
-      }
-    }
-    loadProgress()
-  }, [modules])
-
-  const getScoreColor = (percentage: number) => {
-    if (percentage >= 80) return "text-emerald-600"
-    if (percentage >= 60) return "text-amber-600"
-    if (percentage >= 40) return "text-orange-600"
-    return "text-red-600"
-  }
-
+// Компонент индикатора прогресса
+const ProgressIndicator: React.FC<{
+  progress: number
+  isLoading: boolean
+  size?: "sm" | "md"
+}> = React.memo(({ progress, isLoading, size = "md" }) => {
   const getProgressColor = (percentage: number) => {
-    if (percentage >= 80) return "bg-emerald-500"
-    if (percentage >= 60) return "bg-amber-500"
-    if (percentage >= 40) return "bg-orange-500"
-    return "bg-red-500"
+    if (percentage >= 80) return "bg-gradient-to-r from-emerald-500 to-emerald-600"
+    if (percentage >= 60) return "bg-gradient-to-r from-amber-500 to-amber-600"
+    if (percentage >= 40) return "bg-gradient-to-r from-orange-500 to-orange-600"
+    return "bg-gradient-to-r from-red-500 to-red-600"
   }
 
-  if (!Array.isArray(modules) || modules.length === 0) {
+  const sizeClasses = {
+    sm: "w-16 h-1",
+    md: "w-24 h-1.5",
+  }
+
+  if (isLoading) {
     return (
-      <div className="text-center py-16">
-        <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <FileText className="w-6 h-6 text-slate-400" />
-        </div>
-        <h3 className="text-lg font-medium text-slate-900 mb-2">Нет модулей</h3>
-        <p className="text-slate-500">Модули появятся здесь после загрузки</p>
+      <div className="flex items-center gap-2 text-slate-400">
+        <Loader2 className="w-3 h-3 animate-spin" />
+        <span className="text-xs">Загрузка...</span>
       </div>
     )
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-semibold text-slate-900 mb-2">Модули</h2>
-        <p className="text-slate-600">Коллекции тестов по темам</p>
+    <div className="text-right">
+      <div className="text-sm font-semibold text-slate-900 mb-1">{progress}%</div>
+      <div className={`bg-slate-200 rounded-full overflow-hidden ${sizeClasses[size]}`}>
+        <div
+          className={`h-full ${getProgressColor(progress)} rounded-full transition-all duration-700 ease-out`}
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+    </div>
+  )
+})
+
+ProgressIndicator.displayName = "ProgressIndicator"
+
+// Компонент действий с тестом
+const TestActions: React.FC<{
+  testId: string
+  hasProgress: boolean
+  onStartTest: (testId: string) => void
+  onViewHistory: (testId: string) => void
+}> = React.memo(({ testId, hasProgress, onStartTest, onViewHistory }) => (
+  <div className="flex items-center gap-2 flex-shrink-0">
+    <button
+      onClick={(e) => {
+        e.stopPropagation()
+        onStartTest(testId)
+      }}
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+    >
+      <Play className="w-3.5 h-3.5" />
+      Пройти
+    </button>
+    {hasProgress && (
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          onViewHistory(testId)
+        }}
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+      >
+        <History className="w-3.5 h-3.5" />
+        История
+      </button>
+    )}
+  </div>
+))
+
+TestActions.displayName = "TestActions"
+
+// Компонент метаданных теста
+const TestMetadata: React.FC<{
+  questionCount: number
+  difficulty: string
+  createdAt: string
+  sourceType?: string
+}> = React.memo(({ questionCount, difficulty, createdAt, sourceType }) => {
+  const formatDate = useMemo(() => new Date(createdAt).toLocaleDateString("ru-RU"), [createdAt])
+
+  const getSourceTypeLabel = (type?: string) => {
+    switch (type) {
+      case "file":
+        return "из файла"
+      case "url":
+        return "из URL"
+      default:
+        return "другое"
+    }
+  }
+
+  return (
+    <div className="flex items-center gap-4 text-sm text-slate-500">
+      <span className="flex items-center gap-1.5">
+        <BookOpen className="w-3.5 h-3.5" />
+        {questionCount} вопросов
+      </span>
+      <span className="px-2 py-1 bg-slate-100 text-slate-600 rounded-md text-xs font-medium">
+        {difficulty || "средний"}
+      </span>
+      <span className="flex items-center gap-1.5">
+        <Clock className="w-3.5 h-3.5" />
+        {formatDate}
+      </span>
+      {sourceType && (
+        <span className="flex items-center gap-1.5">
+          <FileText className="w-3.5 h-3.5" />
+          {getSourceTypeLabel(sourceType)}
+        </span>
+      )}
+    </div>
+  )
+})
+
+TestMetadata.displayName = "TestMetadata"
+
+// Компонент отображения счета
+const ScoreDisplay: React.FC<{ score: number }> = React.memo(({ score }) => {
+  const getScoreColor = (percentage: number) => {
+    if (percentage >= 80) return "text-emerald-600 bg-emerald-50"
+    if (percentage >= 60) return "text-amber-600 bg-amber-50"
+    if (percentage >= 40) return "text-orange-600 bg-orange-50"
+    return "text-red-600 bg-red-50"
+  }
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 text-sm font-medium px-2 py-1 rounded-md ${getScoreColor(score)}`}
+    >
+      <TrendingUp className="w-3.5 h-3.5" />
+      {score}%
+    </span>
+  )
+})
+
+ScoreDisplay.displayName = "ScoreDisplay"
+
+// Компонент элемента теста
+const TestItem: React.FC<{
+  test: ModuleTest
+  progress?: TestProgressInfo
+  isLastItem: boolean
+  isSummaryOpen: boolean
+  onToggleSummary: (testId: string) => void
+  onStartTest: (testId: string) => void
+  onViewHistory: (testId: string) => void
+}> = React.memo(({ test, progress, isLastItem, isSummaryOpen, onToggleSummary, onStartTest, onViewHistory }) => {
+  const hasProgress = Boolean(progress)
+
+  return (
+    <div className="group/test">
+      <div className="flex items-start justify-between gap-4 py-4 hover:bg-slate-50/50 rounded-lg px-4 -mx-4 transition-all duration-200">
+        <div className="flex-1 min-w-0 space-y-3">
+          {/* Заголовок и бейдж достижения */}
+          <div className="flex items-center gap-3">
+            <h4 className="font-semibold text-slate-900 leading-tight group-hover/test:text-blue-700 transition-colors">
+              {test.title}
+            </h4>
+            {hasProgress && <Award className="w-4 h-4 text-amber-500 flex-shrink-0" />}
+          </div>
+
+          {/* Метаданные */}
+          <TestMetadata
+            questionCount={test.questionCount}
+            difficulty={test.difficulty}
+            createdAt={test.createdAt}
+            sourceType={test.sourceType}
+          />
+
+          {/* Прогресс */}
+          {hasProgress && progress && (
+            <div className="mt-2">
+              <ScoreDisplay score={progress.percentage} />
+            </div>
+          )}
+        </div>
+
+        {/* Действия */}
+        <TestActions
+          testId={test._id}
+          hasProgress={hasProgress}
+          onStartTest={onStartTest}
+          onViewHistory={onViewHistory}
+        />
       </div>
 
-      <div className="space-y-6">
-        {modules.map((module) => {
-          const isExpanded = selectedModuleId === module._id
-          const progress = progressMap[module._id] || 0
-          const isProgressLoading = progressLoading[module._id]
+      {/* Конспект */}
+      {test.summary && (
+        <div className="ml-4 mt-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              onToggleSummary(test._id)
+            }}
+            className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 transition-colors font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md px-2 py-1"
+            aria-expanded={isSummaryOpen}
+          >
+            <FileText className="w-3.5 h-3.5" />
+            {isSummaryOpen ? "Скрыть конспект" : "Показать конспект"}
+            {isSummaryOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </button>
+          {isSummaryOpen && (
+            <div className="mt-3 p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg text-sm text-slate-700 leading-relaxed whitespace-pre-line border border-slate-200 animate-in slide-in-from-top-2 duration-200">
+              {test.summary}
+            </div>
+          )}
+        </div>
+      )}
 
-          return (
-            <div key={module._id} className="group">
-              <div
-                className="flex items-center justify-between py-4 cursor-pointer hover:bg-slate-50 rounded-lg px-4 -mx-4 transition-colors"
-                onClick={() => handleModuleClick(module._id)}
-              >
-                <div className="flex items-center gap-4 flex-1 min-w-0">
-                  <div className="flex-shrink-0">
-                    {isExpanded ? (
-                      <ChevronDown className="w-5 h-5 text-slate-400" />
-                    ) : (
-                      <ChevronRight className="w-5 h-5 text-slate-400" />
-                    )}
-                  </div>
+      {/* Разделитель */}
+      {!isLastItem && <div className="border-b border-slate-100 mt-4" />}
+    </div>
+  )
+})
 
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-slate-900 truncate">
-                      {decodeURIComponent(module.originalFileName)}
-                    </h3>
-                    <div className="flex items-center gap-4 mt-1 text-sm text-slate-500">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {new Date(module.createdAt).toLocaleDateString("ru-RU")}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+TestItem.displayName = "TestItem"
 
-                <div className="flex-shrink-0 w-24">
-                  {isProgressLoading ? (
-                    <div className="flex items-center gap-2 text-slate-400">
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                      <span className="text-xs">...</span>
-                    </div>
-                  ) : (
-                    <div className="text-right">
-                      <div className="text-sm font-medium text-slate-900">{progress}%</div>
-                      <div className="w-full h-1 bg-slate-200 rounded-full mt-1">
-                        <div
-                          className={`h-full ${getProgressColor(progress)} rounded-full transition-all duration-500`}
-                          style={{ width: `${progress}%` }}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
+// Компонент состояния загрузки тестов
+const TestsLoadingState: React.FC = () => (
+  <div className="flex items-center gap-3 text-slate-500 py-6">
+    <Loader2 className="w-5 h-5 animate-spin" />
+    <span className="text-sm font-medium">Загрузка тестов...</span>
+  </div>
+)
+
+// Компонент пустого состояния тестов
+const TestsEmptyState: React.FC = () => (
+  <div className="text-center py-12 text-slate-500">
+    <BookOpen className="w-12 h-12 mx-auto mb-4 text-slate-300" />
+    <p className="text-sm font-medium">Нет тестов в этом модуле</p>
+    <p className="text-xs text-slate-400 mt-1">Тесты появятся после добавления</p>
+  </div>
+)
+
+// Компонент карточки модуля
+const ModuleCard: React.FC<{
+  module: any
+  isExpanded: boolean
+  progress: number
+  isProgressLoading: boolean
+  tests: ModuleTest[]
+  testsLoading: boolean
+  testProgressMap: TestProgressMap
+  openSummaries: SummaryState
+  onModuleClick: (moduleId: string) => void
+  onToggleSummary: (testId: string) => void
+  onStartTest: (testId: string) => void
+  onViewHistory: (testId: string) => void
+}> = React.memo(
+  ({
+    module,
+    isExpanded,
+    progress,
+    isProgressLoading,
+    tests,
+    testsLoading,
+    testProgressMap,
+    openSummaries,
+    onModuleClick,
+    onToggleSummary,
+    onStartTest,
+    onViewHistory,
+  }) => {
+    const formatDate = useMemo(() => new Date(module.createdAt).toLocaleDateString("ru-RU"), [module.createdAt])
+
+    return (
+      <div className="group border border-slate-200 rounded-xl overflow-hidden hover:shadow-md transition-all duration-200">
+        {/* Заголовок модуля */}
+        <div
+          className="flex items-center justify-between py-5 px-6 cursor-pointer hover:bg-slate-50 transition-colors"
+          onClick={() => onModuleClick(module._id)}
+          role="button"
+          tabIndex={0}
+          aria-expanded={isExpanded}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault()
+              onModuleClick(module._id)
+            }
+          }}
+        >
+          <div className="flex items-center gap-4 flex-1 min-w-0">
+            {/* Иконка раскрытия */}
+            <div className="flex-shrink-0 transition-transform duration-200">
+              {isExpanded ? (
+                <ChevronDown className="w-5 h-5 text-slate-600" />
+              ) : (
+                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
+              )}
+            </div>
+
+            {/* Информация о модуле */}
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-slate-900 truncate text-lg group-hover:text-blue-700 transition-colors">
+                {decodeURIComponent(module.originalFileName)}
+              </h3>
+              <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
+                <span className="flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5" />
+                  {formatDate}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <FolderOpen className="w-3.5 h-3.5" />
+                  {tests.length} тестов
+                </span>
               </div>
+            </div>
+          </div>
 
-              {isExpanded && (
-                <div className="ml-9 mt-4 space-y-4">
-                  {loading ? (
-                    <div className="flex items-center gap-2 text-slate-500 py-4">
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span className="text-sm">Загрузка тестов...</span>
-                    </div>
-                  ) : tests.length === 0 ? (
-                    <div className="text-center py-8 text-slate-500">
-                      <BookOpen className="w-8 h-8 mx-auto mb-2 text-slate-300" />
-                      <p className="text-sm">Нет тестов в этом модуле</p>
-                    </div>
-                  ) : (
-                    tests.map((test) => {
-                      const testProgress = testProgressMap[test._id]
-                      const isOpen = openSummaries[test._id]
+          {/* Индикатор прогресса */}
+          <div className="flex-shrink-0">
+            <ProgressIndicator progress={progress} isLoading={isProgressLoading} />
+          </div>
+        </div>
 
-                      return (
-                        <div key={test._id} className="group/test">
-                          <div className="flex items-start justify-between gap-4 py-3">
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-2">
-                                <h4 className="font-medium text-slate-900">{test.title}</h4>
-                                {testProgress && <Award className="w-4 h-4 text-amber-500 flex-shrink-0" />}
-                              </div>
-
-                              <div className="flex items-center gap-4 text-sm text-slate-500">
-                                <span className="flex items-center gap-1">
-                                  <BookOpen className="w-3 h-3" />
-                                  {test.questionCount}
-                                </span>
-                                <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs">
-                                  {test.difficulty}
-                                </span>
-                                <span>{new Date(test.createdAt).toLocaleDateString("ru-RU")}</span>
-                              </div>
-
-                              {testProgress && (
-                                <div className="mt-2">
-                                  <span
-                                    className={`inline-flex items-center gap-1 text-sm font-medium ${getScoreColor(testProgress.percentage)}`}
-                                  >
-                                    <TrendingUp className="w-3 h-3" />
-                                    {testProgress.percentage}%
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-
-                            <div className="flex items-center gap-2 flex-shrink-0">
-                              <button
-                                onClick={() => router.push(`/main/tests/passing/${test._id}`)}
-                                className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
-                              >
-                                <Play className="w-3 h-3" />
-                                Пройти
-                              </button>
-
-                              {testProgress && (
-                                <button
-                                  onClick={() => router.push(`/main/tests/history/${test._id}`)}
-                                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm rounded-lg transition-colors"
-                                >
-                                  <History className="w-3 h-3" />
-                                  История
-                                </button>
-                              )}
-                            </div>
-                          </div>
-
-                          {test.summary && (
-                            <div className="mt-3">
-                              <button
-                                onClick={() => toggleSummary(test._id)}
-                                className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
-                              >
-                                <FileText className="w-3 h-3" />
-                                {isOpen ? "Скрыть конспект" : "Показать конспект"}
-                                {isOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                              </button>
-
-                              {isOpen && (
-                                <div className="mt-3 p-4 bg-slate-50 rounded-lg text-sm text-slate-700 leading-relaxed whitespace-pre-line">
-                                  {test.summary}
-                                </div>
-                              )}
-                            </div>
-                          )}
-
-                          {tests.indexOf(test) < tests.length - 1 && <div className="border-b border-slate-100 mt-4" />}
-                        </div>
-                      )
-                    })
-                  )}
+        {/* Содержимое модуля */}
+        {isExpanded && (
+          <div className="border-t border-slate-100 bg-slate-50/30">
+            <div className="px-6 py-4">
+              {testsLoading ? (
+                <TestsLoadingState />
+              ) : tests.length === 0 ? (
+                <TestsEmptyState />
+              ) : (
+                <div className="space-y-2">
+                  {tests.map((test, index) => (
+                    <TestItem
+                      key={test._id}
+                      test={test}
+                      progress={testProgressMap[test._id]}
+                      isLastItem={index === tests.length - 1}
+                      isSummaryOpen={openSummaries[test._id] || false}
+                      onToggleSummary={onToggleSummary}
+                      onStartTest={onStartTest}
+                      onViewHistory={onViewHistory}
+                    />
+                  ))}
                 </div>
               )}
             </div>
-          )
-        })}
+          </div>
+        )}
+      </div>
+    )
+  },
+)
+
+ModuleCard.displayName = "ModuleCard"
+
+// Компонент скелетона загрузки
+const ModuleSkeleton: React.FC = () => (
+  <div className="space-y-8">
+    <div className="space-y-2">
+      <div className="h-8 bg-slate-200 rounded-lg w-48 animate-pulse" />
+      <div className="h-5 bg-slate-200 rounded w-64 animate-pulse" />
+    </div>
+    <div className="space-y-4">
+      {[...Array(3)].map((_, i) => (
+        <div key={i} className="border border-slate-200 rounded-xl p-6 animate-pulse">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4 flex-1">
+              <div className="w-5 h-5 bg-slate-200 rounded" />
+              <div className="space-y-2 flex-1">
+                <div className="h-6 bg-slate-200 rounded w-3/4" />
+                <div className="h-4 bg-slate-200 rounded w-1/2" />
+              </div>
+            </div>
+            <div className="w-24 space-y-2">
+              <div className="h-4 bg-slate-200 rounded w-full" />
+              <div className="h-1.5 bg-slate-200 rounded w-full" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)
+
+// Компонент пустого состояния
+const EmptyState: React.FC = () => (
+  <div className="text-center py-20">
+    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <FileText className="w-8 h-8 text-slate-400" />
+    </div>
+    <h3 className="text-xl font-semibold text-slate-900 mb-3">Нет модулей</h3>
+    <p className="text-slate-500 max-w-sm mx-auto">
+      Модули появятся здесь после загрузки. Создайте свой первый модуль, чтобы начать организацию тестов.
+    </p>
+  </div>
+)
+
+// Компонент ошибки
+const ErrorState: React.FC<{ onRetry: () => void }> = ({ onRetry }) => (
+  <div className="text-center py-20">
+    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <AlertCircle className="w-8 h-8 text-red-500" />
+    </div>
+    <h3 className="text-xl font-semibold text-slate-900 mb-3">Ошибка загрузки</h3>
+    <p className="text-slate-500 max-w-sm mx-auto mb-6">Не удалось загрузить модули. Попробуйте еще раз.</p>
+    <button
+      onClick={onRetry}
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+    >
+      Попробовать снова
+    </button>
+  </div>
+)
+
+// Основной компонент
+const ModuleList: React.FC<ModuleListProps> = ({ modules }) => {
+  const router = useRouter()
+  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null)
+  const [tests, setTests] = useState<ModuleTest[]>([])
+  const [testsLoading, setTestsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [progressMap, setProgressMap] = useState<ModuleProgress>({})
+  const [progressLoading, setProgressLoading] = useState<LoadingState>({})
+  const [testProgressMap, setTestProgressMap] = useState<TestProgressMap>({})
+  const [openSummaries, setOpenSummaries] = useState<SummaryState>({})
+
+  // Мемоизированные обработчики
+  const handleStartTest = useCallback(
+    (testId: string) => {
+      router.push(`/main/tests/passing/${testId}`)
+    },
+    [router],
+  )
+
+  const handleViewHistory = useCallback(
+    (testId: string) => {
+      router.push(`/main/tests/history/${testId}`)
+    },
+    [router],
+  )
+
+  const handleToggleSummary = useCallback((testId: string) => {
+    setOpenSummaries((prev) => ({ ...prev, [testId]: !prev[testId] }))
+  }, [])
+
+  // Обработчик клика по модулю
+  const handleModuleClick = useCallback(
+    async (moduleId: string) => {
+      if (selectedModuleId === moduleId) {
+        setSelectedModuleId(null)
+        setTests([])
+        return
+      }
+
+      setSelectedModuleId(moduleId)
+      setTestsLoading(true)
+      setError(null)
+
+      try {
+        const response = await fetchTestsByModule(moduleId)
+        const fetchedTests = Array.isArray(response) ? response : []
+        setTests(fetchedTests)
+
+        // Загрузка прогресса тестов
+        const testProgresses: TestProgressMap = {}
+        await Promise.all(
+          fetchedTests.map(async (test) => {
+            try {
+              const data = await getTestProgressByTestId(test._id)
+              if (data.attempts && data.attempts.length > 0) {
+                const best = data.attempts.reduce((max: any, attempt: any) =>
+                  attempt.percentage > max.percentage ? attempt : max,
+                )
+                testProgresses[test._id] = {
+                  score: best.score,
+                  percentage: best.percentage,
+                }
+              }
+            } catch (e) {
+              // Игнорируем ошибки для отдельных тестов
+            }
+          }),
+        )
+        setTestProgressMap(testProgresses)
+      } catch (err) {
+        console.error("Ошибка загрузки тестов:", err)
+        setError("Не удалось загрузить тесты модуля")
+        setTests([])
+      } finally {
+        setTestsLoading(false)
+      }
+    },
+    [selectedModuleId],
+  )
+
+  // Загрузка прогресса модулей
+  const loadModuleProgress = useCallback(async () => {
+    if (!modules.length) return
+
+    const loadingMap: LoadingState = {}
+    modules.forEach((mod) => (loadingMap[mod._id] = true))
+    setProgressLoading(loadingMap)
+
+    try {
+      const progressResults = await Promise.all(
+        modules.map(async (mod) => {
+          try {
+            const progress = await fetchModuleProgress(mod._id)
+            return { id: mod._id, progress }
+          } catch (e) {
+            return { id: mod._id, progress: 0 }
+          }
+        }),
+      )
+
+      const map: ModuleProgress = {}
+      progressResults.forEach(({ id, progress }) => {
+        map[id] = progress
+      })
+      setProgressMap(map)
+    } catch (err) {
+      console.error("Ошибка загрузки прогресса модулей:", err)
+    } finally {
+      const doneMap: LoadingState = {}
+      modules.forEach((mod) => (doneMap[mod._id] = false))
+      setProgressLoading(doneMap)
+    }
+  }, [modules])
+
+  useEffect(() => {
+    loadModuleProgress()
+  }, [loadModuleProgress])
+
+  // Мемоизированная сортировка модулей
+  const sortedModules = useMemo(() => {
+    return [...modules].sort((a, b) => {
+      const aProgress = progressMap[a._id] || 0
+      const bProgress = progressMap[b._id] || 0
+      // Сначала модули с прогрессом, потом по дате создания
+      if (aProgress > 0 && bProgress === 0) return -1
+      if (aProgress === 0 && bProgress > 0) return 1
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    })
+  }, [modules, progressMap])
+
+  if (error && !modules.length) {
+    return <ErrorState onRetry={loadModuleProgress} />
+  }
+
+  if (!Array.isArray(modules) || modules.length === 0) {
+    return <EmptyState />
+  }
+
+  return (
+    <div className="space-y-8">
+      {/* Заголовок */}
+      <div>
+        <h2 className="text-3xl font-bold text-slate-900 mb-3">Модули</h2>
+        <p className="text-slate-600 text-lg">Коллекции тестов, организованные по темам и материалам</p>
+      </div>
+
+      {/* Список модулей */}
+      <div className="space-y-4">
+        {sortedModules.map((module) => (
+          <ModuleCard
+            key={module._id}
+            module={module}
+            isExpanded={selectedModuleId === module._id}
+            progress={progressMap[module._id] || 0}
+            isProgressLoading={progressLoading[module._id] || false}
+            tests={selectedModuleId === module._id ? tests : []}
+            testsLoading={testsLoading}
+            testProgressMap={testProgressMap}
+            openSummaries={openSummaries}
+            onModuleClick={handleModuleClick}
+            onToggleSummary={handleToggleSummary}
+            onStartTest={handleStartTest}
+            onViewHistory={handleViewHistory}
+          />
+        ))}
       </div>
     </div>
   )

@@ -11,6 +11,8 @@ export interface Test {
   difficulty: string
   createdAt: string
   summary?: string
+  sourceType: 'file' | 'url' | 'other'
+  sourceDetails?: string[]
 }
 
 export interface ModuleListProps {
@@ -20,6 +22,7 @@ export interface ModuleListProps {
 export interface TestProgressInfo {
   score: number
   percentage: number
+  attemptsCount?: number // Optional, added to track the number of attempts
 }
 
 export interface TestTabsProps {
