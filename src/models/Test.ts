@@ -11,7 +11,7 @@ export interface Test {
   difficulty: string
   createdAt: string
   summary?: string
-  sourceType: 'file' | 'url' | 'other'
+  sourceType: 'file' | 'url' | 'weak-topic'
   sourceDetails?: string[]
 }
 

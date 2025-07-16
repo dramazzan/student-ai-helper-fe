@@ -108,6 +108,8 @@ const TestMetadata: React.FC<{
         return "из файла"
       case "url":
         return "из URL"
+      case "weak-topic":
+        return "по слабым темам"  
       default:
         return "другое"
     }
@@ -307,7 +309,6 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
     setOpenSummaries((prev) => ({ ...prev, [testId]: !prev[testId] }))
   }, [])
 
-  // Загрузка прогресса с улучшенной обработкой ошибок
   const loadProgress = useCallback(async () => {
     if (!normalTests.length) return
 
