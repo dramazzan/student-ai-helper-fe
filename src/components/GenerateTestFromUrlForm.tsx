@@ -16,6 +16,7 @@ const GenerateTestFromUrlForm = () => {
   const [difficulty, setDifficulty] = useState("medium")
   const [questionCount, setQuestionCount] = useState(5)
   const [questionType, setQuestionType] = useState("тест с выбором")
+  const [testType, setTestType] = useState("normal") // Добавлен testType
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const router = useRouter()
@@ -37,8 +38,10 @@ const GenerateTestFromUrlForm = () => {
         difficulty,
         questionCount,
         questionType,
+        testType, // Добавлен testType в передаваемые параметры
       })
       console.log("✅ Тест создан из URL:", result)
+      console.log("📊 Параметры:", { difficulty, questionCount, questionType, testType }) // Отладочная информация
       alert("Тест успешно создан!")
       router.push("/main/tests")
     } catch (err: any) {
