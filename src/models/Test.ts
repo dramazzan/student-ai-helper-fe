@@ -52,3 +52,11 @@ export interface TestResultData {
   completedAt: string
   details: QuestionDetail[]
 }
+
+
+export interface TestGenerationOptions {
+  difficulty: string
+  questionCount: number
+  questionType: string
+  testType: string
+}
