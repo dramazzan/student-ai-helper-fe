@@ -1,70 +1,63 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { generateTest } from "@/services/testService/generationService";
-import { NotificationToast } from "./NotificationToast";
-import type { Notification } from "@/models/Notification";
-import {
-  UploadCloud,
-  Upload,
-  CheckCircle,
-  AlertTriangle,
-  Loader2,
-  MessageSquareText,
-} from "lucide-react";
+import type React from "react"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { generateTest } from "@/services/testService/generationService"
+import { NotificationToast } from "./NotificationToast"
+import type { Notification } from "@/models/Notification"
+import { UploadCloud, CheckCircle, AlertTriangle, Loader2, MessageSquareText, FileText, Sparkles } from "lucide-react"
 
 const PromptTestForm = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const [userPrompt, setUserPrompt] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-
-  const router = useRouter();
+  const [file, setFile] = useState<File | null>(null)
+  const [userPrompt, setUserPrompt] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const router = useRouter()
 
   const addNotification = (notification: Omit<Notification, "id">) => {
-    const id = Date.now().toString();
-    setNotifications((prev) => [...prev, { ...notification, id }]);
-  };
+    const id = Date.now().toString()
+    setNotifications((prev) => [...prev, { ...notification, id }])
+  }
 
   const removeNotification = (id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
-  };
+    setNotifications((prev) => prev.filter((n) => n.id !== id))
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
-      const selected = e.target.files[0];
-      setFile(selected);
-      setErrorMessage("");
+      const selected = e.target.files[0]
+      setFile(selected)
+      setErrorMessage("")
     }
-  };
+  }
 
   const handleSubmit = async () => {
     if (!file && !userPrompt.trim()) {
-      setErrorMessage("Введите промпт или загрузите файл!");
-      return;
+      setErrorMessage("Введите промпт или загрузите файл!")
+      return
     }
 
-    setLoading(true);
-    setErrorMessage("");
+    setLoading(true)
+    setErrorMessage("")
 
     try {
-      const formData = new FormData();
-      if (file) formData.append("file", file);
-      if (userPrompt.trim()) formData.append("userPrompt", userPrompt.trim());
-      formData.append("difficulty", "medium");
-      formData.append("questionCount", "5");
-      formData.append("questionType", "normal");
+      const formData = new FormData()
+      if (file) formData.append("file", file)
+      if (userPrompt.trim()) formData.append("userPrompt", userPrompt.trim())
+      formData.append("difficulty", "medium")
+      formData.append("questionCount", "5")
+      formData.append("questionType", "normal")
 
       const result = await generateTest(file!, {
         difficulty: "medium",
         questionCount: 5,
         userPrompt,
-      });
+      })
 
-      console.log("✅ Тест создан:", result);
-
+      console.log("✅ Тест создан:", result)
       addNotification({
         type: "success",
         title: "Тест успешно создан!",
@@ -72,58 +65,50 @@ const PromptTestForm = () => {
           file && userPrompt
             ? "Сгенерирован тест из файла и промпта."
             : file
-            ? "Сгенерирован тест из файла."
-            : "Сгенерирован тест из промпта.",
-      });
+              ? "Сгенерирован тест из файла."
+              : "Сгенерирован тест из промпта.",
+      })
 
       setTimeout(() => {
-        router.push("/main/tests");
-      }, 1500);
+        router.push("/main/tests")
+      }, 1500)
     } catch (err: any) {
-      const errorMsg =
-        err?.response?.data?.message || "Ошибка при генерации теста";
-      setErrorMessage(errorMsg);
+      const errorMsg = err?.response?.data?.message || "Ошибка при генерации теста"
+      setErrorMessage(errorMsg)
       addNotification({
         type: "error",
         title: "Ошибка генерации",
         message: errorMsg,
-      });
+      })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <>
       {notifications.map((n) => (
-        <NotificationToast
-          key={n.id}
-          notification={n}
-          onClose={removeNotification}
-        />
+        <NotificationToast key={n.id} notification={n} onClose={removeNotification} />
       ))}
 
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-lg bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4">
-              <MessageSquareText className="w-8 h-8 text-blue-600" />
-            </div>
-            <h1 className="text-2xl font-bold text-slate-900 mb-2">
-              Генерация теста
-            </h1>
-            <p className="text-slate-600">
-              Вы можете ввести промпт, загрузить файл или использовать оба
-              источника
-            </p>
-          </div>
+      <div className="space-y-8">
+        {/* Instructions */}
+        <div className="text-center">
+          <p className="text-slate-600 text-lg leading-relaxed">
+            Вы можете ввести промпт, загрузить файл или использовать оба источника для создания персонализированного
+            теста
+          </p>
+        </div>
 
-          <div className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-slate-900 mb-1">
-                Файл (необязательно)
-              </label>
-              <div className="relative border-2 border-dashed border-slate-300 p-4 rounded-xl">
+        <div className="space-y-6">
+          {/* File Upload Section */}
+          <div className="space-y-3">
+            <label className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+              <FileText className="w-4 h-4 text-indigo-600" />
+              Файл (необязательно)
+            </label>
+            <div className="relative">
+              <div className="border-2 border-dashed border-indigo-200 bg-gradient-to-br from-indigo-50/50 to-purple-50/50 p-6 rounded-2xl transition-all duration-300 hover:border-indigo-300 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50">
                 <input
                   type="file"
                   accept=".pdf,.docx,.pptx,.txt"
@@ -131,59 +116,96 @@ const PromptTestForm = () => {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
                 {file ? (
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="text-green-600 w-6 h-6" />
-                    <span className="text-slate-900 font-medium">
-                      {file.name}
-                    </span>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-green-100 to-green-200 rounded-xl">
+                      <CheckCircle className="text-green-600 w-6 h-6" />
+                    </div>
+                    <div>
+                      <p className="text-slate-900 font-semibold">{file.name}</p>
+                      <p className="text-sm text-slate-600">Файл успешно загружен</p>
+                    </div>
                   </div>
                 ) : (
-                  <div className="text-center text-slate-500 text-sm">
-                    <UploadCloud className="w-10 h-10 mx-auto mb-1" />
-                    Нажмите или перетащите файл
+                  <div className="text-center">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-2xl mb-4">
+                      <UploadCloud className="w-8 h-8 text-indigo-600" />
+                    </div>
+                    <p className="text-slate-700 font-medium mb-1">Нажмите или перетащите файл</p>
+                    <p className="text-sm text-slate-500">Поддерживаются PDF, DOCX, PPTX, TXT</p>
                   </div>
                 )}
               </div>
             </div>
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-900 mb-1">
-                Промпт (необязательно)
-              </label>
+          {/* Prompt Section */}
+          <div className="space-y-3">
+            <label className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+              <MessageSquareText className="w-4 h-4 text-indigo-600" />
+              Промпт
+            </label>
+            <div className="relative">
               <textarea
                 value={userPrompt}
                 onChange={(e) => setUserPrompt(e.target.value)}
                 rows={4}
-                className="w-full px-3 py-2 bg-slate-50 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Например: Создай тест с 10 вопросами на тему логарифмов, средней сложности"
+                className="w-full px-4 py-4 bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 focus:outline-none transition-all duration-300 resize-none text-slate-900 placeholder-slate-500"
+                placeholder="Например: Создай тест с 10 вопросами на тему логарифмов, средней сложности, с объяснениями к ответам"
               />
-            </div>
-
-            {errorMessage && (
-              <div className="flex items-start gap-2 bg-red-50 text-red-700 p-3 rounded-xl">
-                <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5" />
-                <p className="text-sm">{errorMessage}</p>
+              <div className="absolute bottom-3 right-3">
+                <div className="flex items-center gap-1 px-2 py-1 bg-white/80 backdrop-blur-sm rounded-lg text-xs text-slate-500">
+                  <Sparkles className="w-3 h-3" />
+                  ИИ поможет
+                </div>
               </div>
-            )}
+            </div>
+          </div>
 
-            <button
-              onClick={handleSubmit}
-              disabled={loading || (!file && !userPrompt.trim())}
-              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 transition disabled:bg-blue-300 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" /> Генерация...
-                </>
-              ) : (
-                <>Создать тест</>
-              )}
-            </button>
+          {/* Error Message */}
+          {errorMessage && (
+            <div className="flex items-start gap-3 bg-gradient-to-r from-red-50 to-red-100/50 border border-red-200 text-red-700 p-4 rounded-2xl">
+              <div className="flex items-center justify-center w-8 h-8 bg-red-100 rounded-xl flex-shrink-0">
+                <AlertTriangle className="w-4 h-4 text-red-600" />
+              </div>
+              <div>
+                <p className="font-medium text-red-800">Ошибка</p>
+                <p className="text-sm text-red-700">{errorMessage}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Submit Button */}
+          <button
+            onClick={handleSubmit}
+            disabled={loading || (!file && !userPrompt.trim())}
+            className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none disabled:shadow-none"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Генерация теста...</span>
+                <div className="flex gap-1">
+                  <div className="w-1 h-1 bg-white/60 rounded-full animate-pulse"></div>
+                  <div className="w-1 h-1 bg-white/60 rounded-full animate-pulse delay-100"></div>
+                  <div className="w-1 h-1 bg-white/60 rounded-full animate-pulse delay-200"></div>
+                </div>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-5 h-5" />
+                <span>Создать тест</span>
+              </>
+            )}
+          </button>
+
+          {/* Helper Text */}
+          <div className="text-center">
+            <p className="text-sm text-slate-500">Процесс генерации может занять до 30 секунд</p>
           </div>
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default PromptTestForm;
+export default PromptTestForm
