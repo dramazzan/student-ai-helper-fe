@@ -1,24 +1,33 @@
 import api from "@/services/api";
 
 export const generateTest = async (
-  file: File,
+  file: File | null,
   options: {
     difficulty: string;
     questionCount: number;
-    questionType: string;
+    userPrompt?: string;
   }
 ) => {
   const formData = new FormData();
-  formData.append("file", file);
+
+  if (file) {
+    formData.append("file", file);
+  }
+
   formData.append("difficulty", options.difficulty);
   formData.append("questionCount", String(options.questionCount));
-  formData.append("questionType", options.questionType);
+
+  if (options.userPrompt) {
+    formData.append("userPrompt", options.userPrompt);
+  }
 
   const response = await api.post("/test/generate-test", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+
   return response.data;
 };
+
 
 export const generateMultiTest = async (
   file: File,

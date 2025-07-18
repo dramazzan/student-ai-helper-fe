@@ -111,7 +111,7 @@ const GenerateTestForm = () => {
 
     try {
       if (activeTab === "normal") {
-        const result = await generateTest(file, { difficulty, questionCount, questionType })
+        const result = await generateTest(file, { difficulty, questionCount })
         console.log("✅ Обычный тест создан:", result)
         addNotification({
           type: "success",

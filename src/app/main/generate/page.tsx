@@ -5,12 +5,15 @@ import GenerateTestForm from "@/components/GenerateTestForm"
 import GenerateTestFromUrlForm from "@/components/GenerateTestFromUrlForm"
 import { FileText, Globe, Sparkles } from "lucide-react"
 import Link from "next/link"
+import PromptTestForm from "@/components/PromptTestForm"
 
 const GeneratePage = () => {
   const [activeTab, setActiveTab] = useState<"text" | "url">("text")
 
   return (
     <div className="min-h-screen bg-slate-50">
+
+      <PromptTestForm />
       <div className="max-w-4xl mx-auto px-6 py-12">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium mb-4">
@@ -71,6 +74,7 @@ const GeneratePage = () => {
             )}
           </div>
         </div>
+
 
         <div className="mt-8 bg-white rounded-xl border border-slate-200 p-6">
           <h3 className="font-semibold text-slate-900 mb-4">Советы для лучших результатов</h3>
