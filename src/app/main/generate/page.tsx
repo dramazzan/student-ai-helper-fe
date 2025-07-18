@@ -13,7 +13,6 @@ const GeneratePage = () => {
   return (
     <div className="min-h-screen bg-slate-50">
 
-      <PromptTestForm />
       <div className="max-w-4xl mx-auto px-6 py-12">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium mb-4">
@@ -97,6 +96,9 @@ const GeneratePage = () => {
             </div>
           </div>
         </div>
+
+      <PromptTestForm />
+
 
         <div className="mt-8 text-center">
           <p className="text-slate-600 mb-4">Готовы посмотреть созданные тесты?</p>
