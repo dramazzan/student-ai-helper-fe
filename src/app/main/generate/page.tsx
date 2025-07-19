@@ -13,6 +13,23 @@ const GeneratePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-green-50/30">
       <div className="max-w-5xl mx-auto px-6 py-12">
+           {/* Prompt Test Form Section */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/50 shadow-lg overflow-hidden mb-12">
+          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-8 border-b border-slate-200/60">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl">
+                <Zap className="w-6 h-6 text-indigo-600" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-slate-900">Быстрая генерация</h3>
+                <p className="text-slate-600 text-lg">Создайте тест одним промптом</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-8">
+            <PromptTestForm />
+          </div>
+        </div>
         {/* Header Section */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-100 to-blue-100 text-green-700 rounded-full text-sm font-medium mb-6 shadow-sm">
@@ -116,23 +133,7 @@ const GeneratePage = () => {
           </div>
         </div>
 
-        {/* Prompt Test Form Section */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/50 shadow-lg overflow-hidden mb-12">
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-8 border-b border-slate-200/60">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl">
-                <Zap className="w-6 h-6 text-indigo-600" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold text-slate-900">Быстрая генерация</h3>
-                <p className="text-slate-600 text-lg">Создайте тест одним промптом</p>
-              </div>
-            </div>
-          </div>
-          <div className="p-8">
-            <PromptTestForm />
-          </div>
-        </div>
+     
 
         {/* CTA Section */}
         <div className="text-center bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-10 border border-white/50 shadow-lg">
