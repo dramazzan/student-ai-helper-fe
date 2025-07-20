@@ -14,6 +14,8 @@ import {
   Loader2,
   CheckCircle,
   AlertTriangle,
+  Sparkles,
+  Zap,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { NotificationToast } from "./NotificationToast"
@@ -23,6 +25,12 @@ const difficultyLabels: Record<string, string> = {
   easy: "Лёгкий",
   medium: "Средний",
   hard: "Сложный",
+}
+
+const difficultyColors: Record<string, string> = {
+  easy: "from-emerald-500 to-green-600",
+  medium: "from-amber-500 to-orange-600",
+  hard: "from-red-500 to-pink-600",
 }
 
 const GenerateTestForm = () => {
@@ -128,7 +136,6 @@ const GenerateTestForm = () => {
         })
       }
 
-      // Небольшая задержка перед переходом, чтобы пользователь увидел уведомление
       setTimeout(() => {
         router.push("/main/tests")
       }, 1500)
@@ -153,197 +160,269 @@ const GenerateTestForm = () => {
         <NotificationToast key={notification.id} notification={notification} onClose={removeNotification} />
       ))}
 
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-lg">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4">
-              <UploadCloud className="w-8 h-8 text-blue-600" />
-            </div>
-            <h1 className="text-2xl font-bold text-slate-900 mb-2">Генерация теста из файла</h1>
-            <p className="text-slate-600">Загрузите документ и создайте тест на основе его содержимого</p>
+      <div className="w-full max-w-4xl mx-auto">
+        {/* Enhanced Tab Navigation */}
+        <div className="bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-lg rounded-2xl shadow-xl border border-white/60 overflow-hidden mb-8">
+          <div className="flex border-b border-white/30 bg-gradient-to-r from-slate-50/80 to-slate-100/50">
+            <button
+              className={`flex-1 flex items-center justify-center gap-4 px-8 py-6 font-bold text-lg transition-all duration-500 relative overflow-hidden group ${
+                activeTab === "normal"
+                  ? "bg-gradient-to-r from-emerald-500/20 to-green-500/20 text-emerald-700 shadow-lg"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+              }`}
+              onClick={() => setActiveTab("normal")}
+            >
+              {activeTab === "normal" && (
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 animate-pulse" />
+              )}
+              <div
+                className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 ${
+                  activeTab === "normal"
+                    ? "bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg"
+                    : "bg-slate-200 text-slate-600 group-hover:bg-slate-300"
+                }`}
+              >
+                <FileText className="w-5 h-5" />
+              </div>
+              <span className="relative z-10">Обычный тест</span>
+              {activeTab === "normal" && (
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-green-600" />
+              )}
+            </button>
+
+            <button
+              className={`flex-1 flex items-center justify-center gap-4 px-8 py-6 font-bold text-lg transition-all duration-500 relative overflow-hidden group ${
+                activeTab === "multi"
+                  ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-700 shadow-lg"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+              }`}
+              onClick={() => setActiveTab("multi")}
+            >
+              {activeTab === "multi" && (
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 animate-pulse" />
+              )}
+              <div
+                className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 ${
+                  activeTab === "multi"
+                    ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg"
+                    : "bg-slate-200 text-slate-600 group-hover:bg-slate-300"
+                }`}
+              >
+                <Layers className="w-5 h-5" />
+              </div>
+              <span className="relative z-10">Мульти тест</span>
+              {activeTab === "multi" && (
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-600" />
+              )}
+            </button>
           </div>
 
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-            <div className="p-6 border-b border-slate-100">
-              <div className="flex bg-slate-50 rounded-xl p-1">
-                <button
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    activeTab === "normal" ? "bg-white text-blue-600 shadow-sm" : "text-slate-600 hover:text-slate-900"
-                  }`}
-                  onClick={() => setActiveTab("normal")}
-                >
-                  <FileText className="w-4 h-4" />
-                  Обычный тест
-                </button>
-                <button
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    activeTab === "multi" ? "bg-white text-purple-600 shadow-sm" : "text-slate-600 hover:text-slate-900"
-                  }`}
-                  onClick={() => setActiveTab("multi")}
-                >
-                  <Layers className="w-4 h-4" />
-                  Мульти тест
-                </button>
+          {/* Enhanced Description */}
+          <div className="p-6 bg-gradient-to-r from-slate-50/50 to-white/50">
+            <p className="text-center text-slate-600 text-lg">
+              {activeTab === "normal"
+                ? "Создает один персонализированный тест с заданными параметрами"
+                : "Создает несколько тестов разной сложности для комплексной проверки знаний"}
+            </p>
+          </div>
+        </div>
+
+        {/* Main Form */}
+        <div className="bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/60 overflow-hidden">
+          {/* File Upload Section */}
+          <div className="p-8 border-b border-white/30">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg">
+                <Upload className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">Загрузка документа</h3>
+                <p className="text-slate-600">Выберите файл для создания теста</p>
               </div>
             </div>
 
-            <div className="p-6 border-b border-slate-100">
-              <div className="flex items-center gap-3 mb-4">
-                <Upload className="w-5 h-5 text-slate-600" />
-                <label className="text-sm font-medium text-slate-900">Файл документа</label>
+            <div
+              className={`relative border-2 border-dashed rounded-2xl p-8 transition-all duration-300 cursor-pointer group ${
+                dragActive
+                  ? "border-blue-400 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-lg scale-105"
+                  : file
+                    ? "border-emerald-400 bg-gradient-to-r from-emerald-50 to-green-50 shadow-lg"
+                    : "border-slate-300 hover:border-slate-400 hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100 hover:shadow-lg hover:scale-105"
+              }`}
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              onDrop={handleDrop}
+            >
+              <input
+                type="file"
+                accept=".pdf,.docx,.pptx,.txt"
+                onChange={handleFileChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div className="text-center">
+                {file ? (
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl shadow-lg">
+                      <CheckCircle className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <p className="font-bold text-emerald-900 text-lg">{file.name}</p>
+                      <p className="text-emerald-600 font-medium">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="group-hover:scale-105 transition-transform duration-300">
+                    <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-r from-slate-200 to-slate-300 rounded-3xl mx-auto mb-4 group-hover:from-blue-200 group-hover:to-indigo-300 transition-all duration-300">
+                      <UploadCloud className="w-10 h-10 text-slate-500 group-hover:text-blue-600 transition-colors duration-300" />
+                    </div>
+                    <p className="text-slate-900 font-bold text-lg mb-2">Перетащите файл или нажмите для выбора</p>
+                    <p className="text-slate-500 font-medium">Поддерживаются форматы: PDF, DOCX, PPTX, TXT</p>
+                  </div>
+                )}
               </div>
-              <div
-                className={`relative border-2 border-dashed rounded-xl p-6 transition-all duration-200 cursor-pointer ${
-                  dragActive
-                    ? "border-blue-400 bg-blue-50"
-                    : file
-                      ? "border-green-300 bg-green-50"
-                      : "border-slate-300 hover:border-slate-400 hover:bg-slate-50"
-                }`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-              >
+            </div>
+          </div>
+
+          {/* Settings Section */}
+          <div className="p-8 space-y-8">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Difficulty Selection */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-100 to-pink-200 rounded-xl">
+                    <Target className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <label className="text-lg font-bold text-slate-900">Уровень сложности</label>
+                    <p className="text-sm text-slate-600">Выберите подходящий уровень</p>
+                  </div>
+                </div>
+                <select
+                  value={difficulty}
+                  onChange={(e) => setDifficulty(e.target.value)}
+                  className="w-full px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-purple-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  <option value="easy">🟢 Лёгкий уровень</option>
+                  <option value="medium">🟡 Средний уровень</option>
+                  <option value="hard">🔴 Сложный уровень</option>
+                </select>
+              </div>
+
+              {/* Question Count */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-100 to-indigo-200 rounded-xl">
+                    <Hash className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <label className="text-lg font-bold text-slate-900">Количество вопросов</label>
+                    <p className="text-sm text-slate-600">От 5 до 50 вопросов</p>
+                  </div>
+                </div>
                 <input
-                  type="file"
-                  accept=".pdf,.docx,.pptx,.txt"
-                  onChange={handleFileChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  type="number"
+                  value={questionCount}
+                  onChange={(e) => {
+                    const val = Number(e.target.value)
+                    if (val >= 5 && val <= 50) setQuestionCount(val)
+                  }}
+                  min={5}
+                  max={50}
+                  className="w-full px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-blue-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 />
-                <div className="text-center">
-                  {file ? (
-                    <div className="flex items-center justify-center gap-3">
-                      <CheckCircle className="w-8 h-8 text-green-600" />
-                      <div className="text-left">
-                        <p className="font-medium text-green-900">{file.name}</p>
-                        <p className="text-sm text-green-600">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <UploadCloud className="w-12 h-12 text-slate-400 mx-auto mb-3" />
-                      <p className="text-slate-900 font-medium mb-1">Перетащите файл или нажмите для выбора</p>
-                      <p className="text-sm text-slate-500">PDF, DOCX, PPTX, TXT</p>
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
 
-            <div className="p-6 space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Target className="w-4 h-4 text-slate-600" />
-                    <label className="text-sm font-medium text-slate-900">Сложность</label>
+            {/* Question Type (only for normal test) */}
+            {activeTab === "normal" && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-100 to-green-200 rounded-xl">
+                    <Type className="w-5 h-5 text-emerald-600" />
                   </div>
-                  <select
-                    value={difficulty}
-                    onChange={(e) => setDifficulty(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-slate-50 border-0 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
-                  >
-                    <option value="easy">Лёгкий</option>
-                    <option value="medium">Средний</option>
-                    <option value="hard">Сложный</option>
-                  </select>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Hash className="w-4 h-4 text-slate-600" />
-                    <label className="text-sm font-medium text-slate-900">Вопросов</label>
+                  <div>
+                    <label className="text-lg font-bold text-slate-900">Тип вопросов</label>
+                    <p className="text-sm text-slate-600">Выберите формат вопросов</p>
                   </div>
-                  <input
-                    type="number"
-                    value={questionCount}
-                    onChange={(e) => {
-                      const val = Number(e.target.value)
-                      if (val >= 5 && val <= 50) setQuestionCount(val)
-                    }}
-                    min={5}
-                    max={50}
-                    className="w-full px-3 py-2.5 bg-slate-50 border-0 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
-                  />
                 </div>
-              </div>
-
-              {activeTab === "normal" && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Type className="w-4 h-4 text-slate-600" />
-                    <label className="text-sm font-medium text-slate-900">Тип вопросов</label>
-                  </div>
-                  <select
-                    value={questionType}
-                    onChange={(e) => setQuestionType(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-slate-50 border-0 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
-                  >
-                    <option value="тест с выбором">Тест с выбором</option>
-                    <option value="открытые">Открытые</option>
-                    <option value="с одним выбором">С одним выбором</option>
-                    <option value="с несколькими">С несколькими</option>
-                  </select>
-                </div>
-              )}
-
-              <div className="flex justify-center">
-                <div
-                  className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
-                    difficulty === "easy"
-                      ? "text-green-700 bg-green-100"
-                      : difficulty === "medium"
-                        ? "text-amber-700 bg-amber-100"
-                        : "text-red-700 bg-red-100"
-                  }`}
+                <select
+                  value={questionType}
+                  onChange={(e) => setQuestionType(e.target.value)}
+                  className="w-full px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
-                  {difficultyLabels[difficulty]} • {questionCount} вопросов
-                </div>
-              </div>
-            </div>
-
-            {errorMessage && (
-              <div className="mx-6 mb-6">
-                <div className="flex items-start gap-3 bg-red-50 text-red-700 p-4 rounded-xl">
-                  <AlertTriangle className="w-5 h-5 mt-0.5 text-red-500 flex-shrink-0" />
-                  <div className="text-sm">
-                    <p className="font-medium mb-1">Ошибка</p>
-                    <p>{errorMessage}</p>
-                  </div>
-                </div>
+                  <option value="тест с выбором">📝 Тест с выбором ответа</option>
+                  <option value="открытые">✍️ Открытые вопросы</option>
+                  <option value="с одним выбором">☑️ С одним правильным ответом</option>
+                  <option value="с несколькими">☑️ С несколькими правильными ответами</option>
+                </select>
               </div>
             )}
 
-            <div className="p-6 pt-0">
-              <button
-                onClick={handleSubmit}
-                disabled={loading || !file}
-                className={`w-full flex items-center justify-center gap-3 px-6 py-4 text-white font-semibold rounded-2xl focus:outline-none focus:ring-4 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
-                  activeTab === "normal"
-                    ? "bg-blue-600 hover:bg-blue-700 focus:ring-blue-200 disabled:bg-blue-300"
-                    : "bg-purple-600 hover:bg-purple-700 focus:ring-purple-200 disabled:bg-purple-300"
+            {/* Summary Badge */}
+            <div className="flex justify-center">
+              <div
+                className={`inline-flex items-center gap-3 px-6 py-3 rounded-2xl text-sm font-bold shadow-lg bg-gradient-to-r ${
+                  difficulty === "easy"
+                    ? "from-emerald-100 to-green-200 text-emerald-800"
+                    : difficulty === "medium"
+                      ? "from-amber-100 to-orange-200 text-amber-800"
+                      : "from-red-100 to-pink-200 text-red-800"
                 }`}
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Генерация теста...</span>
-                  </>
-                ) : (
-                  <>
-                    {activeTab === "normal" ? <FileText className="w-5 h-5" /> : <Layers className="w-5 h-5" />}
-                    <span>Сгенерировать {activeTab === "normal" ? "тест" : "мульти тест"}</span>
-                  </>
-                )}
-              </button>
+                <Sparkles className="w-4 h-4" />
+                {difficultyLabels[difficulty]} • {questionCount} вопросов
+              </div>
             </div>
           </div>
 
-          <div className="text-center mt-6">
-            <p className="text-xs text-slate-500">
-              {activeTab === "normal"
-                ? "Создает один тест с заданными параметрами"
-                : "Создает несколько тестов разной сложности"}
-            </p>
+          {/* Error Message */}
+          {errorMessage && (
+            <div className="mx-8 mb-8">
+              <div className="flex items-start gap-4 bg-gradient-to-r from-red-50 to-pink-50 text-red-700 p-6 rounded-2xl border border-red-200 shadow-lg">
+                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-500 to-pink-600 rounded-xl flex-shrink-0">
+                  <AlertTriangle className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="font-bold text-lg mb-1">Ошибка</p>
+                  <p className="font-medium">{errorMessage}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Submit Button */}
+          <div className="p-8 pt-0">
+            <button
+              onClick={handleSubmit}
+              disabled={loading || !file}
+              className={`w-full flex items-center justify-center gap-4 px-8 py-6 text-white font-bold text-lg rounded-2xl focus:outline-none focus:ring-4 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-2xl hover:shadow-3xl ${
+                activeTab === "normal"
+                  ? "bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 hover:from-emerald-700 hover:via-green-700 hover:to-emerald-800 focus:ring-emerald-200 disabled:from-emerald-300 disabled:to-green-400"
+                  : "bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700 hover:from-purple-700 hover:via-pink-700 hover:to-purple-800 focus:ring-purple-200 disabled:from-purple-300 disabled:to-pink-400"
+              }`}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                  <span>Генерация теста...</span>
+                </>
+              ) : (
+                <>
+                  {activeTab === "normal" ? (
+                    <div className="flex items-center justify-center w-8 h-8 bg-white/20 rounded-xl">
+                      <FileText className="w-5 h-5" />
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center w-8 h-8 bg-white/20 rounded-xl">
+                      <Layers className="w-5 h-5" />
+                    </div>
+                  )}
+                  <span>Сгенерировать {activeTab === "normal" ? "тест" : "мульти тест"}</span>
+                  <Zap className="w-5 h-5" />
+                </>
+              )}
+            </button>
           </div>
         </div>
       </div>
