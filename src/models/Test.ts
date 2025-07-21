@@ -27,6 +27,7 @@ export interface TestProgressInfo {
 
 export interface TestTabsProps {
   normalTests: Test[]
+  onDeleteTest: (testId: string) => Promise<boolean>;
 }
 
 export interface TestDownloadListProps {

@@ -41,3 +41,4 @@ export const getUserProgress = async() =>{
         throw error;
     }
 }
+

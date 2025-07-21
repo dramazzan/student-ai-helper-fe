@@ -1,23 +1,12 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { fetchNormalTests, fetchTestModule } from "@/services/testService/fetchService"
+import { deleteTestById } from "@/services/testService/generationService"
 import ModuleList from "@/components/ModuleList"
 import NormalTestList from "@/components/NormalTestList"
 import { BookOpen, Layers, Search, Filter, FileText, TrendingUp, Target, BarChart3 } from "lucide-react"
-
-interface Test {
-  _id: string
-  title: string
-  questionCount: number
-  difficulty: string
-  createdAt: string
-}
-
-interface Module {
-  _id: string
-  originalFileName: string
-  createdAt: string
-}
+import type { Test } from "@/models/Test"
+import type { Module } from "@/models/Test" 
 
 const TestPage = () => {
   const [normalTests, setNormalTests] = useState<Test[]>([])
@@ -27,19 +16,68 @@ const TestPage = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all")
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [normal, fetchedModules] = await Promise.all([fetchNormalTests(), fetchTestModule()])
-        setNormalTests(normal)
-        setModules(fetchedModules)
-      } catch (err) {
-        console.error("Ошибка загрузки данных:", err)
-      } finally {
-        setLoading(false)
-      }
+  const loadData = useCallback(async () => {
+    try {
+      const [normal, fetchedModules] = await Promise.all([fetchNormalTests(), fetchTestModule()])
+      setNormalTests(normal)
+      setModules(fetchedModules)
+    } catch (err) {
+      console.error("Ошибка загрузки данных:", err)
+    } finally {
+      setLoading(false)
     }
+  }, [])
+
+  useEffect(() => {
     loadData()
+  }, [loadData])
+
+  // Функция для удаления теста с оптимистическим обновлением
+  const handleDeleteTest = useCallback(async (testId: string): Promise<boolean> => {
+    try {
+      // Оптимистично обновляем UI сразу
+      setNormalTests(prevTests => prevTests.filter(test => test._id !== testId))
+      
+      // Выполняем фактическое удаление
+      await deleteTestById(testId)
+      
+      return true
+    } catch (error) {
+      console.error('Ошибка при удалении теста:', error)
+      
+      // В случае ошибки возвращаем тест обратно
+      const [refreshedTests] = await Promise.all([fetchNormalTests()])
+      setNormalTests(refreshedTests)
+      
+      throw error
+    }
+  }, [])
+
+  // Функция для добавления теста
+  const handleAddTest = useCallback((newTest: Test) => {
+    setNormalTests(prevTests => [newTest, ...prevTests])
+  }, [])
+
+  // Функция для обновления теста
+  const handleUpdateTest = useCallback((updatedTest: Test) => {
+    setNormalTests(prevTests => 
+      prevTests.map(test => test._id === updatedTest._id ? updatedTest : test)
+    )
+  }, [])
+
+  // Функция для удаления модуля
+  const handleDeleteModule = useCallback(async (moduleId: string) => {
+    try {
+      setModules(prevModules => prevModules.filter(module => module._id !== moduleId))
+      // Здесь должна быть функция удаления модуля из сервиса
+      // await deleteModuleById(moduleId)
+    } catch (error) {
+      console.error('Ошибка при удалении модуля:', error)
+      // В случае ошибки перезагружаем модули
+      const [, refreshedModules] = await Promise.all([Promise.resolve([]), fetchTestModule()])
+      setModules(refreshedModules)
+      throw error
+    }
   }, [])
 
   const filteredNormalTests = normalTests.filter((test) => {
@@ -220,7 +258,10 @@ const TestPage = () => {
         <div className="p-6">
           {activeTab === "normal" ? (
             filteredNormalTests.length > 0 ? (
-              <NormalTestList normalTests={filteredNormalTests} />
+              <NormalTestList 
+                normalTests={filteredNormalTests} 
+                onDeleteTest={handleDeleteTest}
+              />
             ) : searchQuery || selectedDifficulty !== "all" ? (
               <div className="text-center py-12">
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-4">

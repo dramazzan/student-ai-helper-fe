@@ -84,3 +84,9 @@ export const generateTestsFromWeakTopics = async (options: {
   return response.data;
 };
 
+
+
+export const deleteTestById = async (testId: string) => {
+  const response = await api.delete(`/test/delete/${testId}`)
+  return response.data
+}

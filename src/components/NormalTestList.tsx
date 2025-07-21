@@ -14,8 +14,10 @@ import {
   ChevronDown,
   ChevronUp,
   AlertCircle,
+  Trash2,
 } from "lucide-react"
 import { getTestProgressByTestId } from "@/services/testService/passingService"
+import { deleteTestById } from "@/services/testService/generationService"
 import type { TestTabsProps } from "@/models/Test"
 
 // Типы для лучшей типизации
@@ -70,7 +72,9 @@ const TestActions: React.FC<{
   hasProgress: boolean
   onStartTest: (testId: string) => void
   onViewHistory: (testId: string) => void
-}> = React.memo(({ testId, hasProgress, onStartTest, onViewHistory }) => (
+  onDeleteTest: (testId: string) => void
+  isDeleting: boolean
+}> = React.memo(({ testId, hasProgress, onStartTest, onViewHistory, onDeleteTest, isDeleting }) => (
   <div className="flex items-center gap-2 flex-shrink-0">
     <button
       onClick={() => onStartTest(testId)}
@@ -88,6 +92,14 @@ const TestActions: React.FC<{
         История
       </button>
     )}
+    <button
+      onClick={() => onDeleteTest(testId)}
+      disabled={isDeleting}
+      className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 hover:text-red-800 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <Trash2 className="w-3.5 h-3.5" />
+      {isDeleting ? "Удаление..." : "Удалить"}
+    </button>
   </div>
 ))
 
@@ -149,7 +161,19 @@ const TestCard: React.FC<{
   onToggleSummary: (testId: string) => void
   onStartTest: (testId: string) => void
   onViewHistory: (testId: string) => void
-}> = React.memo(({ test, progress, isLastItem, isSummaryOpen, onToggleSummary, onStartTest, onViewHistory }) => {
+  onDeleteTest: (testId: string) => void
+  isDeleting: boolean
+}> = React.memo(({ 
+  test, 
+  progress, 
+  isLastItem, 
+  isSummaryOpen, 
+  onToggleSummary, 
+  onStartTest, 
+  onViewHistory, 
+  onDeleteTest,
+  isDeleting 
+}) => {
   const hasProgress = progress > 0
 
   return (
@@ -187,6 +211,8 @@ const TestCard: React.FC<{
           hasProgress={hasProgress}
           onStartTest={onStartTest}
           onViewHistory={onViewHistory}
+          onDeleteTest={onDeleteTest}
+          isDeleting={isDeleting}
         />
       </div>
 
@@ -244,6 +270,7 @@ const TestSkeleton: React.FC = () => (
             <div className="flex gap-2">
               <div className="h-9 bg-slate-200 rounded-lg w-20" />
               <div className="h-9 bg-slate-200 rounded-lg w-20" />
+              <div className="h-9 bg-slate-200 rounded-lg w-20" />
             </div>
           </div>
         </div>
@@ -283,12 +310,14 @@ const ErrorState: React.FC<{ onRetry: () => void }> = ({ onRetry }) => (
 )
 
 // Основной компонент
-const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
+const NormalTestList: React.FC<TestTabsProps> = ({ normalTests, onDeleteTest}) => {
   const router = useRouter()
   const [progressMap, setProgressMap] = useState<TestProgress>({})
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [openSummaries, setOpenSummaries] = useState<TestSummaryState>({})
+  const [deletingTestId, setDeletingTestId] = useState<string | null>(null)
+  const [tests, setTests] = useState(normalTests)
 
   // Мемоизированные обработчики
   const handleStartTest = useCallback(
@@ -309,14 +338,39 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
     setOpenSummaries((prev) => ({ ...prev, [testId]: !prev[testId] }))
   }, [])
 
+  const handleDeleteTest = useCallback(async (testId: string) => {
+    if (!confirm('Вы уверены, что хотите удалить этот тест?')) {
+      return
+    }
+
+    setDeletingTestId(testId)
+    try {
+      await deleteTestById(testId)
+      setTests(prevTests => prevTests.filter(test => test._id !== testId))
+      setProgressMap(prevProgress => {
+        const { [testId]: deleted, ...rest } = prevProgress
+        return rest
+      })
+      setOpenSummaries(prevSummaries => {
+        const { [testId]: deleted, ...rest } = prevSummaries
+        return rest
+      })
+    } catch (error) {
+      console.error('Ошибка при удалении теста:', error)
+      alert('Не удалось удалить тест. Попробуйте еще раз.')
+    } finally {
+      setDeletingTestId(null)
+    }
+  }, [])
+
   const loadProgress = useCallback(async () => {
-    if (!normalTests.length) return
+    if (!tests.length) return
 
     setIsLoading(true)
     setError(null)
 
     try {
-      const progressPromises = normalTests.map(async (test) => {
+      const progressPromises = tests.map(async (test) => {
         try {
           const data: TestProgressData = await getTestProgressByTestId(test._id)
           const bestScore = data.attempts.length > 0 ? Math.max(...data.attempts.map((a) => a.percentage)) : 0
@@ -339,6 +393,10 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
     } finally {
       setIsLoading(false)
     }
+  }, [tests])
+
+  useEffect(() => {
+    setTests(normalTests)
   }, [normalTests])
 
   useEffect(() => {
@@ -347,7 +405,7 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
 
   // Мемоизированные вычисления
   const sortedTests = useMemo(() => {
-    return [...normalTests].sort((a, b) => {
+    return [...tests].sort((a, b) => {
       const aProgress = progressMap[a._id] || 0
       const bProgress = progressMap[b._id] || 0
       // Сначала тесты с прогрессом, потом по дате создания
@@ -355,7 +413,7 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
       if (aProgress === 0 && bProgress > 0) return 1
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     })
-  }, [normalTests, progressMap])
+  }, [tests, progressMap])
 
   if (error) {
     return <ErrorState onRetry={loadProgress} />
@@ -365,7 +423,7 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
     return <TestSkeleton />
   }
 
-  if (!normalTests.length) {
+  if (!tests.length) {
     return <EmptyState />
   }
 
@@ -389,6 +447,8 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests }) => {
             onToggleSummary={handleToggleSummary}
             onStartTest={handleStartTest}
             onViewHistory={handleViewHistory}
+            onDeleteTest={handleDeleteTest}
+            isDeleting={deletingTestId === test._id}
           />
         ))}
       </div>
