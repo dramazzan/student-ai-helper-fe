@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { generateTestFromUrl } from "@/services/testService/generationService"
 import {
@@ -16,6 +15,11 @@ import {
   Zap,
   ExternalLink,
   CheckCircle,
+  Circle,
+  AlertCircle,
+  Edit3,
+  CheckSquare,
+  Square,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { NotificationToast } from "./NotificationToast"
@@ -63,6 +67,34 @@ const GenerateTestFromUrlForm = () => {
     setUrl(newUrl)
     setUrlValid(validateUrl(newUrl))
     if (errorMessage) setErrorMessage("")
+  }
+
+  const getDifficultyIcon = (level: string) => {
+    switch (level) {
+      case "easy":
+        return <Circle className="w-4 h-4 text-emerald-600" />
+      case "medium":
+        return <AlertCircle className="w-4 h-4 text-amber-600" />
+      case "hard":
+        return <Target className="w-4 h-4 text-red-600" />
+      default:
+        return <Circle className="w-4 h-4" />
+    }
+  }
+
+  const getQuestionTypeIcon = (type: string) => {
+    switch (type) {
+      case "тест с выбором":
+        return <CheckSquare className="w-4 h-4" />
+      case "открытые":
+        return <Edit3 className="w-4 h-4" />
+      case "с одним выбором":
+        return <Circle className="w-4 h-4" />
+      case "с несколькими":
+        return <Square className="w-4 h-4" />
+      default:
+        return <Type className="w-4 h-4" />
+    }
   }
 
   const handleSubmit = async () => {
@@ -196,9 +228,9 @@ const GenerateTestFromUrlForm = () => {
                   onChange={(e) => setDifficulty(e.target.value)}
                   className="w-full px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-purple-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
-                  <option value="easy">🟢 Лёгкий уровень</option>
-                  <option value="medium">🟡 Средний уровень</option>
-                  <option value="hard">🔴 Сложный уровень</option>
+                  <option value="easy">Лёгкий уровень</option>
+                  <option value="medium">Средний уровень</option>
+                  <option value="hard">Сложный уровень</option>
                 </select>
               </div>
 
@@ -243,10 +275,10 @@ const GenerateTestFromUrlForm = () => {
                 onChange={(e) => setQuestionType(e.target.value)}
                 className="w-full px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                <option value="тест с выбором">📝 Тест с выбором ответа</option>
-                <option value="открытые">✍️ Открытые вопросы</option>
-                <option value="с одним выбором">☑️ С одним правильным ответом</option>
-                <option value="с несколькими">☑️ С несколькими правильными ответами</option>
+                <option value="тест с выбором">Тест с выбором ответа</option>
+                <option value="открытые">Открытые вопросы</option>
+                <option value="с одним выбором">С одним правильным ответом</option>
+                <option value="с несколькими">С несколькими правильными ответами</option>
               </select>
             </div>
 
@@ -261,8 +293,11 @@ const GenerateTestFromUrlForm = () => {
                       : "from-red-100 to-pink-200 text-red-800"
                 }`}
               >
+                {getDifficultyIcon(difficulty)}
                 <Sparkles className="w-4 h-4" />
                 {difficultyLabels[difficulty]} • {questionCount} вопросов
+                <span>•</span>
+                {getQuestionTypeIcon(questionType)}
               </div>
             </div>
           </div>
