@@ -1,107 +1,141 @@
-"use client"
-import { useEffect, useState, useCallback } from "react"
-import { fetchNormalTests, fetchTestModule } from "@/services/testService/fetchService"
-import { deleteTestById } from "@/services/testService/generationService"
-import ModuleList from "@/components/ModuleList"
-import NormalTestList from "@/components/NormalTestList"
-import { BookOpen, Layers, Search, Filter, FileText, TrendingUp, Target, BarChart3 } from "lucide-react"
-import type { Test } from "@/models/Test"
-import type { Module } from "@/models/Test" 
+"use client";
+import { useEffect, useState, useCallback } from "react";
+import {
+  fetchNormalTests,
+  fetchTestModule,
+} from "@/services/testService/fetchService";
+import { deleteTestById } from "@/services/testService/generationService";
+import ModuleList from "@/components/ModuleList";
+import NormalTestList from "@/components/NormalTestList";
+import {
+  BookOpen,
+  Layers,
+  Search,
+  Filter,
+  FileText,
+  TrendingUp,
+  Target,
+  BarChart3,
+} from "lucide-react";
+import type { Test } from "@/models/Test";
+import type { Module } from "@/models/Test";
 
 const TestPage = () => {
-  const [normalTests, setNormalTests] = useState<Test[]>([])
-  const [modules, setModules] = useState<Module[]>([])
-  const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<"normal" | "multi">("normal")
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all")
+  const [normalTests, setNormalTests] = useState<Test[]>([]);
+  const [modules, setModules] = useState<Module[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"normal" | "multi">("normal");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
 
   const loadData = useCallback(async () => {
     try {
-      const [normal, fetchedModules] = await Promise.all([fetchNormalTests(), fetchTestModule()])
-      setNormalTests(normal)
-      setModules(fetchedModules)
+      const [normal, fetchedModules] = await Promise.all([
+        fetchNormalTests(),
+        fetchTestModule(),
+      ]);
+      setNormalTests(normal);
+      setModules(fetchedModules);
     } catch (err) {
-      console.error("Ошибка загрузки данных:", err)
+      console.error("Ошибка загрузки данных:", err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    loadData()
-  }, [loadData])
+    loadData();
+  }, [loadData]);
 
   // Функция для удаления теста с оптимистическим обновлением
-  const handleDeleteTest = useCallback(async (testId: string): Promise<boolean> => {
-    try {
-      // Оптимистично обновляем UI сразу
-      setNormalTests(prevTests => prevTests.filter(test => test._id !== testId))
-      
-      // Выполняем фактическое удаление
-      await deleteTestById(testId)
-      
-      return true
-    } catch (error) {
-      console.error('Ошибка при удалении теста:', error)
-      
-      // В случае ошибки возвращаем тест обратно
-      const [refreshedTests] = await Promise.all([fetchNormalTests()])
-      setNormalTests(refreshedTests)
-      
-      throw error
-    }
-  }, [])
+  const handleDeleteTest = useCallback(
+    async (testId: string): Promise<boolean> => {
+      try {
+        // Оптимистично обновляем UI сразу
+        setNormalTests((prevTests) =>
+          prevTests.filter((test) => test._id !== testId)
+        );
+
+        // Выполняем фактическое удаление
+        await deleteTestById(testId);
+
+        return true;
+      } catch (error) {
+        console.error("Ошибка при удалении теста:", error);
+
+        // В случае ошибки возвращаем тест обратно
+        const [refreshedTests] = await Promise.all([fetchNormalTests()]);
+        setNormalTests(refreshedTests);
+
+        throw error;
+      }
+    },
+    []
+  );
 
   // Функция для добавления теста
   const handleAddTest = useCallback((newTest: Test) => {
-    setNormalTests(prevTests => [newTest, ...prevTests])
-  }, [])
+    setNormalTests((prevTests) => [newTest, ...prevTests]);
+  }, []);
 
   // Функция для обновления теста
   const handleUpdateTest = useCallback((updatedTest: Test) => {
-    setNormalTests(prevTests => 
-      prevTests.map(test => test._id === updatedTest._id ? updatedTest : test)
-    )
-  }, [])
+    setNormalTests((prevTests) =>
+      prevTests.map((test) =>
+        test._id === updatedTest._id ? updatedTest : test
+      )
+    );
+  }, []);
 
   // Функция для удаления модуля
   const handleDeleteModule = useCallback(async (moduleId: string) => {
     try {
-      setModules(prevModules => prevModules.filter(module => module._id !== moduleId))
+      setModules((prevModules) =>
+        prevModules.filter((module) => module._id !== moduleId)
+      );
       // Здесь должна быть функция удаления модуля из сервиса
       // await deleteModuleById(moduleId)
     } catch (error) {
-      console.error('Ошибка при удалении модуля:', error)
+      console.error("Ошибка при удалении модуля:", error);
       // В случае ошибки перезагружаем модули
-      const [, refreshedModules] = await Promise.all([Promise.resolve([]), fetchTestModule()])
-      setModules(refreshedModules)
-      throw error
+      const [, refreshedModules] = await Promise.all([
+        Promise.resolve([]),
+        fetchTestModule(),
+      ]);
+      setModules(refreshedModules);
+      throw error;
     }
-  }, [])
+  }, []);
 
   const filteredNormalTests = normalTests.filter((test) => {
-    const matchesSearch = test.title.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesDifficulty = selectedDifficulty === "all" || test.difficulty === selectedDifficulty
-    return matchesSearch && matchesDifficulty
-  })
+    const matchesSearch = test.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesDifficulty =
+      selectedDifficulty === "all" || test.difficulty === selectedDifficulty;
+    return matchesSearch && matchesDifficulty;
+  });
 
   const getStats = () => {
-    const totalNormal = normalTests.length
-    const totalModules = modules.length
-    const totalQuestions = normalTests.reduce((sum, test) => sum + test.questionCount, 0)
-    const avgQuestions = totalNormal > 0 ? Math.round(totalQuestions / totalNormal) : 0
+    const totalNormal = normalTests.length;
+    const totalModules = modules.length;
+    const totalQuestions = normalTests.reduce(
+      (sum, test) => sum + test.questionCount,
+      0
+    );
+    const avgQuestions =
+      totalNormal > 0 ? Math.round(totalQuestions / totalNormal) : 0;
 
     return {
       totalNormal,
       totalModules,
       totalQuestions,
       avgQuestions,
-    }
-  }
+    };
+  };
 
-  const stats = getStats()
-  const difficulties = ["all", "easy", "medium", "hard"]
+  const stats = getStats();
+  const difficulties = ["all", "easy", "medium", "hard"];
 
   if (loading) {
     return (
@@ -131,12 +165,15 @@ const TestPage = () => {
           </div>
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-20 bg-slate-50 rounded-lg animate-pulse" />
+              <div
+                key={i}
+                className="h-20 bg-slate-50 rounded-lg animate-pulse"
+              />
             ))}
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -149,7 +186,9 @@ const TestPage = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-slate-900">Мои тесты</h1>
-              <p className="text-slate-600">Управляйте тестами и отслеживайте прогресс</p>
+              <p className="text-slate-600">
+                Управляйте тестами и отслеживайте прогресс
+              </p>
             </div>
           </div>
 
@@ -157,33 +196,49 @@ const TestPage = () => {
             <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
               <div className="flex items-center gap-2 mb-2">
                 <FileText className="w-4 h-4 text-slate-600" />
-                <span className="text-sm font-medium text-slate-700">Обычные</span>
+                <span className="text-sm font-medium text-slate-700">
+                  Обычные
+                </span>
               </div>
-              <div className="text-xl font-bold text-slate-900">{stats.totalNormal}</div>
+              <div className="text-xl font-bold text-slate-900">
+                {stats.totalNormal}
+              </div>
             </div>
 
             <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
               <div className="flex items-center gap-2 mb-2">
                 <Layers className="w-4 h-4 text-slate-600" />
-                <span className="text-sm font-medium text-slate-700">Мульти</span>
+                <span className="text-sm font-medium text-slate-700">
+                  Мульти
+                </span>
               </div>
-              <div className="text-xl font-bold text-slate-900">{stats.totalModules}</div>
+              <div className="text-xl font-bold text-slate-900">
+                {stats.totalModules}
+              </div>
             </div>
 
             <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
               <div className="flex items-center gap-2 mb-2">
                 <Target className="w-4 h-4 text-slate-600" />
-                <span className="text-sm font-medium text-slate-700">Вопросов</span>
+                <span className="text-sm font-medium text-slate-700">
+                  Вопросов
+                </span>
               </div>
-              <div className="text-xl font-bold text-slate-900">{stats.totalQuestions}</div>
+              <div className="text-xl font-bold text-slate-900">
+                {stats.totalQuestions}
+              </div>
             </div>
 
             <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
               <div className="flex items-center gap-2 mb-2">
                 <BarChart3 className="w-4 h-4 text-slate-600" />
-                <span className="text-sm font-medium text-slate-700">Среднее</span>
+                <span className="text-sm font-medium text-slate-700">
+                  Среднее
+                </span>
               </div>
-              <div className="text-xl font-bold text-slate-900">{stats.avgQuestions}</div>
+              <div className="text-xl font-bold text-slate-900">
+                {stats.avgQuestions}
+              </div>
             </div>
           </div>
         </div>
@@ -246,7 +301,9 @@ const TestPage = () => {
                 >
                   {difficulties.map((diff) => (
                     <option key={diff} value={diff}>
-                      {diff === "all" ? "Все уровни" : diff.charAt(0).toUpperCase() + diff.slice(1)}
+                      {diff === "all"
+                        ? "Все уровни"
+                        : diff.charAt(0).toUpperCase() + diff.slice(1)}
                     </option>
                   ))}
                 </select>
@@ -258,21 +315,25 @@ const TestPage = () => {
         <div className="p-6">
           {activeTab === "normal" ? (
             filteredNormalTests.length > 0 ? (
-              <NormalTestList 
-                normalTests={filteredNormalTests} 
-                onDeleteTest={handleDeleteTest}
+              <NormalTestList
+                normalTests={filteredNormalTests}
+                onDeleteTest={handleDeleteTest} // Теперь это (testId: string) => void
               />
             ) : searchQuery || selectedDifficulty !== "all" ? (
               <div className="text-center py-12">
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <Search className="w-6 h-6 text-slate-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Ничего не найдено</h3>
-                <p className="text-slate-600 mb-4">Попробуйте изменить параметры поиска</p>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  Ничего не найдено
+                </h3>
+                <p className="text-slate-600 mb-4">
+                  Попробуйте изменить параметры поиска
+                </p>
                 <button
                   onClick={() => {
-                    setSearchQuery("")
-                    setSelectedDifficulty("all")
+                    setSearchQuery("");
+                    setSelectedDifficulty("all");
                   }}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
                 >
@@ -285,8 +346,12 @@ const TestPage = () => {
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <BookOpen className="w-6 h-6 text-slate-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Нет обычных тестов</h3>
-                <p className="text-slate-600">Создайте свой первый тест для начала работы</p>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  Нет обычных тестов
+                </h3>
+                <p className="text-slate-600">
+                  Создайте свой первый тест для начала работы
+                </p>
               </div>
             )
           ) : modules.length > 0 ? (
@@ -296,8 +361,12 @@ const TestPage = () => {
               <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Layers className="w-6 h-6 text-slate-400" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">Нет мульти-тестов</h3>
-              <p className="text-slate-600">Загрузите документы для создания мульти-тестов</p>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                Нет мульти-тестов
+              </h3>
+              <p className="text-slate-600">
+                Загрузите документы для создания мульти-тестов
+              </p>
             </div>
           )}
         </div>
@@ -305,7 +374,9 @@ const TestPage = () => {
 
       {(normalTests.length > 0 || modules.length > 0) && (
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
-          <h3 className="font-semibold text-slate-900 mb-3">💡 Советы по использованию</h3>
+          <h3 className="font-semibold text-slate-900 mb-3">
+            💡 Советы по использованию
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-700">
             <div>• Регулярно проходите тесты для закрепления знаний</div>
             <div>• Анализируйте результаты в разделе "История"</div>
@@ -315,7 +386,7 @@ const TestPage = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default TestPage
+export default TestPage;
