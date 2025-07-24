@@ -1,4 +1,5 @@
 "use client"
+
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import {
@@ -16,8 +17,7 @@ import {
   ChevronRight,
 } from "lucide-react"
 import { getTestProgressByTestId } from "@/services/testService/passingService"
-import { TestProgress, Attempt } from "@/models/ProgressHistory"
-
+import type { TestProgress, Attempt } from "@/models/ProgressHistory"
 
 const TestProgressHistory = () => {
   const { testId } = useParams() as { testId: string }
@@ -80,22 +80,22 @@ const TestProgressHistory = () => {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-white rounded-2xl border border-slate-200 p-8">
-          <div className="flex items-center justify-center gap-3 text-blue-600 mb-6">
+        <div className="bg-white rounded-2xl border border-[#E0E0E0] p-8">
+          <div className="flex items-center justify-center gap-3 text-[#C8102E] mb-6">
             <Loader2 className="w-6 h-6 animate-spin" />
             <span className="text-lg font-medium">Загрузка истории...</span>
           </div>
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="flex justify-between items-center p-4 border border-slate-200 rounded-xl">
+                <div className="flex justify-between items-center p-4 border border-[#E0E0E0] rounded-xl">
                   <div className="space-y-2">
-                    <div className="h-5 bg-slate-200 rounded w-32" />
-                    <div className="h-4 bg-slate-200 rounded w-48" />
+                    <div className="h-5 bg-gray-200 rounded w-32" />
+                    <div className="h-4 bg-gray-200 rounded w-48" />
                   </div>
                   <div className="space-y-2 text-right">
-                    <div className="h-5 bg-slate-200 rounded w-20" />
-                    <div className="h-4 bg-slate-200 rounded w-16" />
+                    <div className="h-5 bg-gray-200 rounded w-20" />
+                    <div className="h-4 bg-gray-200 rounded w-16" />
                   </div>
                 </div>
               </div>
@@ -109,15 +109,15 @@ const TestProgressHistory = () => {
   if (error || !progress) {
     return (
       <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8 text-center">
-          <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
-          <h2 className="text-lg font-semibold text-amber-900 mb-2">Результаты не найдены</h2>
-          <p className="text-amber-700 mb-6">
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
+          <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-lg font-semibold text-red-900 mb-2">Результаты не найдены</h2>
+          <p className="text-red-700 mb-6">
             Возможно, вы ещё не проходили этот тест или произошла ошибка при загрузке данных.
           </p>
           <button
             onClick={() => router.push("/main/tests")}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#C8102E] hover:bg-[#B00020] text-white rounded-lg transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
             Вернуться к тестам
@@ -133,51 +133,48 @@ const TestProgressHistory = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
+      <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
+        <div className="p-6 border-b border-[#E0E0E0]">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-[#C8102E] to-[#B00020] rounded-lg flex items-center justify-center">
               <History className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-semibold text-slate-900">{progress.testTitle}</h1>
-              <p className="text-slate-600">История прохождения теста</p>
+              <h1 className="text-2xl font-semibold text-black">{progress.testTitle}</h1>
+              <p className="text-[#666666]">История прохождения теста</p>
             </div>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-slate-50 rounded-xl p-4">
+            <div className="bg-gray-50 rounded-xl p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Target className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                  <Target className="w-5 h-5 text-[#C8102E]" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">Всего попыток</p>
-                  <p className="text-xl font-semibold text-slate-900">{progress.attempts.length}</p>
+                  <p className="text-sm text-[#666666]">Всего попыток</p>
+                  <p className="text-xl font-semibold text-black">{progress.attempts.length}</p>
                 </div>
               </div>
             </div>
-
-            <div className="bg-slate-50 rounded-xl p-4">
+            <div className="bg-gray-50 rounded-xl p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
                   <Award className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">Лучший результат</p>
-                  <p className="text-xl font-semibold text-slate-900">{bestAttempt?.percentage || 0}%</p>
+                  <p className="text-sm text-[#666666]">Лучший результат</p>
+                  <p className="text-xl font-semibold text-black">{bestAttempt?.percentage || 0}%</p>
                 </div>
               </div>
             </div>
-
-            <div className="bg-slate-50 rounded-xl p-4">
+            <div className="bg-gray-50 rounded-xl p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-amber-600" />
+                <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-[#C8102E]" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">Средний балл</p>
-                  <p className="text-xl font-semibold text-slate-900">{averageScore}%</p>
+                  <p className="text-sm text-[#666666]">Средний балл</p>
+                  <p className="text-xl font-semibold text-black">{averageScore}%</p>
                 </div>
               </div>
             </div>
@@ -185,24 +182,22 @@ const TestProgressHistory = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
-          <h2 className="text-lg font-semibold text-slate-900">Все попытки</h2>
+      <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
+        <div className="p-6 border-b border-[#E0E0E0]">
+          <h2 className="text-lg font-semibold text-black">Все попытки</h2>
         </div>
-
         <div className="p-6 space-y-4">
           {reversedAttempts.map((attempt, index) => {
             const isActive = selectedAttempt?.resultId === attempt.resultId
             const attemptNumber = reversedAttempts.length - index
             const isBest = bestAttempt?.resultId === attempt.resultId
-
             return (
               <div
                 key={attempt.resultId}
                 className={`border-2 rounded-xl p-4 cursor-pointer transition-all duration-200 ${
                   isActive
-                    ? "border-purple-300 bg-purple-50 shadow-md"
-                    : "border-slate-200 hover:border-slate-300 hover:shadow-md"
+                    ? "border-red-300 bg-red-50 shadow-md"
+                    : "border-[#E0E0E0] hover:border-[#666666] hover:shadow-md"
                 }`}
                 onClick={() => setSelectedAttempt(isActive ? null : attempt)}
               >
@@ -210,14 +205,14 @@ const TestProgressHistory = () => {
                   <div className="flex items-center gap-4">
                     <div
                       className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-semibold ${
-                        isBest ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-700"
+                        isBest ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-[#666666]"
                       }`}
                     >
                       #{attemptNumber}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <p className="font-medium text-slate-900">Попытка #{attemptNumber}</p>
+                        <p className="font-medium text-black">Попытка #{attemptNumber}</p>
                         {isBest && (
                           <div className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-full">
                             <Award className="w-3 h-3" />
@@ -225,32 +220,34 @@ const TestProgressHistory = () => {
                           </div>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                      <div className="flex items-center gap-2 text-sm text-[#666666]">
                         <Calendar className="w-4 h-4" />
                         <span>{new Date(attempt.completedAt).toLocaleString("ru-RU")}</span>
                       </div>
                     </div>
                   </div>
-
                   <div className="flex items-center gap-4">
                     <div className="text-right">
-                      <p className="font-semibold text-slate-900">
+                      <p className="font-semibold text-black">
                         {attempt.score}/{attempt.totalQuestions}
                       </p>
                       <div
-                        className={`inline-flex items-center px-3 py-1 rounded-lg border text-sm font-medium ${getScoreColor(attempt.percentage)}`}
+                        className={`inline-flex items-center px-3 py-1 rounded-lg border text-sm font-medium ${getScoreColor(
+                          attempt.percentage,
+                        )}`}
                       >
                         {attempt.percentage}%
                       </div>
                     </div>
-                    <div className="w-5 h-5 text-slate-400">{isActive ? <ChevronDown /> : <ChevronRight />}</div>
+                    <div className="w-5 h-5 text-[#666666]">{isActive ? <ChevronDown /> : <ChevronRight />}</div>
                   </div>
                 </div>
-
                 <div className="mt-4">
-                  <div className="w-full bg-slate-100 rounded-full h-2">
+                  <div className="w-full bg-[#E0E0E0] rounded-full h-2">
                     <div
-                      className={`bg-gradient-to-r ${getProgressColor(attempt.percentage)} h-2 rounded-full transition-all duration-500`}
+                      className={`bg-gradient-to-r ${getProgressColor(
+                        attempt.percentage,
+                      )} h-2 rounded-full transition-all duration-500`}
                       style={{ width: `${attempt.percentage}%` }}
                     />
                   </div>
@@ -262,28 +259,26 @@ const TestProgressHistory = () => {
       </div>
 
       {selectedAttempt && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-          <div className="p-6 border-b border-slate-100">
+        <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
+          <div className="p-6 border-b border-[#E0E0E0]">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-slate-900">Детальные результаты</h3>
+              <h3 className="text-lg font-semibold text-black">Детальные результаты</h3>
               <button
                 onClick={() => router.push(`/main/tests/passing/${progress.testId || testId}`)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#C8102E] hover:bg-[#B00020] text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#C8102E] focus:ring-offset-2"
               >
                 <RotateCcw className="w-4 h-4" />
                 Пройти снова
               </button>
             </div>
           </div>
-
           <div className="p-6 space-y-4">
             {selectedAttempt.details.map((detail, idx) => {
               const isExpanded = expandedQuestions.has(idx)
-
               return (
-                <div key={idx} className="border border-slate-200 rounded-xl overflow-hidden">
+                <div key={idx} className="border border-[#E0E0E0] rounded-xl overflow-hidden">
                   <div
-                    className="p-4 cursor-pointer hover:bg-slate-50 transition-colors"
+                    className="p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                     onClick={() => toggleQuestionExpansion(idx)}
                   >
                     <div className="flex items-start justify-between gap-4">
@@ -296,7 +291,7 @@ const TestProgressHistory = () => {
                           {detail.isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
                         </div>
                         <div className="flex-1">
-                          <p className="font-medium text-slate-900 leading-relaxed">{detail.question}</p>
+                          <p className="font-medium text-black leading-relaxed">{detail.question}</p>
                           <div className="mt-2 flex items-center gap-2">
                             <span
                               className={`text-xs px-2 py-1 rounded-full ${
@@ -308,19 +303,17 @@ const TestProgressHistory = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="w-5 h-5 text-slate-400 flex-shrink-0">
+                      <div className="w-5 h-5 text-[#666666] flex-shrink-0">
                         {isExpanded ? <ChevronDown /> : <ChevronRight />}
                       </div>
                     </div>
                   </div>
-
                   {isExpanded && (
-                    <div className="border-t border-slate-100 p-4 bg-slate-50">
+                    <div className="border-t border-[#E0E0E0] p-4 bg-gray-50">
                       <div className="space-y-3">
                         {detail.options.map((opt, i) => {
                           const isSelected = i === detail.selectedAnswerIndex
                           const isCorrect = i === detail.correctAnswerIndex
-
                           return (
                             <div
                               key={i}
@@ -329,7 +322,7 @@ const TestProgressHistory = () => {
                                   ? "bg-emerald-100 border border-emerald-200"
                                   : isSelected && !isCorrect
                                     ? "bg-red-100 border border-red-200"
-                                    : "bg-white border border-slate-200"
+                                    : "bg-white border border-[#E0E0E0]"
                               }`}
                             >
                               <div className="flex-shrink-0 mt-0.5">
@@ -338,7 +331,7 @@ const TestProgressHistory = () => {
                                 ) : isSelected ? (
                                   <XCircle className="w-4 h-4 text-red-600" />
                                 ) : (
-                                  <div className="w-4 h-4 border-2 border-slate-300 rounded-full" />
+                                  <div className="w-4 h-4 border-2 border-[#E0E0E0] rounded-full" />
                                 )}
                               </div>
                               <div className="flex-1">
@@ -348,7 +341,7 @@ const TestProgressHistory = () => {
                                       ? "text-emerald-900 font-medium"
                                       : isSelected && !isCorrect
                                         ? "text-red-900"
-                                        : "text-slate-700"
+                                        : "text-[#666666]"
                                   }`}
                                 >
                                   {opt}
