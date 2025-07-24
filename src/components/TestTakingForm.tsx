@@ -1,4 +1,5 @@
 "use client"
+
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { CheckCircle, Clock, Send, Loader2, AlertCircle, ChevronLeft, ChevronRight, BookOpen } from "lucide-react"
@@ -29,7 +30,6 @@ const TestTakingForm = () => {
 
   const handleSubmit = async () => {
     if (!test) return
-
     const isAllAnswered = test.questions.every((q: { _id: string | number }) => answers[q._id] !== undefined)
     if (!isAllAnswered) {
       alert("Пожалуйста, ответьте на все вопросы.")
@@ -89,19 +89,19 @@ const TestTakingForm = () => {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-white rounded-2xl border border-slate-200 p-8">
-          <div className="flex items-center justify-center gap-3 text-blue-600">
+        <div className="bg-white rounded-2xl border border-[#E0E0E0] p-8">
+          <div className="flex items-center justify-center gap-3 text-[#C8102E]">
             <Loader2 className="w-6 h-6 animate-spin" />
             <span className="text-lg font-medium">Загрузка теста...</span>
           </div>
           <div className="mt-6 space-y-4">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="h-6 bg-slate-200 rounded w-3/4 mb-3" />
+                <div className="h-6 bg-gray-200 rounded w-3/4 mb-3" />
                 <div className="space-y-2">
-                  <div className="h-4 bg-slate-200 rounded w-1/2" />
-                  <div className="h-4 bg-slate-200 rounded w-2/3" />
-                  <div className="h-4 bg-slate-200 rounded w-1/3" />
+                  <div className="h-4 bg-gray-200 rounded w-1/2" />
+                  <div className="h-4 bg-gray-200 rounded w-2/3" />
+                  <div className="h-4 bg-gray-200 rounded w-1/3" />
                 </div>
               </div>
             ))}
@@ -130,47 +130,45 @@ const TestTakingForm = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
+      <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
+        <div className="p-6 border-b border-[#E0E0E0]">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#C8102E] to-[#B00020] rounded-lg flex items-center justify-center">
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-semibold text-slate-900">{test.title}</h1>
-                <p className="text-sm text-slate-600">
+                <h1 className="text-2xl font-semibold text-black">{test.title}</h1>
+                <p className="text-sm text-[#666666]">
                   Вопрос {currentQuestion + 1} из {test.questions.length}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-slate-600">
+              <div className="flex items-center gap-2 text-[#666666]">
                 <Clock className="w-4 h-4" />
                 <span className="text-sm font-medium">{formatTime(timeElapsed)}</span>
               </div>
             </div>
           </div>
-
           {/* Progress Bar */}
           <div className="mt-4">
-            <div className="flex items-center justify-between text-sm text-slate-600 mb-2">
+            <div className="flex items-center justify-between text-sm text-[#666666] mb-2">
               <span>Прогресс выполнения</span>
               <span>
                 {answeredCount}/{test.questions.length} отвечено
               </span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-2">
+            <div className="w-full bg-[#E0E0E0] rounded-full h-2">
               <div
-                className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-[#C8102E] to-[#B00020] h-2 rounded-full transition-all duration-500"
                 style={{ width: `${getProgressPercentage()}%` }}
               />
             </div>
           </div>
         </div>
-
         {/* Question Navigation */}
-        <div className="p-4 bg-slate-50 border-b border-slate-100">
+        <div className="p-4 bg-gray-50 border-b border-[#E0E0E0]">
           <div className="flex gap-2 overflow-x-auto pb-2">
             {test.questions.map((q: any, index: number) => (
               <button
@@ -178,10 +176,10 @@ const TestTakingForm = () => {
                 onClick={() => goToQuestion(index)}
                 className={`flex-shrink-0 w-10 h-10 rounded-lg text-sm font-medium transition-all duration-200 ${
                   index === currentQuestion
-                    ? "bg-blue-600 text-white shadow-md"
+                    ? "bg-[#C8102E] text-white shadow-md"
                     : answers[q._id] !== undefined
                       ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
-                      : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300"
+                      : "bg-white text-[#666666] border border-[#E0E0E0] hover:border-[#666666]"
                 }`}
               >
                 {answers[q._id] !== undefined && index !== currentQuestion && (
@@ -195,24 +193,23 @@ const TestTakingForm = () => {
       </div>
 
       {/* Current Question */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-lg p-6">
+      <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg p-6">
         <div className="mb-6">
           <div className="flex items-start gap-3 mb-4">
-            <div className="w-8 h-8 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
+            <div className="w-8 h-8 bg-red-100 text-[#C8102E] rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
               {currentQuestion + 1}
             </div>
-            <h2 className="text-lg font-semibold text-slate-900 leading-relaxed">{currentQ.question}</h2>
+            <h2 className="text-lg font-semibold text-black leading-relaxed">{currentQ.question}</h2>
           </div>
         </div>
-
         <div className="space-y-3">
           {currentQ.options.map((opt: string, idx: number) => (
             <label
               key={idx}
               className={`flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                 answers[currentQ._id] === idx
-                  ? "border-blue-300 bg-blue-50"
-                  : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                  ? "border-red-300 bg-red-50"
+                  : "border-[#E0E0E0] hover:border-[#666666] hover:bg-gray-50"
               }`}
             >
               <div className="flex-shrink-0 mt-0.5">
@@ -227,29 +224,27 @@ const TestTakingForm = () => {
                 <div
                   className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
                     answers[currentQ._id] === idx
-                      ? "border-blue-500 bg-blue-500"
-                      : "border-slate-300 bg-white hover:border-slate-400"
+                      ? "border-[#C8102E] bg-[#C8102E]"
+                      : "border-[#E0E0E0] bg-white hover:border-[#666666]"
                   }`}
                 >
                   {answers[currentQ._id] === idx && <div className="w-2 h-2 bg-white rounded-full" />}
                 </div>
               </div>
-              <span className="text-slate-700 leading-relaxed">{opt}</span>
+              <span className="text-[#666666] leading-relaxed">{opt}</span>
             </label>
           ))}
         </div>
-
         {/* Navigation Buttons */}
-        <div className="flex items-center justify-between mt-8 pt-6 border-t border-slate-100">
+        <div className="flex items-center justify-between mt-8 pt-6 border-t border-[#E0E0E0]">
           <button
             onClick={prevQuestion}
             disabled={currentQuestion === 0}
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-slate-600 hover:text-slate-900 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-[#666666] hover:text-black disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
             Предыдущий
           </button>
-
           <div className="flex gap-3">
             {currentQuestion === test.questions.length - 1 ? (
               <button
@@ -263,7 +258,7 @@ const TestTakingForm = () => {
             ) : (
               <button
                 onClick={nextQuestion}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#C8102E] hover:bg-[#B00020] text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#C8102E] focus:ring-offset-2"
               >
                 Следующий
                 <ChevronRight className="w-4 h-4" />
@@ -281,15 +276,15 @@ const TestTakingForm = () => {
               <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertCircle className="w-6 h-6 text-amber-600" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">Завершить тест?</h3>
-              <p className="text-slate-600 mb-6">
+              <h3 className="text-lg font-semibold text-black mb-2">Завершить тест?</h3>
+              <p className="text-[#666666] mb-6">
                 Вы ответили на {answeredCount} из {test.questions.length} вопросов. После отправки изменить ответы будет
                 невозможно.
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowConfirmDialog(false)}
-                  className="flex-1 px-4 py-2.5 text-slate-600 hover:text-slate-900 border border-slate-300 rounded-lg transition-colors"
+                  className="flex-1 px-4 py-2.5 text-[#666666] hover:text-black border border-[#E0E0E0] rounded-lg transition-colors"
                 >
                   Отмена
                 </button>
