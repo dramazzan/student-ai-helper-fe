@@ -1,21 +1,11 @@
 "use client"
+
 import { useEffect, useState } from "react"
 import { getUserData, getOverallStats, getUserProgress } from "@/services/data"
 import type { User } from "@/models/User"
 import DonutChart from "@/components/DonutChart"
 import ProgressOverview from "@/components/ProgressOverview"
-import {
-  UserIcon,
-  Mail,
-  Shield,
-  CheckCircle,
-  AlertCircle,
-  TrendingUp,
-  BookOpen,
-  Target,
-  Sparkles,
-  Crown,
-} from "lucide-react"
+import { UserIcon, Mail, Shield, CheckCircle, AlertCircle, TrendingUp, BookOpen, Sparkles, Crown } from "lucide-react"
 
 const DashboardPage = () => {
   const [currentUser, setCurrentUser] = useState<User>({
@@ -63,13 +53,13 @@ const DashboardPage = () => {
     switch (role) {
       case "admin":
         return {
-          color: "text-purple-700 bg-purple-100 border-purple-200",
+          color: "text-[#B00020] bg-red-50 border-red-200",
           icon: Crown,
           label: "Администратор",
         }
       case "teacher":
         return {
-          color: "text-blue-700 bg-blue-100 border-blue-200",
+          color: "text-[#C8102E] bg-red-50 border-red-200",
           icon: BookOpen,
           label: "Преподаватель",
         }
@@ -88,24 +78,26 @@ const DashboardPage = () => {
   if (isLoading) {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-lg p-8">
+        {/* Loading Header */}
+        <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg p-8">
           <div className="flex items-center gap-6">
-            <div className="w-20 h-20 bg-slate-200 rounded-full animate-pulse" />
+            <div className="w-20 h-20 bg-gray-200 rounded-full animate-pulse" />
             <div className="space-y-3 flex-1">
-              <div className="h-8 bg-slate-200 rounded w-64 animate-pulse" />
-              <div className="h-4 bg-slate-200 rounded w-48 animate-pulse" />
+              <div className="h-8 bg-gray-200 rounded w-64 animate-pulse" />
+              <div className="h-4 bg-gray-200 rounded w-48 animate-pulse" />
             </div>
           </div>
         </div>
 
+        {/* Loading Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl border border-slate-200 shadow-lg p-6 animate-pulse">
+            <div key={i} className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg p-6 animate-pulse">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-slate-200 rounded-xl" />
+                <div className="w-12 h-12 bg-gray-200 rounded-xl" />
                 <div className="space-y-2 flex-1">
-                  <div className="h-4 bg-slate-200 rounded w-20" />
-                  <div className="h-6 bg-slate-200 rounded w-16" />
+                  <div className="h-4 bg-gray-200 rounded w-20" />
+                  <div className="h-6 bg-gray-200 rounded w-16" />
                 </div>
               </div>
             </div>
@@ -117,7 +109,8 @@ const DashboardPage = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-xl overflow-hidden">
+      {/* Welcome Header */}
+      <div className="bg-gradient-to-r from-[#C8102E] to-[#B00020] rounded-2xl shadow-xl overflow-hidden">
         <div className="p-8 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
@@ -131,51 +124,54 @@ const DashboardPage = () => {
               </div>
               <div>
                 <h1 className="text-3xl font-bold mb-2">Добро пожаловать, {currentUser.name}!</h1>
-                <p className="text-blue-100">Ваш персональный дашборд обучения</p>
+                <p className="text-red-100">Ваш персональный дашборд обучения</p>
               </div>
             </div>
             <div className="hidden md:block">
               <div className="text-right">
                 <div className="text-2xl font-bold">{new Date().toLocaleDateString("ru-RU")}</div>
-                <div className="text-blue-200 text-sm">Сегодня</div>
+                <div className="text-red-200 text-sm">Сегодня</div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
+      {/* Profile Information */}
+      <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
+        <div className="p-6 border-b border-[#E0E0E0]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-[#666666] to-[#666666] rounded-lg flex items-center justify-center">
               <UserIcon className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-xl font-semibold text-slate-900">Информация профиля</h2>
+            <h2 className="text-xl font-semibold text-black">Информация профиля</h2>
           </div>
         </div>
-
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            {/* Name */}
+            <div className="bg-gray-50 rounded-xl p-4 border border-[#E0E0E0]">
               <div className="flex items-center gap-3 mb-2">
-                <UserIcon className="w-5 h-5 text-slate-600" />
-                <span className="text-sm font-medium text-slate-600">Имя</span>
+                <UserIcon className="w-5 h-5 text-[#666666]" />
+                <span className="text-sm font-medium text-[#666666]">Имя</span>
               </div>
-              <div className="text-lg font-semibold text-slate-900">{currentUser.name}</div>
+              <div className="text-lg font-semibold text-black">{currentUser.name}</div>
             </div>
 
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            {/* Email */}
+            <div className="bg-gray-50 rounded-xl p-4 border border-[#E0E0E0]">
               <div className="flex items-center gap-3 mb-2">
-                <Mail className="w-5 h-5 text-slate-600" />
-                <span className="text-sm font-medium text-slate-600">Email</span>
+                <Mail className="w-5 h-5 text-[#666666]" />
+                <span className="text-sm font-medium text-[#666666]">Email</span>
               </div>
-              <div className="text-sm font-medium text-slate-900 truncate">{currentUser.email}</div>
+              <div className="text-sm font-medium text-black truncate">{currentUser.email}</div>
             </div>
 
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            {/* Role */}
+            <div className="bg-gray-50 rounded-xl p-4 border border-[#E0E0E0]">
               <div className="flex items-center gap-3 mb-2">
-                <Shield className="w-5 h-5 text-slate-600" />
-                <span className="text-sm font-medium text-slate-600">Роль</span>
+                <Shield className="w-5 h-5 text-[#666666]" />
+                <span className="text-sm font-medium text-[#666666]">Роль</span>
               </div>
               <div
                 className={`inline-flex items-center gap-2 px-3 py-1 rounded-lg border text-sm font-medium ${roleConfig.color}`}
@@ -185,14 +181,15 @@ const DashboardPage = () => {
               </div>
             </div>
 
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            {/* Verification Status */}
+            <div className="bg-gray-50 rounded-xl p-4 border border-[#E0E0E0]">
               <div className="flex items-center gap-3 mb-2">
                 {currentUser.isVerified ? (
                   <CheckCircle className="w-5 h-5 text-emerald-600" />
                 ) : (
                   <AlertCircle className="w-5 h-5 text-amber-600" />
                 )}
-                <span className="text-sm font-medium text-slate-600">Статус</span>
+                <span className="text-sm font-medium text-[#666666]">Статус</span>
               </div>
               <div
                 className={`inline-flex items-center gap-2 px-3 py-1 rounded-lg border text-sm font-medium ${
@@ -218,18 +215,17 @@ const DashboardPage = () => {
         </div>
       </div>
 
-
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
+      {/* Test Results */}
+      <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
+        <div className="p-6 border-b border-[#E0E0E0]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-[#C8102E] to-[#B00020] rounded-lg flex items-center justify-center">
               <TrendingUp className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-xl font-semibold text-slate-900">Результаты тестирования</h2>
+            <h2 className="text-xl font-semibold text-black">Результаты тестирования</h2>
           </div>
-          <p className="text-slate-600 mt-2">Общая статистика на основе ваших сданных тестов</p>
+          <p className="text-[#666666] mt-2">Общая статистика на основе ваших сданных тестов</p>
         </div>
-
         <div className="p-6">
           <div className="flex justify-center">
             <DonutChart average={averageScore} testsTaken={testsTaken} isLoading={isLoading} />
@@ -237,7 +233,8 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
+      {/* Progress Overview */}
+      <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
         <ProgressOverview data={userProgress} isLoading={isLoading} />
       </div>
     </div>
