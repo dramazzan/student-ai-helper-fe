@@ -1,4 +1,5 @@
 "use client"
+
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -13,6 +14,7 @@ const Navbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
     }
+
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
@@ -52,14 +54,15 @@ const Navbar = () => {
     <>
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "bg-white/95 backdrop-blur-md shadow-lg border-b border-slate-200" : "bg-white shadow-md"
+          isScrolled ? "bg-white/95 backdrop-blur-md shadow-lg border-b border-[#E0E0E0]" : "bg-white shadow-md"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
+            {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#C8102E] to-[#B00020] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                   <Brain className="w-6 h-6 text-white" />
                 </div>
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
@@ -67,42 +70,43 @@ const Navbar = () => {
                 </div>
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-black to-[#666666] bg-clip-text text-transparent">
                   Student AI Helper
                 </h1>
-                <p className="text-xs text-slate-500 -mt-1">Умный помощник студента</p>
+                <p className="text-xs text-[#666666] -mt-1">Умный помощник студента</p>
               </div>
             </Link>
 
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-1">
               {navItems.map((item) => {
                 const Icon = item.icon
                 const isActive = isActiveLink(item.href)
-
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     className={`group relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? "bg-blue-100 text-blue-700 shadow-sm"
-                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                        ? "bg-red-50 text-[#C8102E] shadow-sm border border-red-100"
+                        : "text-[#666666] hover:text-black hover:bg-gray-50"
                     }`}
                   >
                     <Icon
                       className={`w-4 h-4 transition-all duration-200 ${
-                        isActive ? "text-blue-600" : "text-slate-500 group-hover:text-slate-700 group-hover:scale-110"
+                        isActive ? "text-[#C8102E]" : "text-[#666666] group-hover:text-black group-hover:scale-110"
                       }`}
                     />
                     <span>{item.label}</span>
                     {isActive && (
-                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full" />
+                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-[#C8102E] rounded-full" />
                     )}
                   </Link>
                 )
               })}
 
-              <div className="ml-4 pl-4 border-l border-slate-200">
+              {/* Logout Button */}
+              <div className="ml-4 pl-4 border-l border-[#E0E0E0]">
                 <Link
                   href="/auth/login"
                   className="group flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all duration-200"
@@ -113,25 +117,26 @@ const Navbar = () => {
               </div>
             </div>
 
+            {/* Mobile Menu Button */}
             <button
               onClick={toggleMobileMenu}
-              className="md:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all duration-200"
+              className="md:hidden p-2 rounded-xl text-[#666666] hover:text-black hover:bg-gray-50 transition-all duration-200"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
+        {/* Mobile Menu */}
         <div
           className={`md:hidden transition-all duration-300 ease-in-out ${
-            isMobileMenuOpen ? "max-h-96 opacity-100 border-t border-slate-200" : "max-h-0 opacity-0 overflow-hidden"
+            isMobileMenuOpen ? "max-h-96 opacity-100 border-t border-[#E0E0E0]" : "max-h-0 opacity-0 overflow-hidden"
           }`}
         >
           <div className="bg-white/95 backdrop-blur-md px-4 py-4 space-y-2">
             {navItems.map((item) => {
               const Icon = item.icon
               const isActive = isActiveLink(item.href)
-
               return (
                 <Link
                   key={item.href}
@@ -139,18 +144,19 @@ const Navbar = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? "bg-blue-100 text-blue-700 shadow-sm"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      ? "bg-red-50 text-[#C8102E] shadow-sm border border-red-100"
+                      : "text-[#666666] hover:text-black hover:bg-gray-50"
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? "text-blue-600" : "text-slate-500"}`} />
+                  <Icon className={`w-5 h-5 ${isActive ? "text-[#C8102E]" : "text-[#666666]"}`} />
                   <span>{item.label}</span>
-                  {isActive && <div className="ml-auto w-2 h-2 bg-blue-600 rounded-full" />}
+                  {isActive && <div className="ml-auto w-2 h-2 bg-[#C8102E] rounded-full" />}
                 </Link>
               )
             })}
 
-            <div className="pt-2 mt-2 border-t border-slate-200">
+            {/* Mobile Logout */}
+            <div className="pt-2 mt-2 border-t border-[#E0E0E0]">
               <Link
                 href="/auth/login"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -164,8 +170,10 @@ const Navbar = () => {
         </div>
       </nav>
 
+      {/* Spacer */}
       <div className="h-16" />
 
+      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-20 z-40 md:hidden"
