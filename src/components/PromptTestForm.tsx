@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { generateTest } from "@/services/testService/generationService"
@@ -58,6 +57,7 @@ const PromptTestForm = () => {
       })
 
       console.log("✅ Тест создан:", result)
+
       addNotification({
         type: "success",
         title: "Тест успешно создан!",
@@ -94,7 +94,7 @@ const PromptTestForm = () => {
       <div className="space-y-8">
         {/* Instructions */}
         <div className="text-center">
-          <p className="text-slate-600 text-lg leading-relaxed">
+          <p className="text-[#666666] text-lg leading-relaxed">
             Вы можете ввести промпт, загрузить файл или использовать оба источника для создания персонализированного
             теста
           </p>
@@ -103,12 +103,12 @@ const PromptTestForm = () => {
         <div className="space-y-6">
           {/* File Upload Section */}
           <div className="space-y-3">
-            <label className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-              <FileText className="w-4 h-4 text-indigo-600" />
+            <label className="flex items-center gap-2 text-sm font-semibold text-black">
+              <FileText className="w-4 h-4 text-[#C8102E]" />
               Файл (необязательно)
             </label>
             <div className="relative">
-              <div className="border-2 border-dashed border-indigo-200 bg-gradient-to-br from-indigo-50/50 to-purple-50/50 p-6 rounded-2xl transition-all duration-300 hover:border-indigo-300 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50">
+              <div className="border-2 border-dashed border-red-200 bg-gradient-to-br from-red-50/50 to-red-100/30 p-6 rounded-2xl transition-all duration-300 hover:border-red-300 hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100/50">
                 <input
                   type="file"
                   accept=".pdf,.docx,.pptx,.txt"
@@ -121,17 +121,17 @@ const PromptTestForm = () => {
                       <CheckCircle className="text-green-600 w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-slate-900 font-semibold">{file.name}</p>
-                      <p className="text-sm text-slate-600">Файл успешно загружен</p>
+                      <p className="text-black font-semibold">{file.name}</p>
+                      <p className="text-sm text-[#666666]">Файл успешно загружен</p>
                     </div>
                   </div>
                 ) : (
                   <div className="text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-2xl mb-4">
-                      <UploadCloud className="w-8 h-8 text-indigo-600" />
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-50 to-red-100 rounded-2xl mb-4">
+                      <UploadCloud className="w-8 h-8 text-[#C8102E]" />
                     </div>
-                    <p className="text-slate-700 font-medium mb-1">Нажмите или перетащите файл</p>
-                    <p className="text-sm text-slate-500">Поддерживаются PDF, DOCX, PPTX, TXT</p>
+                    <p className="text-black font-medium mb-1">Нажмите или перетащите файл</p>
+                    <p className="text-sm text-[#666666]">Поддерживаются PDF, DOCX, PPTX, TXT</p>
                   </div>
                 )}
               </div>
@@ -140,8 +140,8 @@ const PromptTestForm = () => {
 
           {/* Prompt Section */}
           <div className="space-y-3">
-            <label className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-              <MessageSquareText className="w-4 h-4 text-indigo-600" />
+            <label className="flex items-center gap-2 text-sm font-semibold text-black">
+              <MessageSquareText className="w-4 h-4 text-[#C8102E]" />
               Промпт
             </label>
             <div className="relative">
@@ -149,11 +149,11 @@ const PromptTestForm = () => {
                 value={userPrompt}
                 onChange={(e) => setUserPrompt(e.target.value)}
                 rows={4}
-                className="w-full px-4 py-4 bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-300 focus:outline-none transition-all duration-300 resize-none text-slate-900 placeholder-slate-500"
+                className="w-full px-4 py-4 bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-2xl border border-[#E0E0E0] focus:ring-2 focus:ring-[#C8102E] focus:border-[#C8102E] focus:outline-none transition-all duration-300 resize-none text-black placeholder-[#666666]"
                 placeholder="Например: Создай тест с 10 вопросами на тему логарифмов, средней сложности, с объяснениями к ответам"
               />
               <div className="absolute bottom-3 right-3">
-                <div className="flex items-center gap-1 px-2 py-1 bg-white/80 backdrop-blur-sm rounded-lg text-xs text-slate-500">
+                <div className="flex items-center gap-1 px-2 py-1 bg-white/80 backdrop-blur-sm rounded-lg text-xs text-[#666666]">
                   <Sparkles className="w-3 h-3" />
                   ИИ поможет
                 </div>
@@ -178,7 +178,7 @@ const PromptTestForm = () => {
           <button
             onClick={handleSubmit}
             disabled={loading || (!file && !userPrompt.trim())}
-            className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none disabled:shadow-none"
+            className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-semibold text-white bg-gradient-to-r from-[#C8102E] to-[#B00020] hover:from-[#B00020] hover:to-[#C8102E] transition-all duration-300 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none disabled:shadow-none"
           >
             {loading ? (
               <>
@@ -200,7 +200,7 @@ const PromptTestForm = () => {
 
           {/* Helper Text */}
           <div className="text-center">
-            <p className="text-sm text-slate-500">Процесс генерации может занять до 30 секунд</p>
+            <p className="text-sm text-[#666666]">Процесс генерации может занять до 30 секунд</p>
           </div>
         </div>
       </div>

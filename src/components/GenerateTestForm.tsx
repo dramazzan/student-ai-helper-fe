@@ -35,7 +35,7 @@ const difficultyLabels: Record<string, string> = {
 const difficultyColors: Record<string, string> = {
   easy: "from-emerald-500 to-green-600",
   medium: "from-amber-500 to-orange-600",
-  hard: "from-red-500 to-pink-600",
+  hard: "from-red-500 to-red-600",
 }
 
 const GenerateTestForm = () => {
@@ -48,7 +48,6 @@ const GenerateTestForm = () => {
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const [notifications, setNotifications] = useState<Notification[]>([])
-
   const router = useRouter()
 
   const addNotification = (notification: Omit<Notification, "id">) => {
@@ -74,6 +73,7 @@ const GenerateTestForm = () => {
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFile = e.dataTransfer.files[0]
       if (
@@ -114,6 +114,7 @@ const GenerateTestForm = () => {
       setErrorMessage("Выберите файл!")
       return
     }
+
     if (questionCount < 5 || questionCount > 50) {
       setErrorMessage("Количество вопросов должно быть от 5 до 50")
       return
@@ -195,64 +196,64 @@ const GenerateTestForm = () => {
 
       <div className="w-full max-w-4xl mx-auto">
         {/* Enhanced Tab Navigation */}
-        <div className="bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-lg rounded-2xl shadow-xl border border-white/60 overflow-hidden mb-8">
-          <div className="flex border-b border-white/30 bg-gradient-to-r from-slate-50/80 to-slate-100/50">
+        <div className="bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-lg rounded-2xl shadow-xl border border-[#E0E0E0] overflow-hidden mb-8">
+          <div className="flex border-b border-[#E0E0E0] bg-gradient-to-r from-gray-50/80 to-gray-100/50">
             <button
               className={`flex-1 flex items-center justify-center gap-4 px-8 py-6 font-bold text-lg transition-all duration-500 relative overflow-hidden group ${
                 activeTab === "normal"
-                  ? "bg-gradient-to-r from-emerald-500/20 to-green-500/20 text-emerald-700 shadow-lg"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+                  ? "bg-gradient-to-r from-red-50/50 to-red-100/30 text-[#C8102E] shadow-lg"
+                  : "text-[#666666] hover:text-black hover:bg-white/60"
               }`}
               onClick={() => setActiveTab("normal")}
             >
               {activeTab === "normal" && (
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-r from-red-50/30 to-red-100/20 animate-pulse" />
               )}
               <div
                 className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 ${
                   activeTab === "normal"
-                    ? "bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg"
-                    : "bg-slate-200 text-slate-600 group-hover:bg-slate-300"
+                    ? "bg-gradient-to-r from-[#C8102E] to-[#B00020] text-white shadow-lg"
+                    : "bg-gray-200 text-[#666666] group-hover:bg-gray-300"
                 }`}
               >
                 <FileText className="w-5 h-5" />
               </div>
               <span className="relative z-10">Обычный тест</span>
               {activeTab === "normal" && (
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-green-600" />
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#C8102E] to-[#B00020]" />
               )}
             </button>
 
             <button
               className={`flex-1 flex items-center justify-center gap-4 px-8 py-6 font-bold text-lg transition-all duration-500 relative overflow-hidden group ${
                 activeTab === "multi"
-                  ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-700 shadow-lg"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+                  ? "bg-gradient-to-r from-red-50/50 to-red-100/30 text-[#C8102E] shadow-lg"
+                  : "text-[#666666] hover:text-black hover:bg-white/60"
               }`}
               onClick={() => setActiveTab("multi")}
             >
               {activeTab === "multi" && (
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-r from-red-50/30 to-red-100/20 animate-pulse" />
               )}
               <div
                 className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 ${
                   activeTab === "multi"
-                    ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg"
-                    : "bg-slate-200 text-slate-600 group-hover:bg-slate-300"
+                    ? "bg-gradient-to-r from-[#C8102E] to-[#B00020] text-white shadow-lg"
+                    : "bg-gray-200 text-[#666666] group-hover:bg-gray-300"
                 }`}
               >
                 <Layers className="w-5 h-5" />
               </div>
               <span className="relative z-10">Мульти тест</span>
               {activeTab === "multi" && (
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-600" />
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#C8102E] to-[#B00020]" />
               )}
             </button>
           </div>
 
           {/* Enhanced Description */}
-          <div className="p-6 bg-gradient-to-r from-slate-50/50 to-white/50">
-            <p className="text-center text-slate-600 text-lg">
+          <div className="p-6 bg-gradient-to-r from-gray-50/50 to-white/50">
+            <p className="text-center text-[#666666] text-lg">
               {activeTab === "normal"
                 ? "Создает один персонализированный тест с заданными параметрами"
                 : "Создает несколько тестов разной сложности для комплексной проверки знаний"}
@@ -261,26 +262,26 @@ const GenerateTestForm = () => {
         </div>
 
         {/* Main Form */}
-        <div className="bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/60 overflow-hidden">
+        <div className="bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-[#E0E0E0] overflow-hidden">
           {/* File Upload Section */}
-          <div className="p-8 border-b border-white/30">
+          <div className="p-8 border-b border-[#E0E0E0]">
             <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg">
+              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-[#C8102E] to-[#B00020] rounded-2xl shadow-lg">
                 <Upload className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900">Загрузка документа</h3>
-                <p className="text-slate-600">Выберите файл для создания теста</p>
+                <h3 className="text-xl font-bold text-black">Загрузка документа</h3>
+                <p className="text-[#666666]">Выберите файл для создания теста</p>
               </div>
             </div>
 
             <div
               className={`relative border-2 border-dashed rounded-2xl p-8 transition-all duration-300 cursor-pointer group ${
                 dragActive
-                  ? "border-blue-400 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-lg scale-105"
+                  ? "border-red-400 bg-gradient-to-r from-red-50 to-red-100 shadow-lg scale-105"
                   : file
                     ? "border-emerald-400 bg-gradient-to-r from-emerald-50 to-green-50 shadow-lg"
-                    : "border-slate-300 hover:border-slate-400 hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100 hover:shadow-lg hover:scale-105"
+                    : "border-[#E0E0E0] hover:border-red-300 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:shadow-lg hover:scale-105"
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -306,11 +307,11 @@ const GenerateTestForm = () => {
                   </div>
                 ) : (
                   <div className="group-hover:scale-105 transition-transform duration-300">
-                    <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-r from-slate-200 to-slate-300 rounded-3xl mx-auto mb-4 group-hover:from-blue-200 group-hover:to-indigo-300 transition-all duration-300">
-                      <UploadCloud className="w-10 h-10 text-slate-500 group-hover:text-blue-600 transition-colors duration-300" />
+                    <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-r from-gray-200 to-gray-300 rounded-3xl mx-auto mb-4 group-hover:from-red-200 group-hover:to-red-300 transition-all duration-300">
+                      <UploadCloud className="w-10 h-10 text-[#666666] group-hover:text-[#C8102E] transition-colors duration-300" />
                     </div>
-                    <p className="text-slate-900 font-bold text-lg mb-2">Перетащите файл или нажмите для выбора</p>
-                    <p className="text-slate-500 font-medium">Поддерживаются форматы: PDF, DOCX, PPTX, TXT</p>
+                    <p className="text-black font-bold text-lg mb-2">Перетащите файл или нажмите для выбора</p>
+                    <p className="text-[#666666] font-medium">Поддерживаются форматы: PDF, DOCX, PPTX, TXT</p>
                   </div>
                 )}
               </div>
@@ -323,18 +324,18 @@ const GenerateTestForm = () => {
               {/* Difficulty Selection */}
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-100 to-pink-200 rounded-xl">
-                    <Target className="w-5 h-5 text-purple-600" />
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-50 to-red-100 rounded-xl">
+                    <Target className="w-5 h-5 text-[#C8102E]" />
                   </div>
                   <div>
-                    <label className="text-lg font-bold text-slate-900">Уровень сложности</label>
-                    <p className="text-sm text-slate-600">Выберите подходящий уровень</p>
+                    <label className="text-lg font-bold text-black">Уровень сложности</label>
+                    <p className="text-sm text-[#666666]">Выберите подходящий уровень</p>
                   </div>
                 </div>
                 <select
                   value={difficulty}
                   onChange={(e) => setDifficulty(e.target.value)}
-                  className="w-full px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-purple-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="w-full px-4 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-0 rounded-2xl text-black font-medium focus:outline-none focus:ring-4 focus:ring-red-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   <option value="easy">Лёгкий уровень</option>
                   <option value="medium">Средний уровень</option>
@@ -345,12 +346,12 @@ const GenerateTestForm = () => {
               {/* Question Count */}
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-100 to-indigo-200 rounded-xl">
-                    <Hash className="w-5 h-5 text-blue-600" />
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-50 to-red-100 rounded-xl">
+                    <Hash className="w-5 h-5 text-[#C8102E]" />
                   </div>
                   <div>
-                    <label className="text-lg font-bold text-slate-900">Количество вопросов</label>
-                    <p className="text-sm text-slate-600">От 5 до 50 вопросов</p>
+                    <label className="text-lg font-bold text-black">Количество вопросов</label>
+                    <p className="text-sm text-[#666666]">От 5 до 50 вопросов</p>
                   </div>
                 </div>
                 <input
@@ -362,7 +363,7 @@ const GenerateTestForm = () => {
                   }}
                   min={5}
                   max={50}
-                  className="w-full px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-blue-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="w-full px-4 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-0 rounded-2xl text-black font-medium focus:outline-none focus:ring-4 focus:ring-red-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 />
               </div>
             </div>
@@ -371,18 +372,18 @@ const GenerateTestForm = () => {
             {activeTab === "normal" && (
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-100 to-green-200 rounded-xl">
-                    <Type className="w-5 h-5 text-emerald-600" />
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-50 to-red-100 rounded-xl">
+                    <Type className="w-5 h-5 text-[#C8102E]" />
                   </div>
                   <div>
-                    <label className="text-lg font-bold text-slate-900">Тип вопросов</label>
-                    <p className="text-sm text-slate-600">Выберите формат вопросов</p>
+                    <label className="text-lg font-bold text-black">Тип вопросов</label>
+                    <p className="text-sm text-[#666666]">Выберите формат вопросов</p>
                   </div>
                 </div>
                 <select
                   value={questionType}
                   onChange={(e) => setQuestionType(e.target.value)}
-                  className="w-full px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="w-full px-4 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-0 rounded-2xl text-black font-medium focus:outline-none focus:ring-4 focus:ring-red-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   <option value="тест с выбором">Тест с выбором ответа</option>
                   <option value="открытые">Открытые вопросы</option>
@@ -400,7 +401,7 @@ const GenerateTestForm = () => {
                     ? "from-emerald-100 to-green-200 text-emerald-800"
                     : difficulty === "medium"
                       ? "from-amber-100 to-orange-200 text-amber-800"
-                      : "from-red-100 to-pink-200 text-red-800"
+                      : "from-red-100 to-red-200 text-red-800"
                 }`}
               >
                 {getDifficultyIcon(difficulty)}
@@ -419,8 +420,8 @@ const GenerateTestForm = () => {
           {/* Error Message */}
           {errorMessage && (
             <div className="mx-8 mb-8">
-              <div className="flex items-start gap-4 bg-gradient-to-r from-red-50 to-pink-50 text-red-700 p-6 rounded-2xl border border-red-200 shadow-lg">
-                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-500 to-pink-600 rounded-xl flex-shrink-0">
+              <div className="flex items-start gap-4 bg-gradient-to-r from-red-50 to-red-100 text-red-700 p-6 rounded-2xl border border-red-200 shadow-lg">
+                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex-shrink-0">
                   <AlertTriangle className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -438,8 +439,8 @@ const GenerateTestForm = () => {
               disabled={loading || !file}
               className={`w-full flex items-center justify-center gap-4 px-8 py-6 text-white font-bold text-lg rounded-2xl focus:outline-none focus:ring-4 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-2xl hover:shadow-3xl ${
                 activeTab === "normal"
-                  ? "bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 hover:from-emerald-700 hover:via-green-700 hover:to-emerald-800 focus:ring-emerald-200 disabled:from-emerald-300 disabled:to-green-400"
-                  : "bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700 hover:from-purple-700 hover:via-pink-700 hover:to-purple-800 focus:ring-purple-200 disabled:from-purple-300 disabled:to-pink-400"
+                  ? "bg-gradient-to-r from-[#C8102E] via-[#B00020] to-[#C8102E] hover:from-[#B00020] hover:via-[#C8102E] hover:to-[#B00020] focus:ring-red-200 disabled:from-gray-300 disabled:to-gray-400"
+                  : "bg-gradient-to-r from-[#B00020] via-[#C8102E] to-[#B00020] hover:from-[#C8102E] hover:via-[#B00020] hover:to-[#C8102E] focus:ring-red-200 disabled:from-gray-300 disabled:to-gray-400"
               }`}
             >
               {loading ? (

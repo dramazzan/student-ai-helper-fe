@@ -41,7 +41,6 @@ const GenerateTestFromUrlForm = () => {
   const [errorMessage, setErrorMessage] = useState("")
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [urlValid, setUrlValid] = useState(false)
-
   const router = useRouter()
 
   const addNotification = (notification: Omit<Notification, "id">) => {
@@ -102,10 +101,12 @@ const GenerateTestFromUrlForm = () => {
       setErrorMessage("Введите ссылку на сайт!")
       return
     }
+
     if (!urlValid) {
       setErrorMessage("Введите корректную ссылку (должна начинаться с http:// или https://)")
       return
     }
+
     if (questionCount < 5 || questionCount > 50) {
       setErrorMessage("Количество вопросов должно быть от 5 до 50")
       return
@@ -121,6 +122,7 @@ const GenerateTestFromUrlForm = () => {
         questionType,
         testType,
       })
+
       console.log("✅ Тест создан из URL:", result)
       console.log("📊 Параметры:", { difficulty, questionCount, questionType, testType })
 
@@ -156,34 +158,34 @@ const GenerateTestFromUrlForm = () => {
 
       <div className="w-full max-w-4xl mx-auto">
         {/* Main Form */}
-        <div className="bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/60 overflow-hidden">
+        <div className="bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-[#E0E0E0] overflow-hidden">
           {/* URL Input Section */}
-          <div className="p-8 border-b border-white/30">
+          <div className="p-8 border-b border-[#E0E0E0]">
             <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg">
+              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-[#C8102E] to-[#B00020] rounded-2xl shadow-lg">
                 <Globe className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900">Веб-страница</h3>
-                <p className="text-slate-600">Введите ссылку на статью или образовательный материал</p>
+                <h3 className="text-xl font-bold text-black">Веб-страница</h3>
+                <p className="text-[#666666]">Введите ссылку на статью или образовательный материал</p>
               </div>
             </div>
 
             <div className="relative">
               <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
-                <Link className="w-5 h-5 text-slate-400" />
+                <Link className="w-5 h-5 text-[#666666]" />
               </div>
               <input
                 type="url"
                 placeholder="https://example.com/article"
                 value={url}
                 onChange={handleUrlChange}
-                className={`w-full pl-12 pr-12 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 placeholder-slate-500 font-medium focus:outline-none focus:ring-4 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl ${
+                className={`w-full pl-12 pr-12 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-0 rounded-2xl text-black placeholder-[#666666] font-medium focus:outline-none focus:ring-4 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl ${
                   url && urlValid
                     ? "focus:ring-emerald-200 ring-2 ring-emerald-300"
                     : url && !urlValid
                       ? "focus:ring-red-200 ring-2 ring-red-300"
-                      : "focus:ring-blue-200"
+                      : "focus:ring-red-200"
                 }`}
               />
               {url && (
@@ -193,7 +195,7 @@ const GenerateTestFromUrlForm = () => {
                       <CheckCircle className="w-4 h-4 text-white" />
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-red-500 to-pink-600 rounded-xl">
+                    <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-xl">
                       <AlertTriangle className="w-4 h-4 text-white" />
                     </div>
                   )}
@@ -215,18 +217,18 @@ const GenerateTestFromUrlForm = () => {
               {/* Difficulty Selection */}
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-100 to-pink-200 rounded-xl">
-                    <Target className="w-5 h-5 text-purple-600" />
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-50 to-red-100 rounded-xl">
+                    <Target className="w-5 h-5 text-[#C8102E]" />
                   </div>
                   <div>
-                    <label className="text-lg font-bold text-slate-900">Уровень сложности</label>
-                    <p className="text-sm text-slate-600">Выберите подходящий уровень</p>
+                    <label className="text-lg font-bold text-black">Уровень сложности</label>
+                    <p className="text-sm text-[#666666]">Выберите подходящий уровень</p>
                   </div>
                 </div>
                 <select
                   value={difficulty}
                   onChange={(e) => setDifficulty(e.target.value)}
-                  className="w-full px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-purple-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="w-full px-4 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-0 rounded-2xl text-black font-medium focus:outline-none focus:ring-4 focus:ring-red-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   <option value="easy">Лёгкий уровень</option>
                   <option value="medium">Средний уровень</option>
@@ -237,12 +239,12 @@ const GenerateTestFromUrlForm = () => {
               {/* Question Count */}
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-100 to-indigo-200 rounded-xl">
-                    <Hash className="w-5 h-5 text-blue-600" />
+                  <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-50 to-red-100 rounded-xl">
+                    <Hash className="w-5 h-5 text-[#C8102E]" />
                   </div>
                   <div>
-                    <label className="text-lg font-bold text-slate-900">Количество вопросов</label>
-                    <p className="text-sm text-slate-600">От 5 до 50 вопросов</p>
+                    <label className="text-lg font-bold text-black">Количество вопросов</label>
+                    <p className="text-sm text-[#666666]">От 5 до 50 вопросов</p>
                   </div>
                 </div>
                 <input
@@ -254,7 +256,7 @@ const GenerateTestFromUrlForm = () => {
                   }}
                   min={5}
                   max={50}
-                  className="w-full px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-blue-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="w-full px-4 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-0 rounded-2xl text-black font-medium focus:outline-none focus:ring-4 focus:ring-red-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 />
               </div>
             </div>
@@ -262,18 +264,18 @@ const GenerateTestFromUrlForm = () => {
             {/* Question Type */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-100 to-green-200 rounded-xl">
-                  <Type className="w-5 h-5 text-emerald-600" />
+                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-50 to-red-100 rounded-xl">
+                  <Type className="w-5 h-5 text-[#C8102E]" />
                 </div>
                 <div>
-                  <label className="text-lg font-bold text-slate-900">Тип вопросов</label>
-                  <p className="text-sm text-slate-600">Выберите формат вопросов</p>
+                  <label className="text-lg font-bold text-black">Тип вопросов</label>
+                  <p className="text-sm text-[#666666]">Выберите формат вопросов</p>
                 </div>
               </div>
               <select
                 value={questionType}
                 onChange={(e) => setQuestionType(e.target.value)}
-                className="w-full px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-0 rounded-2xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="w-full px-4 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-0 rounded-2xl text-black font-medium focus:outline-none focus:ring-4 focus:ring-red-200 focus:bg-white transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 <option value="тест с выбором">Тест с выбором ответа</option>
                 <option value="открытые">Открытые вопросы</option>
@@ -290,7 +292,7 @@ const GenerateTestFromUrlForm = () => {
                     ? "from-emerald-100 to-green-200 text-emerald-800"
                     : difficulty === "medium"
                       ? "from-amber-100 to-orange-200 text-amber-800"
-                      : "from-red-100 to-pink-200 text-red-800"
+                      : "from-red-100 to-red-200 text-red-800"
                 }`}
               >
                 {getDifficultyIcon(difficulty)}
@@ -305,8 +307,8 @@ const GenerateTestFromUrlForm = () => {
           {/* Error Message */}
           {errorMessage && (
             <div className="mx-8 mb-8">
-              <div className="flex items-start gap-4 bg-gradient-to-r from-red-50 to-pink-50 text-red-700 p-6 rounded-2xl border border-red-200 shadow-lg">
-                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-500 to-pink-600 rounded-xl flex-shrink-0">
+              <div className="flex items-start gap-4 bg-gradient-to-r from-red-50 to-red-100 text-red-700 p-6 rounded-2xl border border-red-200 shadow-lg">
+                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex-shrink-0">
                   <AlertTriangle className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -322,7 +324,7 @@ const GenerateTestFromUrlForm = () => {
             <button
               onClick={handleSubmit}
               disabled={loading || !url || !urlValid}
-              className="w-full flex items-center justify-center gap-4 px-8 py-6 text-white font-bold text-lg rounded-2xl focus:outline-none focus:ring-4 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-2xl hover:shadow-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:via-indigo-700 hover:to-blue-800 focus:ring-blue-200 disabled:from-blue-300 disabled:to-indigo-400"
+              className="w-full flex items-center justify-center gap-4 px-8 py-6 text-white font-bold text-lg rounded-2xl focus:outline-none focus:ring-4 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-2xl hover:shadow-3xl bg-gradient-to-r from-[#C8102E] via-[#B00020] to-[#C8102E] hover:from-[#B00020] hover:via-[#C8102E] hover:to-[#B00020] focus:ring-red-200 disabled:from-gray-300 disabled:to-gray-400"
             >
               {loading ? (
                 <>
@@ -343,28 +345,28 @@ const GenerateTestFromUrlForm = () => {
 
           {/* Info Section */}
           <div className="px-8 pb-8">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200/50">
+            <div className="bg-gradient-to-r from-red-50 to-red-100 rounded-2xl p-6 border border-red-200">
               <div className="flex items-start gap-4">
-                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex-shrink-0">
+                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-[#C8102E] to-[#B00020] rounded-xl flex-shrink-0">
                   <Globe className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-blue-900 mb-2">Поддерживаемые типы контента</h4>
-                  <div className="grid grid-cols-2 gap-2 text-sm text-blue-700">
+                  <h4 className="font-bold text-[#B00020] mb-2">Поддерживаемые типы контента</h4>
+                  <div className="grid grid-cols-2 gap-2 text-sm text-[#C8102E]">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                      <div className="w-2 h-2 bg-[#C8102E] rounded-full" />
                       <span>Статьи и блоги</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                      <div className="w-2 h-2 bg-[#C8102E] rounded-full" />
                       <span>Образовательные материалы</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                      <div className="w-2 h-2 bg-[#C8102E] rounded-full" />
                       <span>Документация</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                      <div className="w-2 h-2 bg-[#C8102E] rounded-full" />
                       <span>Новостные материалы</span>
                     </div>
                   </div>
