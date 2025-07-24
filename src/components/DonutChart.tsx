@@ -1,4 +1,5 @@
 "use client"
+
 import { Doughnut } from "react-chartjs-2"
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js"
 import { useEffect, useState } from "react"
@@ -22,12 +23,11 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
     const duration = 1000
     const steps = 50
     const stepDuration = duration / steps
-
     let currentStep = 0
+
     const interval = setInterval(() => {
       currentStep++
       const progress = currentStep / steps
-
       setAnimatedAverage(Math.round(average * progress))
       setAnimatedTests(Math.round(testsTaken * progress))
 
@@ -42,10 +42,10 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
   }, [average, testsTaken, isLoading])
 
   const getColor = (score: number) => {
-    if (score >= 80) return "#10b981" 
-    if (score >= 60) return "#f59e0b" 
-    if (score >= 40) return "#f97316"
-    return "#ef4444" 
+    if (score >= 80) return "#10b981" // Зеленый для отличных результатов
+    if (score >= 60) return "#f59e0b" // Желтый для хороших результатов
+    if (score >= 40) return "#f97316" // Оранжевый для средних результатов
+    return "#ef4444" // Красный для плохих результатов
   }
 
   const getTextColor = (score: number) => {
@@ -67,7 +67,7 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
     datasets: [
       {
         data: [animatedAverage, 100 - animatedAverage],
-        backgroundColor: [getColor(animatedAverage), "#e2e8f0"],
+        backgroundColor: [getColor(animatedAverage), "#E0E0E0"],
         borderWidth: 0,
         cutout: "75%",
       },
@@ -97,10 +97,10 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
   if (isLoading) {
     return (
       <div className="flex flex-col items-center space-y-4">
-        <div className="w-48 h-48 bg-slate-200 rounded-full animate-pulse" />
+        <div className="w-48 h-48 bg-gray-200 rounded-full animate-pulse" />
         <div className="space-y-2 text-center">
-          <div className="h-4 bg-slate-200 rounded w-24 animate-pulse" />
-          <div className="h-3 bg-slate-200 rounded w-32 animate-pulse" />
+          <div className="h-4 bg-gray-200 rounded w-24 animate-pulse" />
+          <div className="h-3 bg-gray-200 rounded w-32 animate-pulse" />
         </div>
       </div>
     )
@@ -108,23 +108,25 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
 
   return (
     <div className="flex flex-col items-center space-y-6">
+      {/* Main Chart */}
       <div className={`relative p-6 rounded-2xl border-2 ${getBgColor(animatedAverage)} shadow-lg`}>
         <div className="relative w-48 h-48">
           <Doughnut data={data} options={options} />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
               <div className={`text-3xl font-bold ${getTextColor(animatedAverage)}`}>{animatedAverage}%</div>
-              <div className="text-sm text-slate-500">средний балл</div>
+              <div className="text-sm text-[#666666]">средний балл</div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Stats Cards */}
       <div className="grid grid-cols-2 gap-4 w-full max-w-sm">
         <div className={`rounded-xl p-4 border-2 ${getBgColor(animatedAverage)}`}>
           <div className="flex items-center gap-2 mb-2">
             <BookOpen className={`w-4 h-4 ${getTextColor(animatedAverage)}`} />
-            <span className="text-xs font-medium text-slate-600">Тестов</span>
+            <span className="text-xs font-medium text-[#666666]">Тестов</span>
           </div>
           <div className={`text-xl font-bold ${getTextColor(animatedAverage)}`}>{animatedTests}</div>
         </div>
@@ -132,7 +134,7 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
         <div className={`rounded-xl p-4 border-2 ${getBgColor(animatedAverage)}`}>
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className={`w-4 h-4 ${getTextColor(animatedAverage)}`} />
-            <span className="text-xs font-medium text-slate-600">Прогресс</span>
+            <span className="text-xs font-medium text-[#666666]">Прогресс</span>
           </div>
           <div className={`text-sm font-medium ${getTextColor(animatedAverage)}`}>
             {animatedAverage >= 80
@@ -146,12 +148,13 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
         </div>
       </div>
 
+      {/* Progress Bar */}
       <div className="w-full max-w-sm">
-        <div className="flex justify-between text-xs text-slate-600 mb-2">
+        <div className="flex justify-between text-xs text-[#666666] mb-2">
           <span>До отличного результата</span>
           <span>{Math.min(animatedAverage, 80)}/80</span>
         </div>
-        <div className="w-full bg-slate-200 rounded-full h-2">
+        <div className="w-full bg-[#E0E0E0] rounded-full h-2">
           <div
             className="h-2 rounded-full transition-all duration-1000 ease-out"
             style={{

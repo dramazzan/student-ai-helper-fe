@@ -85,13 +85,13 @@ const ProgressOverview: React.FC<ProgressOverviewProps> = ({ data, isLoading = f
 
       <div className="space-y-6">
         {/* Основная статистика */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-          <div className="p-6 border-b border-slate-100">
+        <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
+          <div className="p-6 border-b border-[#E0E0E0]">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#C8102E] to-[#B00020] rounded-lg flex items-center justify-center">
                 <LineChart className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-2xl font-semibold text-slate-900">Учебный прогресс</h2>
+              <h2 className="text-2xl font-semibold text-black">Учебный прогресс</h2>
             </div>
           </div>
           <div className="p-6">
@@ -101,9 +101,9 @@ const ProgressOverview: React.FC<ProgressOverviewProps> = ({ data, isLoading = f
                 value={animatedValues.totalTests}
                 subtitle="ТЕСТОВ"
                 icon={BookOpen}
-                bgColor="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200"
-                iconColor="bg-blue-500"
-                textColor="text-blue-700"
+                bgColor="bg-gradient-to-br from-red-50 to-red-100 border-red-200"
+                iconColor="bg-[#C8102E]"
+                textColor="text-[#B00020]"
                 type="number"
               />
               <StatCard
@@ -121,9 +121,9 @@ const ProgressOverview: React.FC<ProgressOverviewProps> = ({ data, isLoading = f
                 value={animatedValues.progress}
                 subtitle=""
                 icon={TrendingUp}
-                bgColor="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200"
-                iconColor="bg-purple-500"
-                textColor="text-purple-700"
+                bgColor="bg-gradient-to-br from-red-50 to-red-100 border-red-200"
+                iconColor="bg-[#B00020]"
+                textColor="text-[#C8102E]"
                 type="progress"
               />
             </div>
@@ -132,14 +132,14 @@ const ProgressOverview: React.FC<ProgressOverviewProps> = ({ data, isLoading = f
 
         {/* Слабые темы */}
         {Array.isArray(data.weakTopics) && data.weakTopics.length > 0 && (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-            <div className="p-6 border-b border-slate-100">
+          <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
+            <div className="p-6 border-b border-[#E0E0E0]">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
                   <AlertTriangle className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900">Слабые темы</h3>
-                <div className="ml-auto text-sm text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+                <h3 className="text-lg font-semibold text-black">Слабые темы</h3>
+                <div className="ml-auto text-sm text-[#666666] bg-gray-100 px-3 py-1 rounded-full">
                   {data.weakTopics.length} {data.weakTopics.length === 1 ? "тема" : "тем"}
                 </div>
               </div>
@@ -155,7 +155,7 @@ const ProgressOverview: React.FC<ProgressOverviewProps> = ({ data, isLoading = f
               ))}
             </div>
             {/* Форма генерации тестов */}
-            <div className="p-6 border-t border-slate-100">
+            <div className="p-6 border-t border-[#E0E0E0]">
               <TestGenerationForm weakTopicsCount={data.weakTopics.length} onNotification={addNotification} />
             </div>
           </div>
@@ -163,14 +163,14 @@ const ProgressOverview: React.FC<ProgressOverviewProps> = ({ data, isLoading = f
 
         {/* Тесты с низкими баллами */}
         {Array.isArray(data.lowScoreTests) && data.lowScoreTests.length > 0 && (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-            <div className="p-6 border-b border-slate-100">
+          <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
+            <div className="p-6 border-b border-[#E0E0E0]">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
                   <FolderDown className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900">Тесты с низкими баллами</h3>
-                <div className="ml-auto text-sm text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+                <h3 className="text-lg font-semibold text-black">Тесты с низкими баллами</h3>
+                <div className="ml-auto text-sm text-[#666666] bg-gray-100 px-3 py-1 rounded-full">
                   {data.lowScoreTests.length} {data.lowScoreTests.length === 1 ? "тест" : "тестов"}
                 </div>
               </div>
