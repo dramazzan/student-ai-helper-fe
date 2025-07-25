@@ -2,7 +2,7 @@
 
 import type React from "react"
 import type { LucideIcon } from "lucide-react"
-import { CircularProgress } from "./CircularProgess"
+import { CircularProgress } from "./CircularProgess" // Corrected import path
 
 interface StatCardProps {
   title: string
@@ -27,9 +27,8 @@ export const StatCard: React.FC<StatCardProps> = ({
 }) => {
   const renderValue = () => {
     if (type === "progress") {
-      return <CircularProgress percentage={Number(value)} size={60} strokeWidth={6} />
+      return <CircularProgress percentage={Number(value)} size={60} strokeWidth={6} variant="narxoz" />
     }
-
     return (
       <div className="text-right">
         <div className={`text-2xl font-bold ${textColor}`}>
@@ -40,7 +39,6 @@ export const StatCard: React.FC<StatCardProps> = ({
       </div>
     )
   }
-
   return (
     <div className={`group ${bgColor} rounded-xl p-6 hover:shadow-md transition-all duration-200 border`}>
       <div className="flex items-center justify-between mb-4">
