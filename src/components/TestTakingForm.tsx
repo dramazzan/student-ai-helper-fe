@@ -5,6 +5,8 @@ import { useParams, useRouter } from "next/navigation"
 import { CheckCircle, Clock, Send, Loader2, AlertCircle, ChevronLeft, ChevronRight, BookOpen } from "lucide-react"
 import { useTest } from "@/hooks/useTest"
 import { submitTestAnswers } from "@/services/testService/passingService"
+import { NotificationToast } from "@/components/NotificationToast" // Import your NotificationToast
+import type { Notification } from "@/models/Notification" // Import the Notification type
 
 const TestTakingForm = () => {
   const { testId } = useParams() as { testId: string }
@@ -15,6 +17,8 @@ const TestTakingForm = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
   const [startTime] = useState(Date.now())
   const [timeElapsed, setTimeElapsed] = useState(0)
+  const [notification, setNotification] = useState<Notification | null>(null) // State for notification
+
   const router = useRouter()
 
   useEffect(() => {
@@ -28,11 +32,20 @@ const TestTakingForm = () => {
     setAnswers((prev) => ({ ...prev, [questionId]: selected }))
   }
 
+  const handleCloseNotification = (id: string) => {
+    setNotification(null) // Clear the notification
+  }
+
   const handleSubmit = async () => {
     if (!test) return
     const isAllAnswered = test.questions.every((q: { _id: string | number }) => answers[q._id] !== undefined)
     if (!isAllAnswered) {
-      alert("Пожалуйста, ответьте на все вопросы.")
+      setNotification({
+        id: Date.now().toString(),
+        title: "Внимание!",
+        message: "Пожалуйста, ответьте на все вопросы.",
+        type: "info", // Using 'info' for a warning
+      })
       return
     }
 
@@ -47,11 +60,21 @@ const TestTakingForm = () => {
     try {
       setSubmitting(true)
       const response = await submitTestAnswers(payload)
-      alert("Тест успешно сдан!")
+      setNotification({
+        id: Date.now().toString(),
+        title: "Успех!",
+        message: "Тест успешно сдан!",
+        type: "success",
+      })
       router.push(`/main/tests/passed/${response.resultId || ""}`)
     } catch (error) {
       console.error("Ошибка при отправке теста:", error)
-      alert("Произошла ошибка при отправке теста.")
+      setNotification({
+        id: Date.now().toString(),
+        title: "Ошибка!",
+        message: "Произошла ошибка при отправке теста.",
+        type: "error",
+      })
     } finally {
       setSubmitting(false)
       setShowConfirmDialog(false)
@@ -191,7 +214,6 @@ const TestTakingForm = () => {
           </div>
         </div>
       </div>
-
       {/* Current Question */}
       <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg p-6">
         <div className="mb-6">
@@ -267,7 +289,6 @@ const TestTakingForm = () => {
           </div>
         </div>
       </div>
-
       {/* Confirmation Dialog */}
       {showConfirmDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -310,6 +331,7 @@ const TestTakingForm = () => {
           </div>
         </div>
       )}
+      {notification && <NotificationToast notification={notification} onClose={handleCloseNotification} />}
     </div>
   )
 }

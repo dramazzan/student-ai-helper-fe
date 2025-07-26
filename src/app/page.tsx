@@ -5,7 +5,6 @@ import { Brain, Sparkles, ArrowRight, BookOpen, Target, TrendingUp, Zap } from "
 
 export default function Home() {
   const router = useRouter()
-
   const features = [
     {
       icon: BookOpen,
@@ -23,7 +22,6 @@ export default function Home() {
       description: "ИИ-помощник для обучения",
     },
   ]
-
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto px-6 py-20">
@@ -38,17 +36,16 @@ export default function Home() {
               </div>
             </div>
           </div>
-
           <div className="space-y-4">
             <h1 className="text-4xl md:text-6xl font-bold text-black leading-tight">
-              Student AI
-              <span className="block text-[#C8102E]">Helper</span>
+              Student AI<span className="block text-[#C8102E]">Helper</span>
             </h1>
+            {/* Added "by Narxoz University" text here */}
+            <p className="text-lg text-[#C8102E] font-semibold">by Narxoz University</p>
             <p className="text-xl text-[#666666] max-w-2xl mx-auto leading-relaxed">
               Загружайте учебные материалы и получайте тесты, задания и персональные рекомендации с помощью ИИ
             </p>
           </div>
-
           <div className="pt-4">
             <button
               onClick={() => router.push("/main/dashboard")}
@@ -59,13 +56,11 @@ export default function Home() {
             </button>
           </div>
         </div>
-
         <div className="mt-24">
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold text-black mb-3">Возможности платформы</h2>
             <p className="text-[#666666]">Все инструменты для эффективного обучения в одном месте</p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, index) => {
               const Icon = feature.icon
@@ -84,7 +79,6 @@ export default function Home() {
             })}
           </div>
         </div>
-
         <div className="mt-20 bg-gray-50 rounded-2xl p-8 border border-[#E0E0E0]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
@@ -101,7 +95,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
         <div className="mt-20 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-[#B00020] rounded-full text-sm font-medium mb-6">
             <Zap className="w-4 h-4" />
