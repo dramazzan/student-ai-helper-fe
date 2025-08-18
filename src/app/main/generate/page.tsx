@@ -220,7 +220,7 @@ const GeneratePage = () => {
             className="group inline-flex items-center gap-4 px-10 py-5 bg-gradient-to-r from-[#C8102E] via-[#B00020] to-[#C8102E] text-white font-bold text-lg rounded-2xl hover:from-[#B00020] hover:via-[#C8102E] hover:to-[#B00020] transition-all duration-500 shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 hover:scale-105"
           >
             <Sparkles className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
-            Перейти к тестам
+            Перейти
             <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
           </Link>
         </div>
