@@ -78,13 +78,11 @@ const ProgressOverview: React.FC<ProgressOverviewProps> = ({ data, isLoading = f
 
   return (
     <>
-      {/* Уведомления */}
       {notifications.map((notification) => (
         <NotificationToast key={notification.id} notification={notification} onClose={removeNotification} />
       ))}
 
       <div className="space-y-6">
-        {/* Основная статистика */}
         <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
           <div className="p-6 border-b border-[#E0E0E0]">
             <div className="flex items-center gap-3">
@@ -130,7 +128,6 @@ const ProgressOverview: React.FC<ProgressOverviewProps> = ({ data, isLoading = f
           </div>
         </div>
 
-        {/* Слабые темы */}
         {Array.isArray(data.weakTopics) && data.weakTopics.length > 0 && (
           <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
             <div className="p-6 border-b border-[#E0E0E0]">
@@ -154,14 +151,12 @@ const ProgressOverview: React.FC<ProgressOverviewProps> = ({ data, isLoading = f
                 />
               ))}
             </div>
-            {/* Форма генерации тестов */}
             <div className="p-6 border-t border-[#E0E0E0]">
               <TestGenerationForm weakTopicsCount={data.weakTopics.length} onNotification={addNotification} />
             </div>
           </div>
         )}
 
-        {/* Тесты с низкими баллами */}
         {Array.isArray(data.lowScoreTests) && data.lowScoreTests.length > 0 && (
           <div className="bg-white rounded-2xl border border-[#E0E0E0] shadow-lg overflow-hidden">
             <div className="p-6 border-b border-[#E0E0E0]">
@@ -183,7 +178,6 @@ const ProgressOverview: React.FC<ProgressOverviewProps> = ({ data, isLoading = f
           </div>
         )}
 
-        {/* Мотивация */}
         {data.motivation && <MotivationCard motivation={data.motivation} />}
       </div>
     </>
