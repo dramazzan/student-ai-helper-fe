@@ -108,7 +108,6 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
 
   return (
     <div className="flex flex-col items-center space-y-6">
-      {/* Main Chart */}
       <div className={`relative p-6 rounded-2xl border-2 ${getBgColor(animatedAverage)} shadow-lg`}>
         <div className="relative w-48 h-48">
           <Doughnut data={data} options={options} />
@@ -121,7 +120,6 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
         </div>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-2 gap-4 w-full max-w-sm">
         <div className={`rounded-xl p-4 border-2 ${getBgColor(animatedAverage)}`}>
           <div className="flex items-center gap-2 mb-2">
@@ -148,7 +146,6 @@ const DonutChart = ({ average, testsTaken, isLoading = false }: DonutChartProps)
         </div>
       </div>
 
-      {/* Progress Bar */}
       <div className="w-full max-w-sm">
         <div className="flex justify-between text-xs text-[#666666] mb-2">
           <span>До отличного результата</span>
