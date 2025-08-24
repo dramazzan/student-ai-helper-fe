@@ -189,13 +189,11 @@ const GenerateTestForm = () => {
 
   return (
     <>
-      {/* Уведомления */}
       {notifications.map((notification) => (
         <NotificationToast key={notification.id} notification={notification} onClose={removeNotification} />
       ))}
 
       <div className="w-full max-w-4xl mx-auto">
-        {/* Enhanced Tab Navigation */}
         <div className="bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-lg rounded-2xl shadow-xl border border-[#E0E0E0] overflow-hidden mb-8">
           <div className="flex border-b border-[#E0E0E0] bg-gradient-to-r from-gray-50/80 to-gray-100/50">
             <button
@@ -251,7 +249,6 @@ const GenerateTestForm = () => {
             </button>
           </div>
 
-          {/* Enhanced Description */}
           <div className="p-6 bg-gradient-to-r from-gray-50/50 to-white/50">
             <p className="text-center text-[#666666] text-lg">
               {activeTab === "normal"
@@ -261,9 +258,7 @@ const GenerateTestForm = () => {
           </div>
         </div>
 
-        {/* Main Form */}
         <div className="bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-[#E0E0E0] overflow-hidden">
-          {/* File Upload Section */}
           <div className="p-8 border-b border-[#E0E0E0]">
             <div className="flex items-center gap-4 mb-6">
               <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-[#C8102E] to-[#B00020] rounded-2xl shadow-lg">
@@ -318,10 +313,8 @@ const GenerateTestForm = () => {
             </div>
           </div>
 
-          {/* Settings Section */}
           <div className="p-8 space-y-8">
             <div className="grid md:grid-cols-2 gap-8">
-              {/* Difficulty Selection */}
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-50 to-red-100 rounded-xl">
@@ -343,7 +336,6 @@ const GenerateTestForm = () => {
                 </select>
               </div>
 
-              {/* Question Count */}
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-50 to-red-100 rounded-xl">
@@ -368,7 +360,6 @@ const GenerateTestForm = () => {
               </div>
             </div>
 
-            {/* Question Type (only for normal test) */}
             {activeTab === "normal" && (
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
@@ -393,7 +384,6 @@ const GenerateTestForm = () => {
               </div>
             )}
 
-            {/* Summary Badge */}
             <div className="flex justify-center">
               <div
                 className={`inline-flex items-center gap-3 px-6 py-3 rounded-2xl text-sm font-bold shadow-lg bg-gradient-to-r ${
@@ -417,7 +407,6 @@ const GenerateTestForm = () => {
             </div>
           </div>
 
-          {/* Error Message */}
           {errorMessage && (
             <div className="mx-8 mb-8">
               <div className="flex items-start gap-4 bg-gradient-to-r from-red-50 to-red-100 text-red-700 p-6 rounded-2xl border border-red-200 shadow-lg">
@@ -432,7 +421,6 @@ const GenerateTestForm = () => {
             </div>
           )}
 
-          {/* Submit Button */}
           <div className="p-8 pt-0">
             <button
               onClick={handleSubmit}
