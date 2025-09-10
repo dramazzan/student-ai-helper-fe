@@ -20,7 +20,6 @@ import { getTestProgressByTestId } from "@/services/testService/passingService"
 import { deleteTestById } from "@/services/testService/generationService"
 import type { TestTabsProps } from "@/models/Test"
 
-// Типы для лучшей типизации
 interface TestProgress {
   [testId: string]: number
 }
@@ -33,7 +32,6 @@ interface TestProgressData {
   attempts: Array<{ percentage: number }>
 }
 
-// Компонент прогресс-бара
 const ProgressBar: React.FC<{ percentage: number }> = React.memo(({ percentage }) => (
   <div className="w-full bg-[#E0E0E0] rounded-full h-1.5 overflow-hidden">
     <div
@@ -44,7 +42,6 @@ const ProgressBar: React.FC<{ percentage: number }> = React.memo(({ percentage }
 ))
 ProgressBar.displayName = "ProgressBar"
 
-// Компонент для отображения счета
 const ScoreDisplay: React.FC<{ score: number }> = React.memo(({ score }) => {
   const getScoreColor = (percentage: number) => {
     if (percentage >= 80) return "text-emerald-600 bg-emerald-50"
@@ -64,7 +61,6 @@ const ScoreDisplay: React.FC<{ score: number }> = React.memo(({ score }) => {
 })
 ScoreDisplay.displayName = "ScoreDisplay"
 
-// Компонент действий с тестом
 const TestActions: React.FC<{
   testId: string
   hasProgress: boolean
@@ -104,7 +100,6 @@ const TestActions: React.FC<{
 ))
 TestActions.displayName = "TestActions"
 
-// Компонент метаданных теста
 const TestMetadata: React.FC<{
   questionCount: number
   difficulty?: string
@@ -150,7 +145,6 @@ const TestMetadata: React.FC<{
 })
 TestMetadata.displayName = "TestMetadata"
 
-// Компонент карточки теста
 const TestCard: React.FC<{
   test: any
   progress: number
@@ -179,7 +173,6 @@ const TestCard: React.FC<{
       <div className="group">
         <div className="flex items-start justify-between gap-6 py-6 hover:bg-gray-50/80 rounded-xl px-6 -mx-6 transition-all duration-200">
           <div className="flex-1 min-w-0 space-y-4">
-            {/* Заголовок и бейдж достижения */}
             <div className="flex items-center gap-3">
               <h3 className="font-semibold text-black leading-tight text-lg group-hover:text-[#C8102E] transition-colors">
                 {test.title}
@@ -187,7 +180,6 @@ const TestCard: React.FC<{
               {hasProgress && <Award className="w-4 h-4 text-amber-500 flex-shrink-0" />}
             </div>
 
-            {/* Метаданные */}
             <TestMetadata
               questionCount={test.questionCount}
               difficulty={test.difficulty}
@@ -195,7 +187,6 @@ const TestCard: React.FC<{
               sourceType={test.sourceType}
             />
 
-            {/* Прогресс */}
             {hasProgress && (
               <div className="space-y-2">
                 <ScoreDisplay score={progress} />
@@ -204,7 +195,6 @@ const TestCard: React.FC<{
             )}
           </div>
 
-          {/* Действия */}
           <TestActions
             testId={test._id}
             hasProgress={hasProgress}
@@ -215,7 +205,6 @@ const TestCard: React.FC<{
           />
         </div>
 
-        {/* Конспект */}
         {test.summary && (
           <div className="ml-6 mt-2">
             <button
@@ -235,7 +224,6 @@ const TestCard: React.FC<{
           </div>
         )}
 
-        {/* Разделитель */}
         {!isLastItem && <div className="border-b border-[#E0E0E0] mt-8" />}
       </div>
     )
@@ -243,7 +231,6 @@ const TestCard: React.FC<{
 )
 TestCard.displayName = "TestCard"
 
-// Компонент скелетона загрузки
 const TestSkeleton: React.FC = () => (
   <div className="space-y-8">
     <div className="space-y-2">
@@ -278,7 +265,6 @@ const TestSkeleton: React.FC = () => (
   </div>
 )
 
-// Компонент пустого состояния
 const EmptyState: React.FC = () => (
   <div className="text-center py-20">
     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -291,7 +277,6 @@ const EmptyState: React.FC = () => (
   </div>
 )
 
-// Компонент ошибки
 const ErrorState: React.FC<{ onRetry: () => void }> = ({ onRetry }) => (
   <div className="text-center py-20">
     <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -308,7 +293,6 @@ const ErrorState: React.FC<{ onRetry: () => void }> = ({ onRetry }) => (
   </div>
 )
 
-// Основной компонент
 const NormalTestList: React.FC<TestTabsProps> = ({ normalTests, onDeleteTest }) => {
   const router = useRouter()
   const [progressMap, setProgressMap] = useState<TestProgress>({})
@@ -318,7 +302,6 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests, onDeleteTest }) 
   const [deletingTestId, setDeletingTestId] = useState<string | null>(null)
   const [tests, setTests] = useState(normalTests)
 
-  // Мемоизированные обработчики
   const handleStartTest = useCallback(
     (testId: string) => {
       router.push(`/main/tests/passing/${testId}`)
@@ -402,13 +385,11 @@ const NormalTestList: React.FC<TestTabsProps> = ({ normalTests, onDeleteTest }) 
     loadProgress()
   }, [loadProgress])
 
-  // Мемоизированные вычисления
   const sortedTests = useMemo(() => {
     return [...tests].sort((a, b) => {
       const aProgress = progressMap[a._id] || 0
       const bProgress = progressMap[b._id] || 0
 
-      // Сначала тесты с прогрессом, потом по дате создания
       if (aProgress > 0 && bProgress === 0) return -1
       if (aProgress === 0 && bProgress > 0) return 1
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
